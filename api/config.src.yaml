@@ -1,0 +1,6 @@
+database:
+  username: conduit_test_user
+  password: conduit!
+  host: localhost
+  port: 15432 # change this value
+  databaseName: conduit_test_db
