@@ -2,12 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gsettings/gsettings.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:xdg_directories/xdg_directories.dart';
+import 'package:xdg_directories/xdg_directories.dart' as xdgDir;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb) {
-    var xdgDir = XDGDirectories();
     print(await xdgDir.configHome);
     print(await xdgDir.cacheHome);
     print(await xdgDir.dataHome);

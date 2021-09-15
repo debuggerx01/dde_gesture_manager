@@ -1,0 +1,24 @@
+name: xdg_directories_web
+description: A Dart package for reading XDG directory configuration information on Linux.
+version: 0.2.0
+
+flutter:
+  plugin:
+    platforms:
+      web:
+        fileName: xdg_directories.dart
+        pluginClass: XDGDirectoriesPlugin
+
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.5.0 <2.0.0"
+
+dependencies:
+  universal_io: ^2.0.4
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+
+dev_dependencies:
+  test: ^1.16.0
