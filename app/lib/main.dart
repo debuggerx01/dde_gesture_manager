@@ -1,6 +1,9 @@
+import 'package:dde_gesture_manager/models/settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gsettings/gsettings.dart';
+import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:xdg_directories/xdg_directories.dart' as xdgDir;
 
@@ -20,32 +23,51 @@ Future<void> main() async {
     var windowManager = WindowManager.instance;
     windowManager.setTitle('Gesture Manager For DDE');
     windowManager.setMinimumSize(const Size(800, 600));
-    var xsettings = GSettings('com.deepin.xsettings');
-    // xsettings.get('scale-factor').then((value) {
-    //   print(value.toString());
-    // });
-    xsettings.get('theme-name').then((value) {
-      print(value.toString());
-    });
-    xsettings.keysChanged.listen((event) {
-      xsettings.get('theme-name').then((value) {
-        print(value.toString());
-      });
-    });
   }
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  var xsettings = GSettings('com.deepin.xsettings');
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      xsettings.keysChanged.listen((event) {
+        xsettings.get('theme-name').then((value) {
+          context.read<SettingsProvider>().setProps(isDarkMode: value.toString().contains('dark'));
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    return MultiProvider(
+        providers: [
+          Provider(create: (context) => SettingsProvider()),
+        ],
+        builder: (context, child) {
+          var isDarkMode = context.watch<SettingsProvider>().settings.isDarkMode;
+          return isDarkMode == null
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : MaterialApp(
+                  title: 'Flutter Demo',
+                  theme: ThemeData(
+                    primarySwatch: isDarkMode ? Colors.blue : Colors.blue,
+                    brightness: isDarkMode ? Brightness.dark : Brightness.light,
+                  ),
+                  home: MyHomePage(title: 'Flutter Demo Home Page'),
+                );
+        });
   }
 }
 
