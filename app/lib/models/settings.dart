@@ -1,29 +1,18 @@
 import 'package:flutter/foundation.dart';
 
 class Settings {
-  Settings({
-    this.isDarkMode,
-  });
+  bool? _isDarkMode;
 
-  bool? isDarkMode;
+  bool? get isDarkMode => _isDarkMode;
 }
 
-class SettingsProvider extends ChangeNotifier {
-  Settings _settings = Settings();
-
-  Settings get settings => _settings;
-
-  set settings(Settings newSettings) {
-    _settings = newSettings;
-    notifyListeners();
-  }
-
+class SettingsProvider extends Settings with ChangeNotifier {
   void setProps({
     bool? isDarkMode,
   }) {
     bool changed = false;
-    if (isDarkMode != _settings.isDarkMode) {
-      _settings.isDarkMode = isDarkMode;
+    if (this._isDarkMode != isDarkMode) {
+      this._isDarkMode = isDarkMode;
       changed = true;
     }
     if (changed) notifyListeners();

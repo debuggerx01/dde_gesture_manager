@@ -27,47 +27,53 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  var xsettings = GSettings('com.deepin.xsettings');
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      xsettings.keysChanged.listen((event) {
-        xsettings.get('theme-name').then((value) {
-          context.read<SettingsProvider>().setProps(isDarkMode: value.toString().contains('dark'));
-        });
-      });
-    });
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          Provider(create: (context) => SettingsProvider()),
-        ],
-        builder: (context, child) {
-          var isDarkMode = context.watch<SettingsProvider>().settings.isDarkMode;
-          return isDarkMode == null
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : MaterialApp(
-                  title: 'Flutter Demo',
-                  theme: ThemeData(
-                    primarySwatch: isDarkMode ? Colors.blue : Colors.blue,
-                    brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                  ),
-                  home: MyHomePage(title: 'Flutter Demo Home Page'),
-                );
-        });
+      providers: [
+        ChangeNotifierProvider(create: (context) => SettingsProvider()),
+      ],
+      builder: (context, child) {
+        var isDarkMode = context.watch<SettingsProvider>().isDarkMode;
+        return AnimatedCrossFade(
+          crossFadeState: isDarkMode != null ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          alignment: Alignment.center,
+          layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) => Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: <Widget>[
+              Positioned(key: bottomChildKey, child: bottomChild),
+              Positioned(key: topChildKey, child: topChild),
+            ],
+          ),
+          firstChild: MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: isDarkMode == true ? Colors.blue : Colors.blue,
+              brightness: isDarkMode == true ? Brightness.dark : Brightness.light,
+            ),
+            home: MyHomePage(title: 'Flutter Demo Home Page'),
+          ),
+          secondChild: Builder(builder: (_) {
+            var xsettings = GSettings('com.deepin.xsettings');
+            xsettings.get('theme-name').then((value) {
+              Future.delayed(
+                Duration(seconds: 1),
+                () => context.read<SettingsProvider>().setProps(isDarkMode: value.toString().contains('dark')),
+              );
+            });
+            xsettings.keysChanged.listen((event) {
+              xsettings.get('theme-name').then((value) {
+                context.read<SettingsProvider>().setProps(isDarkMode: value.toString().contains('dark'));
+              });
+            });
+            return CircularProgressIndicator();
+          }),
+          duration: Duration(seconds: 1),
+        );
+      },
+    );
   }
 }
 
