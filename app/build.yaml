@@ -1,0 +1,11 @@
+builders:
+  provider_builder:
+    import: 'lib/builder/provider_builder.dart'
+    builder_factories: [ 'providerBuilder' ]
+    build_extensions: { '.dart': [ '.provider.dart' ] }
+    auto_apply: root_package
+    build_to: source
+    defaults:
+      generate_for:
+        include:
+          - lib/models/**

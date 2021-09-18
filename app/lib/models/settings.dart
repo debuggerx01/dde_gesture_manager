@@ -1,20 +1,10 @@
-import 'package:flutter/foundation.dart';
+import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 
+@ProviderModel()
 class Settings {
-  bool? _isDarkMode;
+  @ProviderModelProp()
+  bool? isDarkMode;
 
-  bool? get isDarkMode => _isDarkMode;
-}
-
-class SettingsProvider extends Settings with ChangeNotifier {
-  void setProps({
-    bool? isDarkMode,
-  }) {
-    bool changed = false;
-    if (this._isDarkMode != isDarkMode) {
-      this._isDarkMode = isDarkMode;
-      changed = true;
-    }
-    if (changed) notifyListeners();
-  }
+  @ProviderModelProp()
+  String? name;
 }

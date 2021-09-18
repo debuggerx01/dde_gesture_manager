@@ -1,29 +1,13 @@
-import 'package:dde_gesture_manager/models/settings.dart';
+import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/utils/init.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gsettings/gsettings.dart';
 import 'package:provider/provider.dart';
-import 'package:window_manager/window_manager.dart';
-import 'package:xdg_directories/xdg_directories.dart' as xdgDir;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (!kIsWeb) {
-    print(await xdgDir.configHome);
-    print(await xdgDir.cacheHome);
-    print(await xdgDir.dataHome);
-    print('------');
-    print(await xdgDir.configDirs.join('\n'));
-    print('------');
-    print(await xdgDir.dataDirs.join('\n'));
-    print('------');
-    print(await xdgDir.runtimeDir);
-    print('------');
-    var windowManager = WindowManager.instance;
-    windowManager.setTitle('Gesture Manager For DDE');
-    windowManager.setMinimumSize(const Size(800, 600));
-  }
+  await initConfigs();
   runApp(MyApp());
 }
 
@@ -36,41 +20,32 @@ class MyApp extends StatelessWidget {
       ],
       builder: (context, child) {
         var isDarkMode = context.watch<SettingsProvider>().isDarkMode;
-        return AnimatedCrossFade(
-          crossFadeState: isDarkMode != null ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-          alignment: Alignment.center,
-          layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) => Stack(
-            clipBehavior: Clip.none,
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: isDarkMode == true ? Colors.blue : Colors.blue,
+            brightness: isDarkMode == true ? Brightness.dark : Brightness.light,
+          ),
+          home: AnimatedCrossFade(
+            crossFadeState: isDarkMode != null ? CrossFadeState.showFirst : CrossFadeState.showSecond,
             alignment: Alignment.center,
-            children: <Widget>[
-              Positioned(key: bottomChildKey, child: bottomChild),
-              Positioned(key: topChildKey, child: topChild),
-            ],
-          ),
-          firstChild: MaterialApp(
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              primarySwatch: isDarkMode == true ? Colors.blue : Colors.blue,
-              brightness: isDarkMode == true ? Brightness.dark : Brightness.light,
+            layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) => Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: <Widget>[
+                Positioned(key: bottomChildKey, child: bottomChild),
+                Positioned(key: topChildKey, child: topChild),
+              ],
             ),
-            home: MyHomePage(title: 'Flutter Demo Home Page'),
-          ),
-          secondChild: Builder(builder: (_) {
-            var xsettings = GSettings('com.deepin.xsettings');
-            xsettings.get('theme-name').then((value) {
-              Future.delayed(
-                Duration(seconds: 1),
-                () => context.read<SettingsProvider>().setProps(isDarkMode: value.toString().contains('dark')),
+            firstChild: MyHomePage(title: 'Flutter Demo Home Page'),
+            secondChild: Builder(builder: (context) {
+              initEvents(context);
+              return Center(
+                child: CircularProgressIndicator(),
               );
-            });
-            xsettings.keysChanged.listen((event) {
-              xsettings.get('theme-name').then((value) {
-                context.read<SettingsProvider>().setProps(isDarkMode: value.toString().contains('dark'));
-              });
-            });
-            return CircularProgressIndicator();
-          }),
-          duration: Duration(seconds: 1),
+            }),
+            duration: Duration(seconds: 1),
+          ),
         );
       },
     );
