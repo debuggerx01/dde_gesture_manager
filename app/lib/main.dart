@@ -1,3 +1,5 @@
+import 'package:dde_gesture_manager/models/configs.dart';
+import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/init.dart';
 import 'package:flutter/foundation.dart';
@@ -17,17 +19,25 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
+        ChangeNotifierProvider(create: (context) => ConfigsProvider()),
       ],
       builder: (context, child) {
         var isDarkMode = context.watch<SettingsProvider>().isDarkMode;
+        var brightnessMode = context.watch<ConfigsProvider>().brightnessMode;
+        late bool showDarkMode;
+        if (brightnessMode == BrightnessMode.system) {
+          showDarkMode = isDarkMode ?? false;
+        } else {
+          showDarkMode = brightnessMode == BrightnessMode.dark;
+        }
         return MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
-            primarySwatch: isDarkMode == true ? Colors.blue : Colors.blue,
-            brightness: isDarkMode == true ? Brightness.dark : Brightness.light,
+            primarySwatch: showDarkMode ? Colors.blue : Colors.blue,
+            brightness: showDarkMode ? Brightness.dark : Brightness.light,
           ),
           home: AnimatedCrossFade(
-            crossFadeState: isDarkMode != null ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            crossFadeState: isDarkMode != null ? CrossFadeState.showSecond : CrossFadeState.showFirst,
             alignment: Alignment.center,
             layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) => Stack(
               clipBehavior: Clip.none,
@@ -37,14 +47,12 @@ class MyApp extends StatelessWidget {
                 Positioned(key: topChildKey, child: topChild),
               ],
             ),
-            firstChild: MyHomePage(title: 'Flutter Demo Home Page'),
-            secondChild: Builder(builder: (context) {
-              initEvents(context);
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+            firstChild: Builder(builder: (context) {
+              Future.microtask(() => initEvents(context));
+              return Container();
             }),
-            duration: Duration(seconds: 1),
+            secondChild: MyHomePage(title: 'Flutter Demo Home Page'),
+            duration: Duration(milliseconds: 500),
           ),
         );
       },
@@ -72,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var brightnessMode = context.watch<ConfigsProvider>().brightnessMode;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -86,6 +95,40 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
+            ),
+            ListTile(
+              title: const Text('System'),
+              leading: Radio<BrightnessMode>(
+                value: BrightnessMode.system,
+                groupValue: brightnessMode,
+                onChanged: (BrightnessMode? value) {
+                  context.read<ConfigsProvider>().setProps(brightnessMode: value);
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('Light'),
+              leading: Radio<BrightnessMode>(
+                value: BrightnessMode.light,
+                groupValue: brightnessMode,
+                onChanged: (BrightnessMode? value) {
+                  setState(() {
+                    context.read<ConfigsProvider>().setProps(brightnessMode: value);
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('Dark'),
+              leading: Radio<BrightnessMode>(
+                value: BrightnessMode.dark,
+                groupValue: brightnessMode,
+                onChanged: (BrightnessMode? value) {
+                  setState(() {
+                    context.read<ConfigsProvider>().setProps(brightnessMode: value);
+                  });
+                },
+              ),
             ),
           ],
         ),

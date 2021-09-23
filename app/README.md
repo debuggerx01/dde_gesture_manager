@@ -18,7 +18,7 @@ class Test {
 
 ```
 
-2. `app` 项目目录下执行 `flutter packages pub run build_runner build`
+2. `app` 项目目录下执行 `flutter packages pub get && flutter packages pub run build_runner build --delete-conflicting-outputs`
 
 3. 将在 `lib/models/test.provider.dart` 生成如下代码:
 ```dart

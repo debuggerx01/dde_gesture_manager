@@ -4,7 +4,4 @@ import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 class Settings {
   @ProviderModelProp()
   bool? isDarkMode;
-
-  @ProviderModelProp()
-  String? name;
 }
