@@ -1,0 +1,8 @@
+{
+  "theme": {
+    "label": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
+  }
+}

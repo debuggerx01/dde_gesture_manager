@@ -1,16 +1,30 @@
+import 'package:dde_gesture_manager/generated/codegen_loader.g.dart';
 import 'package:dde_gesture_manager/models/configs.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/themes/dark.dart';
+import 'package:dde_gesture_manager/themes/light.dart';
 import 'package:dde_gesture_manager/utils/init.dart';
-import 'package:flutter/foundation.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/home.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initConfigs();
-  runApp(MyApp());
+  runApp(EasyLocalization(
+    supportedLocales: [
+      Locale('zh', 'CN'),
+      Locale('en'),
+    ],
+    fallbackLocale: Locale('zh', 'CN'),
+    path: 'resources/langs',
+    assetLoader: CodegenLoader(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -32,10 +46,7 @@ class MyApp extends StatelessWidget {
         }
         return MaterialApp(
           title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: showDarkMode ? Colors.blue : Colors.blue,
-            brightness: showDarkMode ? Brightness.dark : Brightness.light,
-          ),
+          theme: showDarkMode ? darkTheme : lightTheme,
           home: AnimatedCrossFade(
             crossFadeState: isDarkMode != null ? CrossFadeState.showSecond : CrossFadeState.showFirst,
             alignment: Alignment.center,
@@ -51,93 +62,11 @@ class MyApp extends StatelessWidget {
               Future.microtask(() => initEvents(context));
               return Container();
             }),
-            secondChild: MyHomePage(title: 'Flutter Demo Home Page'),
+            secondChild: HomePage(),
             duration: Duration(milliseconds: 500),
           ),
         );
       },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var brightnessMode = context.watch<ConfigsProvider>().brightnessMode;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            ListTile(
-              title: const Text('System'),
-              leading: Radio<BrightnessMode>(
-                value: BrightnessMode.system,
-                groupValue: brightnessMode,
-                onChanged: (BrightnessMode? value) {
-                  context.read<ConfigsProvider>().setProps(brightnessMode: value);
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text('Light'),
-              leading: Radio<BrightnessMode>(
-                value: BrightnessMode.light,
-                groupValue: brightnessMode,
-                onChanged: (BrightnessMode? value) {
-                  setState(() {
-                    context.read<ConfigsProvider>().setProps(brightnessMode: value);
-                  });
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text('Dark'),
-              leading: Radio<BrightnessMode>(
-                value: BrightnessMode.dark,
-                groupValue: brightnessMode,
-                onChanged: (BrightnessMode? value) {
-                  setState(() {
-                    context.read<ConfigsProvider>().setProps(brightnessMode: value);
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
     );
   }
 }

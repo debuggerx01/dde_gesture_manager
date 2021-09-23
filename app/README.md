@@ -45,3 +45,11 @@ class TestProvider extends Test with ChangeNotifier {
 }
 
 ```
+
+## easy_localization
+### 生成资源代码
+`flutter pub run easy_localization:generate && flutter pub run easy_localization:generate -f keys -o locale_keys.g.dart`
+
+### 已经支持语言
+- 简体中文(zh-CN)
+- English(en)
