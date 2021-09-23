@@ -14,6 +14,8 @@ import 'pages/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  EasyLocalization.logger.enableLevels = [];
+  await EasyLocalization.ensureInitialized();
   await initConfigs();
   runApp(EasyLocalization(
     supportedLocales: [
@@ -47,6 +49,9 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Flutter Demo',
           theme: showDarkMode ? darkTheme : lightTheme,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
           home: AnimatedCrossFade(
             crossFadeState: isDarkMode != null ? CrossFadeState.showSecond : CrossFadeState.showFirst,
             alignment: Alignment.center,

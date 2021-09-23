@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           SizedBox(
-            height: 32,
+            height: 36,
             child: Footer(),
           ),
         ],
