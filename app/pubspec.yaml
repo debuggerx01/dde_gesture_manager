@@ -29,14 +29,19 @@ dependencies:
   shared_preferences: ^2.0.7
   xdg_directories: 0.2.0
   gsettings: 0.2.0
+  provider: ^6.0.0
+  package_info_plus: ^1.0.6
   window_size:
     path: 3rd_party/window_size
   xdg_directories_web:
     path: 3rd_party/xdg_directories_web
+  easy_localization: ^3.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: 2.1.2
+  source_gen: 1.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -51,6 +56,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   # assets:
+  #   - resources/langs/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

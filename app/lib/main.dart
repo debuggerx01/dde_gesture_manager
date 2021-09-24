@@ -1,97 +1,79 @@
-import 'package:flutter/foundation.dart';
+import 'package:dde_gesture_manager/constants/sp_keys.dart';
+import 'package:dde_gesture_manager/constants/supported_locales.dart';
+import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/generated/codegen_loader.g.dart';
+import 'package:dde_gesture_manager/generated/locale_keys.g.dart';
+import 'package:dde_gesture_manager/models/configs.dart';
+import 'package:dde_gesture_manager/models/configs.provider.dart';
+import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/themes/dark.dart';
+import 'package:dde_gesture_manager/themes/light.dart';
+import 'package:dde_gesture_manager/utils/helper.dart';
+import 'package:dde_gesture_manager/utils/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gsettings/gsettings.dart';
-import 'package:window_manager/window_manager.dart';
-import 'package:xdg_directories/xdg_directories.dart' as xdgDir;
+import 'package:flutter/widgets.dart';
+
+import 'pages/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (!kIsWeb) {
-    print(await xdgDir.configHome);
-    print(await xdgDir.cacheHome);
-    print(await xdgDir.dataHome);
-    print('------');
-    print(await xdgDir.configDirs.join('\n'));
-    print('------');
-    print(await xdgDir.dataDirs.join('\n'));
-    print('------');
-    print(await xdgDir.runtimeDir);
-    print('------');
-    var windowManager = WindowManager.instance;
-    windowManager.setTitle('Gesture Manager For DDE');
-    windowManager.setMinimumSize(const Size(800, 600));
-    var xsettings = GSettings('com.deepin.xsettings');
-    // xsettings.get('scale-factor').then((value) {
-    //   print(value.toString());
-    // });
-    xsettings.get('theme-name').then((value) {
-      print(value.toString());
-    });
-    xsettings.keysChanged.listen((event) {
-      xsettings.get('theme-name').then((value) {
-        print(value.toString());
-      });
-    });
-  }
-  runApp(MyApp());
+  EasyLocalization.logger.enableLevels = [];
+  await EasyLocalization.ensureInitialized();
+  await initConfigs();
+  runApp(EasyLocalization(
+    supportedLocales: supportedLocales,
+    fallbackLocale: zh_CN,
+    path: 'resources/langs',
+    assetLoader: CodegenLoader(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SettingsProvider()),
+        ChangeNotifierProvider(create: (context) => ConfigsProvider()),
+      ],
+      builder: (context, child) {
+        var isDarkMode = context.watch<SettingsProvider>().isDarkMode;
+        var brightnessMode = context.watch<ConfigsProvider>().brightnessMode;
+        H().sp.updateInt(SPKeys.brightnessMode, brightnessMode?.index ?? 0);
+        late bool showDarkMode;
+        if (brightnessMode == BrightnessMode.system) {
+          showDarkMode = isDarkMode ?? false;
+        } else {
+          showDarkMode = brightnessMode == BrightnessMode.dark;
+        }
+        return MaterialApp(
+          title: CodegenLoader.mapLocales[context.locale.toString()]?[LocaleKeys.app_name],
+          theme: showDarkMode ? darkTheme : lightTheme,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          home: AnimatedCrossFade(
+            crossFadeState: isDarkMode != null ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            alignment: Alignment.center,
+            layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) => Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: <Widget>[
+                Positioned(key: bottomChildKey, child: bottomChild),
+                Positioned(key: topChildKey, child: topChild),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+            firstChild: Builder(builder: (context) {
+              Future.microtask(() => initEvents(context));
+              return Container();
+            }),
+            secondChild: HomePage(),
+            duration: Duration(milliseconds: 500),
+          ),
+        );
+      },
     );
   }
 }

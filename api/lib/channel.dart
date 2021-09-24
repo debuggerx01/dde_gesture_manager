@@ -1,5 +1,5 @@
-import 'package:dde_gesture_manager/model/model.dart';
 import 'package:dde_gesture_manager/dde_gesture_manager.dart';
+import 'package:dde_gesture_manager/model/model.dart';
 
 /// This type initializes an application.
 ///

@@ -1,10 +1,10 @@
-import 'package:dde_gesture_manager/dde_gesture_manager.dart';
 import 'package:conduit_test/conduit_test.dart';
+import 'package:dde_gesture_manager/dde_gesture_manager.dart';
 
-export 'package:dde_gesture_manager/dde_gesture_manager.dart';
-export 'package:conduit_test/conduit_test.dart';
-export 'package:test/test.dart';
 export 'package:conduit/conduit.dart';
+export 'package:conduit_test/conduit_test.dart';
+export 'package:dde_gesture_manager/dde_gesture_manager.dart';
+export 'package:test/test.dart';
 
 /// A testing harness for dde_gesture_manager.
 ///
