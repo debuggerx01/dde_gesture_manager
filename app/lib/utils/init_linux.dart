@@ -1,9 +1,14 @@
+import 'package:dde_gesture_manager/constants/sp_keys.dart';
+import 'package:dde_gesture_manager/constants/supported_locales.dart';
+import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/generated/codegen_loader.g.dart';
+import 'package:dde_gesture_manager/generated/locale_keys.g.dart';
+import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:gsettings/gsettings.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:dde_gesture_manager/models/settings.provider.dart';
 
 Future<void> initEvents(BuildContext context) async {
   var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -32,7 +37,10 @@ Future<void> initEvents(BuildContext context) async {
 
 Future<void> initConfigs() async {
   await H().initSharedPreference();
-  var windowManager = WindowManager.instance;
-  windowManager.setTitle('Gesture Manager For DDE');
+  var userLanguageIndex = H().sp.getInt(SPKeys.userLanguage) ?? 0;
+  var locale = supportedLocales[userLanguageIndex];
+  windowManager.setTitle(CodegenLoader.mapLocales[locale.toString()]?[LocaleKeys.app_name]);
   windowManager.setMinimumSize(const Size(800, 600));
 }
+
+var windowManager = WindowManager.instance;

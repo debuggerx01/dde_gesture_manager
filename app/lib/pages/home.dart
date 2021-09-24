@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Text('asd'),
+              Text('WIP'),
             ],
           ),
           SizedBox(

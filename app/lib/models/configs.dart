@@ -14,6 +14,7 @@ class Configs {
   BrightnessMode? brightnessMode;
 
   Configs() {
-    this.brightnessMode = BrightnessMode.values[H().sp.getInt(SPKeys.brightnessMode)?.clamp(0, 2) ?? 0];
+    this.brightnessMode =
+        BrightnessMode.values[H().sp.getInt(SPKeys.brightnessMode)?.clamp(0, BrightnessMode.values.length - 1) ?? 0];
   }
 }

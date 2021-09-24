@@ -4,5 +4,13 @@
     "dark": "Dark",
     "light": "Light",
     "system": "System"
+  },
+  "version": {
+    "current": "current version",
+    "check_update": "Check for updates"
+  },
+  "app_name": "Gesture Manager for DDE",
+  "language": {
+    "label": "Language"
   }
 }
