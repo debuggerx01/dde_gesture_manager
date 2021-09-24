@@ -1,4 +1,5 @@
-import 'package:dde_gesture_manager/widgets/footer.dart';
+import 'package:dde_gesture_manager/pages/content.dart';
+import 'package:dde_gesture_manager/pages/footer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,11 +17,8 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text('WIP'),
-            ],
+          Flexible(
+            child: Content(),
           ),
           SizedBox(
             height: 36,
