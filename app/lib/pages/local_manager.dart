@@ -16,18 +16,27 @@ class LocalManager extends StatelessWidget {
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      color: context.t.backgroundColor,
       width: isOpen ? 200 : 36,
-      child: Column(
-        children: [
-          OverflowBox(
-            child: SizedBox(
-              width: 200,
-              child: Row(
+      child: OverflowBox(
+        alignment: Alignment.centerRight,
+        maxWidth: 200,
+        minWidth: 200,
+        child: Material(
+          color: context.t.backgroundColor,
+          elevation: 20,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    child: Text("本地配置"),
+                    child: Center(
+                      child: Text(
+                        "本地配置",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                   IconButton(
                     onPressed: () => context.read<ContentLayoutProvider>().setProps(localManagerOpened: !isOpen),
@@ -37,9 +46,9 @@ class LocalManager extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
