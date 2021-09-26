@@ -21,8 +21,8 @@ class Market extends StatelessWidget {
         maxWidth: marketPanelWidth,
         minWidth: marketPanelWidth,
         child: Material(
-          color: Colors.deepPurpleAccent,
-          elevation: isOpen ? 20 : 0,
+          color: context.t.backgroundColor,
+          elevation: isOpen ? 10 : 0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
