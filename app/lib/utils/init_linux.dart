@@ -1,3 +1,4 @@
+import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/constants/supported_locales.dart';
 import 'package:dde_gesture_manager/extensions.dart';
@@ -40,7 +41,7 @@ Future<void> initConfigs() async {
   var userLanguageIndex = H().sp.getInt(SPKeys.userLanguage) ?? 0;
   var locale = supportedLocales[userLanguageIndex];
   windowManager.setTitle(CodegenLoader.mapLocales[locale.toString()]?[LocaleKeys.app_name]);
-  windowManager.setMinimumSize(const Size(800, 600));
+  windowManager.setMinimumSize(minWindowSize);
 }
 
 var windowManager = WindowManager.instance;

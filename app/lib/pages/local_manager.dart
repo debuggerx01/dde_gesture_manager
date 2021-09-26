@@ -3,6 +3,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/constants/constants.dart';
 
 class LocalManager extends StatelessWidget {
   const LocalManager({
@@ -12,18 +13,18 @@ class LocalManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var isOpen = context.watch<ContentLayoutProvider>().localManagerOpened == true;
-    isOpen.sout();
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
+      duration: mediumDuration,
       curve: Curves.easeInOut,
-      width: isOpen ? 200 : 36,
+      width: isOpen ? localManagerPanelWidth : 0,
       child: OverflowBox(
         alignment: Alignment.centerRight,
-        maxWidth: 200,
-        minWidth: 200,
+        maxWidth: localManagerPanelWidth,
+        minWidth: localManagerPanelWidth,
         child: Material(
-          color: context.t.backgroundColor,
-          elevation: 20,
+          // color: context.t.backgroundColor,
+          color: Colors.deepPurple,
+          elevation: isOpen ? 20 : 0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -41,7 +42,7 @@ class LocalManager extends StatelessWidget {
                   IconButton(
                     onPressed: () => context.read<ContentLayoutProvider>().setProps(localManagerOpened: !isOpen),
                     icon: Icon(
-                      isOpen ? CupertinoIcons.chevron_left_2 : CupertinoIcons.chevron_right_2,
+                      CupertinoIcons.chevron_left_2,
                     ),
                   ),
                 ],

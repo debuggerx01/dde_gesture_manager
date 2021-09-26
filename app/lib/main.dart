@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
+          debugShowCheckedModeBanner: false,
           home: AnimatedCrossFade(
             crossFadeState: isDarkMode != null ? CrossFadeState.showSecond : CrossFadeState.showFirst,
             alignment: Alignment.center,
