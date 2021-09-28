@@ -1,4 +1,5 @@
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/widgets/help_button.dart';
 import 'package:dde_gesture_manager/widgets/language_switcher.dart';
 import 'package:dde_gesture_manager/widgets/theme_switcher.dart';
 import 'package:dde_gesture_manager/widgets/version_checker.dart';
@@ -27,9 +28,9 @@ class _FooterState extends State<Footer> {
             Row(
               children: [
                 LanguageSwitcher(),
-                Container(width: 6),
                 ThemeSwitcher(),
-              ],
+                HelpButton(),
+              ].map((e) => Padding(padding: EdgeInsets.only(right: 6), child: e)).toList(),
             )
           ],
         ),

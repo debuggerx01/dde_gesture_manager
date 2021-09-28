@@ -3,7 +3,8 @@
     "label": "Theme",
     "dark": "Dark",
     "light": "Light",
-    "system": "System"
+    "system": "System",
+    "tip": "Choose a theme"
   },
   "version": {
     "current": "current version",
@@ -11,6 +12,11 @@
   },
   "app_name": "Gesture Manager for DDE",
   "language": {
-    "label": "Language"
+    "label": "Language",
+    "tip": "Choose a language"
+  },
+  "help": {
+    "label": "Help",
+    "tip": "Display help documentation"
   }
 }
