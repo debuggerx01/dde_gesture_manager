@@ -6,6 +6,11 @@ extension SharedPreferencesExtenstion on SharedPreferences {
     return this.setInt(key, value);
   }
 
+  Future<bool> updateDouble(String key, double value) {
+    if (this.getDouble(key) == value) return Future.value(false);
+    return this.setDouble(key, value);
+  }
+
   Future<bool> updateString(String key, String value) {
     if (this.getString(key) == value) return Future.value(false);
     return this.setString(key, value);

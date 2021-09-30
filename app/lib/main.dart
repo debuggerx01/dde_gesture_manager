@@ -1,3 +1,4 @@
+import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/constants/supported_locales.dart';
 import 'package:dde_gesture_manager/extensions.dart';
@@ -71,7 +72,7 @@ class MyApp extends StatelessWidget {
               return Container();
             }),
             secondChild: HomePage(),
-            duration: Duration(milliseconds: 500),
+            duration: longDuration,
           ),
         );
       },

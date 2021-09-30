@@ -14,6 +14,8 @@ const longDuration = const Duration(milliseconds: 500);
 
 const minWindowSize = const Size(800, 600);
 
+const defaultWindowSize = const Size(1120, 720);
+
 const double defaultBorderRadius = 8;
 
 const double defaultButtonHeight = 36;

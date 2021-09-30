@@ -38,12 +38,12 @@ class LocalManager extends StatelessWidget {
                     Flexible(
                       child: Center(
                         child: Text(
-                          "本地方案管理",
+                          LocaleKeys.local_manager_title,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
-                        ),
+                        ).tr(),
                       ),
                     ),
                     DButton(

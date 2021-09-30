@@ -44,12 +44,12 @@ class Market extends StatelessWidget {
                     Flexible(
                       child: Center(
                         child: Text(
-                          "方案市场",
+                          LocaleKeys.market_title,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
-                        ),
+                        ).tr(),
                       ),
                     ),
                     Container(width: defaultButtonHeight),

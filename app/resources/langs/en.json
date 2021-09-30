@@ -18,5 +18,11 @@
   "help": {
     "label": "Help",
     "tip": "Display help documentation"
+  },
+  "market": {
+    "title": "Solution market"
+  },
+  "local_manager": {
+    "title": "Local solution management"
   }
 }

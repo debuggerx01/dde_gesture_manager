@@ -18,5 +18,11 @@
   "help": {
     "label": "帮助",
     "tip": "显示帮助文档"
+  },
+  "market": {
+    "title": "方案市场"
+  },
+  "local_manager": {
+    "title": "本地方案管理"
   }
 }
