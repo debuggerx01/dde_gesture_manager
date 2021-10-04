@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dde_gesture_manager/constants/constants.dart';
 
 var darkTheme = ThemeData.dark().copyWith(
   primaryColor: Colors.grey,
@@ -7,6 +8,7 @@ var darkTheme = ThemeData.dark().copyWith(
   iconTheme: IconThemeData(
     color: Color(0xffc0c6d4),
   ),
+  dividerColor: Color(0xfff3f3f3),
   textTheme: ThemeData.dark().textTheme.copyWith(
         headline1: TextStyle(
           color: Color(0xffc0c6d4),
@@ -15,4 +17,9 @@ var darkTheme = ThemeData.dark().copyWith(
           color: Color(0xffc0c6d4),
         ),
       ),
+  popupMenuTheme: ThemeData.dark().popupMenuTheme.copyWith(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(defaultBorderRadius),
+    ),
+  ),
 );
