@@ -34,14 +34,44 @@ class ProviderGenerator extends GeneratorForAnnotation<ProviderModel> {
         );
     });
     return [
-      if (needImports)
-        '''
+      _genImports(className, needImports),
+      _genClassDefine(element.displayName),
+      _genNamedConstructors(element.constructors, element.displayName),
+      _genSetPropsFunc(fields),
+    ].whereNotNull();
+  }
+}
+
+String? _genImports(String className, bool needImports) => needImports
+    ? '''
 import 'package:flutter/foundation.dart';
 import 'package:dde_gesture_manager/extensions/compare_extension.dart';
 import '$className';
-''',
-      '''
-class ${element.displayName}Provider extends ${element.displayName} with ChangeNotifier {
+'''
+    : null;
+
+String _genClassDefine(String displayName) => '''
+class ${displayName}Provider extends $displayName with ChangeNotifier {
+''';
+
+String? _genNamedConstructors(List<ConstructorElement> constructors, String displayName) {
+  String _genCallSuperParamStr(ParameterElement param) => param.isNamed ? '${param.name}: ${param.name}' : param.name;
+  List<String> _constructors = [];
+  if (constructors.length > 0) {
+    constructors.forEach((constructor) {
+      if (constructor.name.length > 0) {
+        var params = constructor.getDisplayString(withNullability: true).split('$displayName.${constructor.name}').last;
+        _constructors.add('''
+  ${displayName}Provider.${constructor.name}${params.replaceAll('dynamic ', '')}
+      : super.${constructor.name}(${constructor.parameters.map(_genCallSuperParamStr).join(',')});
+  ''');
+      }
+    });
+  }
+  return _constructors.length > 0 ? _constructors.join('\n') : null;
+}
+
+String _genSetPropsFunc(List<AnnotationField> fields) => '''
   void setProps({
     ${fields.map((f) => '${f.type.endsWith('?') ? '' : 'required '}${f.type} ${f.name},').join('\n')}
   }) {
@@ -50,7 +80,4 @@ class ${element.displayName}Provider extends ${element.displayName} with ChangeN
     if (changed) notifyListeners();
   }
 }
-    '''
-    ];
-  }
-}
+    ''';
