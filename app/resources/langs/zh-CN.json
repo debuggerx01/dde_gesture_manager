@@ -39,12 +39,13 @@
       "left": "向左",
       "right": "向右",
       "in": "向内捏合",
-      "out": "向外展开"
+      "out": "向外展开",
+      "none": "/"
     },
     "gestures": {
-      "swipe": "滑动",
+      "swipe": "划",
       "pinch": "捏",
-      "tap": "点击"
+      "tap": "点"
     },
     "types": {
       "built_in": "内置操作",

@@ -990,26 +990,29 @@ class _DDataTableState extends State<DDataTable> {
 
     int displayColumnIndex = 0;
     if (displayCheckboxColumn) {
-      tableColumns[0] = FixedColumnWidth(
-          effectiveCheckboxHorizontalMarginStart + Checkbox.width + effectiveCheckboxHorizontalMarginEnd);
-      tableRows[0].children![0] = _buildCheckbox(
-        context: context,
-        checked: someChecked ? null : allChecked,
-        onRowTap: null,
-        onCheckboxChanged: (bool? checked) => _handleSelectAll(checked, someChecked),
-        overlayColor: null,
-        tristate: true,
-      );
+      tableColumns[0] = FixedColumnWidth(0);
+      tableRows[0].children![0] = RectGetter.defaultKey(child: Container());
+      // tableColumns[0] = FixedColumnWidth(
+      //     effectiveCheckboxHorizontalMarginStart + Checkbox.width + effectiveCheckboxHorizontalMarginEnd);
+      // tableRows[0].children![0] = _buildCheckbox(
+      //   context: context,
+      //   checked: someChecked ? null : allChecked,
+      //   onRowTap: null,
+      //   onCheckboxChanged: (bool? checked) => _handleSelectAll(checked, someChecked),
+      //   overlayColor: null,
+      //   tristate: true,
+      // );
       rowIndex = 1;
       for (final DDataRow row in widget.rows) {
-        tableRows[rowIndex].children![0] = _buildCheckbox(
-          context: context,
-          checked: row.selected,
-          onRowTap: row.onSelectChanged == null ? null : () => row.onSelectChanged?.call(!row.selected),
-          onCheckboxChanged: row.onSelectChanged,
-          overlayColor: row.color ?? effectiveDataRowColor,
-          tristate: false,
-        );
+        // tableRows[rowIndex].children![0] = _buildCheckbox(
+        //   context: context,
+        //   checked: row.selected,
+        //   onRowTap: row.onSelectChanged == null ? null : () => row.onSelectChanged?.call(!row.selected),
+        //   onCheckboxChanged: row.onSelectChanged,
+        //   overlayColor: row.color ?? effectiveDataRowColor,
+        //   tristate: false,
+        // );
+        tableRows[rowIndex].children![0] = Container();
         rowIndex += 1;
       }
       displayColumnIndex += 1;

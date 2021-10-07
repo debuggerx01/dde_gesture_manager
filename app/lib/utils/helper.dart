@@ -49,11 +49,11 @@ class H {
       return preferredPanelsStatus..marketPanelOpened = false;
   }
 
-  static String getGestureName(Gesture gesture) => const {
+  static String? getGestureName(Gesture? gesture) => const {
         Gesture.swipe: 'swipe',
         Gesture.tap: 'tap',
         Gesture.pinch: 'pinch',
-      }[gesture]!;
+      }[gesture];
 
   static Gesture getGestureByName(String gestureName) =>
       const {
@@ -63,13 +63,14 @@ class H {
       }[gestureName] ??
       Gesture.swipe;
 
-  static String? getGestureDirectionName(GestureDirection direction) => const {
+  static String? getGestureDirectionName(GestureDirection? direction) => const {
         GestureDirection.up: 'up',
         GestureDirection.down: 'down',
         GestureDirection.left: 'left',
         GestureDirection.right: 'right',
         GestureDirection.pinch_in: 'in',
         GestureDirection.pinch_out: 'out',
+        GestureDirection.none: 'none',
       }[direction];
 
   static GestureDirection getGestureDirectionByName(String? directionName) =>
@@ -83,11 +84,11 @@ class H {
       }[directionName] ??
       GestureDirection.none;
 
-  static String getGestureTypeName(GestureType type) => const {
+  static String? getGestureTypeName(GestureType? type) => const {
     GestureType.built_in: 'built_in',
     GestureType.shortcut: 'shortcut',
     GestureType.commandline: 'commandline',
-  }[type]!;
+  }[type];
 
   static GestureType getGestureTypeByName(String typeName) =>
       const {

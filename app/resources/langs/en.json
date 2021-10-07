@@ -39,7 +39,8 @@
       "left": "left",
       "right": "right",
       "in": "pinch-in",
-      "out": "pinch-out"
+      "out": "pinch-out",
+      "none": "/"
     },
     "gestures": {
       "swipe": "swipe",

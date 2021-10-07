@@ -77,6 +77,8 @@ class GestureProp {
     return 'GestureProp{gesture: $gesture, direction: $direction, fingers: $fingers, type: $type, command: $command, remark: $remark}';
   }
 
+  GestureProp.empty();
+
   GestureProp.parse(props) {
     if (props is String) props = json.decode(props);
     assert(props is Map);

@@ -24,15 +24,47 @@ class _HomePageState extends State<HomePage> {
             "gestures": [
               {
                 "gesture": "swipe",
+                "direction": "down",
+                "fingers": 3,
+                "type": "shortcut",
+                "command": "ctrl+w",
+                "remark": "close current page."
+              },
+              {
+                "gesture": "swipe",
                 "direction": "up",
                 "fingers": 3,
                 "type": "shortcut",
-                "command": "ctrl+w"
+                "command": "ctrl+alt+t",
+                "remark": "reopen last closed page."
+              },
+              {
+                "gesture": "pinch",
+                "direction": "in",
+                "fingers": 4,
+                "type": "shortcut",
+                "command": "ctrl+alt+f",
+                "remark": "search files."
+              },
+              {
+                "gesture": "tap",
+                "fingers": 4,
+                "type": "built_in",
+                "command": "handle4FingersTap",
+                "remark": "handle4FingersTap."
+              },
+              {
+                "gesture": "swipe",
+                "direction": "down",
+                "fingers": 5,
+                "type": "commandline",
+                "command": "dbus-send --type=method_call --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle",
+                "remark": "toggle launcher."
               }
             ]
           }
           ''')),
-          // ChangeNotifierProvider(create: (context) => GesturePropProvider()),
+          ChangeNotifierProvider(create: (context) => GesturePropProvider.empty()),
         ],
         child: Column(
           mainAxisSize: MainAxisSize.max,

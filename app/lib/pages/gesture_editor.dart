@@ -1,6 +1,7 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
+import 'package:dde_gesture_manager/models/solution.dart';
 import 'package:dde_gesture_manager/models/solution.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
@@ -11,13 +12,43 @@ import 'package:flutter/material.dart';
 class GestureEditor extends StatelessWidget {
   const GestureEditor({Key? key}) : super(key: key);
 
+  List<DDataRow> _buildDataRow(List<GestureProp>? gestures, BuildContext context) => (gestures ?? [])
+      .map((gesture) => DDataRow(
+            onSelectChanged: (selected) {
+              if (selected == true)
+                context.read<GesturePropProvider>().setProps(
+                      gesture: gesture.gesture,
+                      direction: gesture.direction,
+                      fingers: gesture.fingers,
+                      type: gesture.type,
+                      command: gesture.command,
+                      remark: gesture.remark,
+                    );
+            },
+            selected: context.watch<GesturePropProvider>() == gesture,
+            cells: [
+              Center(
+                child: Text('${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(gesture.gesture)}').tr(),
+              ),
+              Text('${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(gesture.direction)}').tr(),
+              Center(
+                child: Text('${gesture.fingers}'),
+              ),
+              Center(child: Text('${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(gesture.type)}').tr()),
+              Text(gesture.command ?? ''),
+              Text(gesture.remark ?? ''),
+            ]
+                .map(
+                  (ele) => DDataCell(ele),
+                )
+                .toList(),
+          ))
+      .toList();
+
   @override
   Widget build(BuildContext context) {
     var layoutProvider = context.watch<ContentLayoutProvider>();
     var solutionProvider = context.watch<SolutionProvider>();
-    solutionProvider.name.sout();
-    solutionProvider.gestures.sout();
-
     return Flexible(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -85,6 +116,7 @@ class GestureEditor extends StatelessWidget {
                           child: ConstrainedBox(
                             constraints: BoxConstraints(minWidth: constraints.maxWidth),
                             child: DDataTable(
+                              showCheckboxColumn: true,
                               headerBackgroundColor: context.t.dialogBackgroundColor,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(defaultBorderRadius),
@@ -94,8 +126,8 @@ class GestureEditor extends StatelessWidget {
                                 ),
                               ),
                               dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-                                if (states.contains(MaterialState.hovered))
-                                  return Colors.blue;
+                                if (states.contains(MaterialState.hovered)) return Colors.grey;
+                                if (states.contains(MaterialState.selected)) return Colors.green;
                                 return null;
                               }),
                               columns: [
@@ -106,72 +138,7 @@ class GestureEditor extends StatelessWidget {
                                 DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
                                 DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
                               ],
-                              rows: [
-                                DDataRow(
-                                  cells: [
-                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_right).tr()),
-                                    DDataCell(Text('3')),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
-                                    DDataCell(Text('ctrl+w')),
-                                    DDataCell(Text('close current page.')),
-                                  ],
-                                ),
-                                DDataRow(
-                                  cells: [
-                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_left).tr()),
-                                    DDataCell(Text('3')),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
-                                    DDataCell(Text('ctrl+alt+t')),
-                                    DDataCell(Text('reopen last closed page.')),
-                                  ],
-                                ),
-                                DDataRow(
-                                  cells: [
-                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_left).tr()),
-                                    DDataCell(Text('3')),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
-                                    DDataCell(Text('ctrl+alt+t')),
-                                    DDataCell(Text('reopen last closed page.')),
-                                  ],
-                                ),
-                                DDataRow(
-                                  cells: [
-                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_left).tr()),
-                                    DDataCell(Text('3')),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
-                                    DDataCell(Text('ctrl+alt+t')),
-                                    DDataCell(Text('reopen last closed page.')),
-                                  ],
-                                ),
-                                DDataRow(
-                                  cells: [
-                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_left).tr()),
-                                    DDataCell(Text('3')),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
-                                    DDataCell(Text('ctrl+alt+t')),
-                                    DDataCell(Text('reopen last closed page.')),
-                                  ],
-                                ),
-                                DDataRow(
-                                  cells: [
-                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_down).tr()),
-                                    DDataCell(Text('3')),
-                                    DDataCell(Text(LocaleKeys.gesture_editor_types_commandline).tr()),
-                                    DDataCell(Text(
-                                        'dbus-send --type=method_call --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle')),
-                                    DDataCell(TextButton(
-                                      onPressed: () => print(123),
-                                      child: Text('show launcher.'),
-                                    )),
-                                  ],
-                                ),
-                              ],
+                              rows: _buildDataRow(solutionProvider.gestures, context),
                             ),
                           ),
                         ),
