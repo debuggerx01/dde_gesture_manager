@@ -22,4 +22,5 @@ var lightTheme = ThemeData.light().copyWith(
           borderRadius: BorderRadius.circular(defaultBorderRadius),
         ),
       ),
+  dialogBackgroundColor: Color(0xfffefefe),
 );

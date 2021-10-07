@@ -1,4 +1,5 @@
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
+import 'package:dde_gesture_manager/models/solution.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
@@ -47,6 +48,54 @@ class H {
     else
       return preferredPanelsStatus..marketPanelOpened = false;
   }
+
+  static String getGestureName(Gesture gesture) => const {
+        Gesture.swipe: 'swipe',
+        Gesture.tap: 'tap',
+        Gesture.pinch: 'pinch',
+      }[gesture]!;
+
+  static Gesture getGestureByName(String gestureName) =>
+      const {
+        'swipe': Gesture.swipe,
+        'tap': Gesture.tap,
+        'pinch': Gesture.pinch,
+      }[gestureName] ??
+      Gesture.swipe;
+
+  static String? getGestureDirectionName(GestureDirection direction) => const {
+        GestureDirection.up: 'up',
+        GestureDirection.down: 'down',
+        GestureDirection.left: 'left',
+        GestureDirection.right: 'right',
+        GestureDirection.pinch_in: 'in',
+        GestureDirection.pinch_out: 'out',
+      }[direction];
+
+  static GestureDirection getGestureDirectionByName(String? directionName) =>
+      const {
+        'up': GestureDirection.up,
+        'down': GestureDirection.down,
+        'left': GestureDirection.left,
+        'right': GestureDirection.right,
+        'in': GestureDirection.pinch_in,
+        'out': GestureDirection.pinch_out,
+      }[directionName] ??
+      GestureDirection.none;
+
+  static String getGestureTypeName(GestureType type) => const {
+    GestureType.built_in: 'built_in',
+    GestureType.shortcut: 'shortcut',
+    GestureType.commandline: 'commandline',
+  }[type]!;
+
+  static GestureType getGestureTypeByName(String typeName) =>
+      const {
+        'built_in': GestureType.built_in,
+        'shortcut': GestureType.shortcut,
+        'commandline': GestureType.commandline,
+      }[typeName] ??
+          GestureType.built_in;
 }
 
 class PreferredPanelsStatus {

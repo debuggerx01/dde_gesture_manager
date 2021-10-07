@@ -24,5 +24,38 @@
   },
   "local_manager": {
     "title": "本地方案管理"
+  },
+  "gesture_editor": {
+    "label": "手势方案编辑",
+    "gesture": "手势",
+    "direction": "方向",
+    "fingers": "手指数",
+    "type": "类型",
+    "command": "命令",
+    "remark": "备注",
+    "directions": {
+      "up": "向上",
+      "down": "向下",
+      "left": "向左",
+      "right": "向右",
+      "in": "向内捏合",
+      "out": "向外展开"
+    },
+    "gestures": {
+      "swipe": "滑动",
+      "pinch": "捏",
+      "tap": "点击"
+    },
+    "types": {
+      "built_in": "内置操作",
+      "commandline": "命令行",
+      "shortcut": "快捷键"
+    }
+  },
+  "operation": {
+    "add": "新增",
+    "delete": "删除",
+    "duplicate": "复制",
+    "apply": "应用"
   }
 }

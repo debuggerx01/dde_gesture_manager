@@ -12,9 +12,13 @@ class AnnotationField {
 }
 
 class ProviderGenerator extends GeneratorForAnnotation<ProviderModel> {
+  var _preClassName;
+
   @override
   generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) {
     var className = (element as ClassElement).source.shortName;
+    var needImports = className != _preClassName;
+    _preClassName = className;
     List<AnnotationField> fields = [];
     element.fields.forEach((field) {
       var annotation = field.metadata.firstWhereOrNull(
@@ -29,11 +33,14 @@ class ProviderGenerator extends GeneratorForAnnotation<ProviderModel> {
           ),
         );
     });
-    return '''
+    return [
+      if (needImports)
+        '''
 import 'package:flutter/foundation.dart';
 import 'package:dde_gesture_manager/extensions/compare_extension.dart';
 import '$className';
-
+''',
+      '''
 class ${element.displayName}Provider extends ${element.displayName} with ChangeNotifier {
   void setProps({
     ${fields.map((f) => '${f.type.endsWith('?') ? '' : 'required '}${f.type} ${f.name},').join('\n')}
@@ -43,6 +50,7 @@ class ${element.displayName}Provider extends ${element.displayName} with ChangeN
     if (changed) notifyListeners();
   }
 }
-    ''';
+    '''
+    ];
   }
 }

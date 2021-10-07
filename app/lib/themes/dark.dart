@@ -22,4 +22,5 @@ var darkTheme = ThemeData.dark().copyWith(
       borderRadius: BorderRadius.circular(defaultBorderRadius),
     ),
   ),
+  dialogBackgroundColor: Color(0xff202020),
 );

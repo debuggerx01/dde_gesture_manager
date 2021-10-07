@@ -24,5 +24,38 @@
   },
   "local_manager": {
     "title": "Local solution management"
+  },
+  "gesture_editor": {
+    "label": "Gesture program editing",
+    "gesture": "gesture",
+    "direction": "direction",
+    "fingers": "fingers",
+    "type": "type",
+    "command": "command",
+    "remark": "remark",
+    "directions": {
+      "up": "up",
+      "down": "down",
+      "left": "left",
+      "right": "right",
+      "in": "pinch-in",
+      "out": "pinch-out"
+    },
+    "gestures": {
+      "swipe": "swipe",
+      "pinch": "pinch",
+      "tap": "pinch"
+    },
+    "types": {
+      "built_in": "built-in",
+      "commandline": "commandline",
+      "shortcut": "shortcut"
+    }
+  },
+  "operation": {
+    "add": "Add",
+    "delete": "delete",
+    "duplicate": "duplicate",
+    "apply": "apply"
   }
 }

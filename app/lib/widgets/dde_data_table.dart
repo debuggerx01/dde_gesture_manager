@@ -6,6 +6,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -415,6 +416,8 @@ class DDataCell {
 ///    provides controls for paging through the remainder of the data.
 ///  * <https://material.io/design/components/data-tables.html>
 class DDataTable extends StatefulWidget {
+  final Color headerBackgroundColor;
+
   /// Creates a widget describing a data table.
   ///
   /// The [columns] argument must be a list of as many [DataColumn]
@@ -459,6 +462,7 @@ class DDataTable extends StatefulWidget {
     this.dividerThickness,
     required this.rows,
     this.checkboxHorizontalMargin,
+    required this.headerBackgroundColor,
   })  : assert(columns != null),
         assert(columns.isNotEmpty),
         assert(sortColumnIndex == null || (sortColumnIndex >= 0 && sortColumnIndex < columns.length)),
@@ -1078,29 +1082,29 @@ class _DDataTableState extends State<DDataTable> {
     }
 
     Future.microtask(() {
-      List<Rect> _rects = [];
-      var changed = false;
-      if (tableRows.first.children != null) {
-        for (var i = 0; i < tableRows.first.children!.length; i++) {
-          _rects.add((tableRows.first.children![i] as RectGetter).getRect() ?? Rect.zero);
-          if (!changed && (_headersRect == null || (_headersRect != null && _headersRect![i] != _rects[i]))) {
-            changed = true;
-          }
-        }
-        if (changed)
-          setState(() {
-            _headersRect = _rects;
-          });
-      }
+      _buildHeaderStack(tableRows);
     });
 
-    var _skickyHeaders = [];
-
+    List<Widget> _skickyHeaders = [];
+    var _headerBackgroundHSLColor = HSLColor.fromColor(widget.headerBackgroundColor);
+    HSLColor.fromColor(widget.headerBackgroundColor).withSaturation(.1).toColor();
     if (_headersRect != null && _headersRect!.length > 0) {
       for (var i = 0; i < _headersRect!.length; i++) {
         _skickyHeaders.add(Positioned(
           child: Container(
-            color: Colors.deepPurple,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  _headerBackgroundHSLColor
+                      .withLightness(
+                        _headerBackgroundHSLColor.lightness - 0.1 < 0 ? 0 : _headerBackgroundHSLColor.lightness - 0.1)
+                      .toColor(),
+                  widget.headerBackgroundColor,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
             child: (tableRows.first.children![i] as RectGetter).clone(),
           ),
           left: _headersRect![i].left - _headersRect![0].left,
@@ -1135,6 +1139,25 @@ class _DDataTableState extends State<DDataTable> {
         ),
       ),
     );
+  }
+
+  void _buildHeaderStack(List<TableRow> tableRows) {
+    List<Rect> _rects = [];
+    var changed = false;
+    if (tableRows.first.children != null) {
+      for (var i = 0; i < tableRows.first.children!.length; i++) {
+        _rects.add((tableRows.first.children![i] as RectGetter).getRect() ?? Rect.zero);
+        if (!changed && (_headersRect == null || (_headersRect != null && _headersRect![i] != _rects[i]))) {
+          changed = true;
+        }
+      }
+      if (changed)
+        setState(() {
+          _headersRect = _rects;
+        });
+    }
+    if (_rects == null || _rects.isEmpty || _rects.first == null)
+      Future.microtask(() => _buildHeaderStack(tableRows));
   }
 }
 

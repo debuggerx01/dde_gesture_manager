@@ -1,6 +1,7 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
+import 'package:dde_gesture_manager/models/solution.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/dde_data_table.dart';
@@ -13,6 +14,10 @@ class GestureEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var layoutProvider = context.watch<ContentLayoutProvider>();
+    var solutionProvider = context.watch<SolutionProvider>();
+    solutionProvider.name.sout();
+    solutionProvider.gestures.sout();
+
     return Flexible(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -22,7 +27,7 @@ class GestureEditor extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
@@ -40,6 +45,13 @@ class GestureEditor extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Text(
+                      LocaleKeys.gesture_editor_label,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).tr(),
                     Visibility(
                       visible: layoutProvider.marketOpened == false,
                       child: DButton(
@@ -52,6 +64,7 @@ class GestureEditor extends StatelessWidget {
                     ),
                   ],
                 ),
+                Container(height: 10),
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
@@ -72,6 +85,7 @@ class GestureEditor extends StatelessWidget {
                           child: ConstrainedBox(
                             constraints: BoxConstraints(minWidth: constraints.maxWidth),
                             child: DDataTable(
+                              headerBackgroundColor: context.t.dialogBackgroundColor,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(defaultBorderRadius),
                                 border: Border.all(
@@ -79,71 +93,76 @@ class GestureEditor extends StatelessWidget {
                                   color: context.t.dividerColor,
                                 ),
                               ),
+                              dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+                                if (states.contains(MaterialState.hovered))
+                                  return Colors.blue;
+                                return null;
+                              }),
                               columns: [
-                                DDataColumn(label: Text('gesture')),
-                                DDataColumn(label: Text('direction')),
-                                DDataColumn(label: Text('fingers')),
-                                DDataColumn(label: Text('type')),
-                                DDataColumn(label: Text('command')),
-                                DDataColumn(label: Text('remark')),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr())),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr())),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr())),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr())),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
                               ],
                               rows: [
                                 DDataRow(
                                   cells: [
-                                    DDataCell(Text('swipe')),
-                                    DDataCell(Text('right')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_right).tr()),
                                     DDataCell(Text('3')),
-                                    DDataCell(Text('shortcut')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
                                     DDataCell(Text('ctrl+w')),
                                     DDataCell(Text('close current page.')),
                                   ],
                                 ),
                                 DDataRow(
                                   cells: [
-                                    DDataCell(Text('swipe')),
-                                    DDataCell(Text('left')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_left).tr()),
                                     DDataCell(Text('3')),
-                                    DDataCell(Text('shortcut')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
                                     DDataCell(Text('ctrl+alt+t')),
                                     DDataCell(Text('reopen last closed page.')),
                                   ],
                                 ),
                                 DDataRow(
                                   cells: [
-                                    DDataCell(Text('swipe')),
-                                    DDataCell(Text('left')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_left).tr()),
                                     DDataCell(Text('3')),
-                                    DDataCell(Text('shortcut')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
                                     DDataCell(Text('ctrl+alt+t')),
                                     DDataCell(Text('reopen last closed page.')),
                                   ],
                                 ),
                                 DDataRow(
                                   cells: [
-                                    DDataCell(Text('swipe')),
-                                    DDataCell(Text('left')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_left).tr()),
                                     DDataCell(Text('3')),
-                                    DDataCell(Text('shortcut')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
                                     DDataCell(Text('ctrl+alt+t')),
                                     DDataCell(Text('reopen last closed page.')),
                                   ],
                                 ),
                                 DDataRow(
                                   cells: [
-                                    DDataCell(Text('swipe')),
-                                    DDataCell(Text('left')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_left).tr()),
                                     DDataCell(Text('3')),
-                                    DDataCell(Text('shortcut')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_types_shortcut).tr()),
                                     DDataCell(Text('ctrl+alt+t')),
                                     DDataCell(Text('reopen last closed page.')),
                                   ],
                                 ),
                                 DDataRow(
                                   cells: [
-                                    DDataCell(Text('swipe')),
-                                    DDataCell(Text('down')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_gestures_swipe).tr()),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_directions_down).tr()),
                                     DDataCell(Text('3')),
-                                    DDataCell(Text('commandline')),
+                                    DDataCell(Text(LocaleKeys.gesture_editor_types_commandline).tr()),
                                     DDataCell(Text(
                                         'dbus-send --type=method_call --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle')),
                                     DDataCell(TextButton(
@@ -162,7 +181,7 @@ class GestureEditor extends StatelessWidget {
                 ),
                 Container(height: 10),
                 Container(
-                  height: 400,
+                  height: 300,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(defaultBorderRadius),
                     border: Border.all(
