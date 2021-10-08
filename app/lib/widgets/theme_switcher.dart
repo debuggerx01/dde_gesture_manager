@@ -1,9 +1,9 @@
+import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/generated/locale_keys.g.dart';
 import 'package:dde_gesture_manager/models/configs.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dde_gesture_manager/extensions.dart';
 
 class ThemeSwitcher extends StatelessWidget {
   const ThemeSwitcher({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class ThemeSwitcher extends StatelessWidget {
         ],
       ),
       padding: EdgeInsets.zero,
-      tooltip: LocaleKeys.theme_label.tr(),
+      tooltip: LocaleKeys.theme_tip.tr(),
       itemBuilder: (BuildContext context) => [
         PopupMenuItem<BrightnessMode>(
           child: ListTile(

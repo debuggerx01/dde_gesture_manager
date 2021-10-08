@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/constants/supported_locales.dart';
 import 'package:dde_gesture_manager/extensions.dart';
@@ -6,7 +7,6 @@ import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 import 'package:window_manager/window_manager.dart';
 
 class LanguageSwitcher extends StatelessWidget {
@@ -18,6 +18,7 @@ class LanguageSwitcher extends StatelessWidget {
     var _supportedLocale = supportedLocales.firstWhereOrNull((element) => element == _locale);
 
     return PopupMenuButton<SupportedLocale>(
+    tooltip: LocaleKeys.language_tip.tr(),
       child: Row(
         children: [
           Icon(Icons.language_outlined, size: 20),

@@ -1,5 +1,7 @@
 class ProviderModel {
-  const ProviderModel();
+  const ProviderModel({this.copyable = false});
+
+  final bool copyable;
 }
 
 class ProviderModelProp {

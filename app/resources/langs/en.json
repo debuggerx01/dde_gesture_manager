@@ -3,7 +3,8 @@
     "label": "Theme",
     "dark": "Dark",
     "light": "Light",
-    "system": "System"
+    "system": "System",
+    "tip": "Choose a theme"
   },
   "version": {
     "current": "current version",
@@ -11,6 +12,51 @@
   },
   "app_name": "Gesture Manager for DDE",
   "language": {
-    "label": "Language"
+    "label": "Language",
+    "tip": "Choose a language"
+  },
+  "help": {
+    "label": "Help",
+    "tip": "Display help documentation"
+  },
+  "market": {
+    "title": "Solution market"
+  },
+  "local_manager": {
+    "title": "Local solution management"
+  },
+  "gesture_editor": {
+    "label": "Gesture program editing",
+    "gesture": "gesture",
+    "direction": "direction",
+    "fingers": "fingers",
+    "type": "type",
+    "command": "command",
+    "remark": "remark",
+    "directions": {
+      "up": "up",
+      "down": "down",
+      "left": "left",
+      "right": "right",
+      "in": "pinch-in",
+      "out": "pinch-out",
+      "none": "/"
+    },
+    "gestures": {
+      "swipe": "swipe",
+      "pinch": "pinch",
+      "tap": "pinch"
+    },
+    "types": {
+      "built_in": "built-in",
+      "commandline": "commandline",
+      "shortcut": "shortcut"
+    }
+  },
+  "operation": {
+    "add": "Add",
+    "delete": "delete",
+    "duplicate": "duplicate",
+    "apply": "apply"
   }
 }

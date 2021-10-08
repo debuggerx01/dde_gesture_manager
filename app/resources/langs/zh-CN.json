@@ -3,7 +3,8 @@
     "label": "主题",
     "dark": "深色",
     "light": "浅色",
-    "system": "跟随系统"
+    "system": "跟随系统",
+    "tip": "选择界面主题"
   },
   "version": {
     "current": "当前版本",
@@ -11,6 +12,51 @@
   },
   "app_name": "DDE手势管理器",
   "language": {
-    "label": "语言"
+    "label": "语言",
+    "tip": "选择语言"
+  },
+  "help": {
+    "label": "帮助",
+    "tip": "显示帮助文档"
+  },
+  "market": {
+    "title": "方案市场"
+  },
+  "local_manager": {
+    "title": "本地方案管理"
+  },
+  "gesture_editor": {
+    "label": "手势方案编辑",
+    "gesture": "手势",
+    "direction": "方向",
+    "fingers": "手指数",
+    "type": "类型",
+    "command": "命令",
+    "remark": "备注",
+    "directions": {
+      "up": "向上",
+      "down": "向下",
+      "left": "向左",
+      "right": "向右",
+      "in": "向内捏合",
+      "out": "向外展开",
+      "none": "/"
+    },
+    "gestures": {
+      "swipe": "划",
+      "pinch": "捏",
+      "tap": "点"
+    },
+    "types": {
+      "built_in": "内置操作",
+      "commandline": "命令行",
+      "shortcut": "快捷键"
+    }
+  },
+  "operation": {
+    "add": "新增",
+    "delete": "删除",
+    "duplicate": "复制",
+    "apply": "应用"
   }
 }

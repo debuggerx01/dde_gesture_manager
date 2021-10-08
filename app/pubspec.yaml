@@ -31,11 +31,12 @@ dependencies:
   gsettings: 0.2.0
   provider: ^6.0.0
   package_info_plus: ^1.0.6
-  window_size:
-    path: 3rd_party/window_size
+  easy_localization: ^3.0.0
+  glass_kit: ^2.0.1
+  rect_getter: ^1.0.0
+  path_provider: ^2.0.5
   xdg_directories_web:
     path: 3rd_party/xdg_directories_web
-  easy_localization: ^3.0.0
 
 dev_dependencies:
   flutter_test:
