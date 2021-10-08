@@ -30,7 +30,9 @@ class GestureEditor extends StatelessWidget {
               Center(
                 child: Text('${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(gesture.gesture)}').tr(),
               ),
-              Text('${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(gesture.direction)}').tr(),
+              Center(
+                  child: Text('${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(gesture.direction)}')
+                      .tr()),
               Center(
                 child: Text('${gesture.fingers}'),
               ),
@@ -126,15 +128,15 @@ class GestureEditor extends StatelessWidget {
                                 ),
                               ),
                               dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-                                if (states.contains(MaterialState.hovered)) return Colors.grey;
-                                if (states.contains(MaterialState.selected)) return Colors.green;
+                                if (states.contains(MaterialState.hovered)) return context.t.dialogBackgroundColor;
+                                if (states.contains(MaterialState.selected)) return Colors.blueAccent;
                                 return null;
                               }),
                               columns: [
-                                DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr())),
-                                DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr())),
-                                DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr())),
-                                DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr())),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr()), center: true),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr()), center: true),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr()), center: true),
+                                DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr()), center: true),
                                 DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
                                 DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
                               ],

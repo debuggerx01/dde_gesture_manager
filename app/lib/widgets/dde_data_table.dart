@@ -30,6 +30,7 @@ class DDataColumn {
     this.tooltip,
     this.numeric = false,
     this.onSort,
+    this.center = false,
   }) : assert(label != null);
 
   /// The column heading.
@@ -66,6 +67,8 @@ class DDataColumn {
   final DataColumnSortCallback? onSort;
 
   bool get _debugInteractive => onSort != null;
+
+  final bool center;
 }
 
 /// Row configuration and cell data for a [DataTable].
@@ -735,68 +738,6 @@ class _DDataTableState extends State<DDataTable> {
         widget.rows.any((DDataRow row) => row._debugInteractive);
   }
 
-  void _handleSelectAll(bool? checked, bool someChecked) {
-    // If some checkboxes are checked, all checkboxes are selected. Otherwise,
-    // use the new checked value but default to false if it's null.
-    final bool effectiveChecked = someChecked || (checked ?? false);
-    if (widget.onSelectAll != null) {
-      widget.onSelectAll!(effectiveChecked);
-    } else {
-      for (final DDataRow row in widget.rows) {
-        if (row.onSelectChanged != null && row.selected != effectiveChecked) row.onSelectChanged!(effectiveChecked);
-      }
-    }
-  }
-
-  Widget _buildCheckbox({
-    required BuildContext context,
-    required bool? checked,
-    required VoidCallback? onRowTap,
-    required ValueChanged<bool?>? onCheckboxChanged,
-    required MaterialStateProperty<Color?>? overlayColor,
-    required bool tristate,
-  }) {
-    final ThemeData themeData = Theme.of(context);
-    final double effectiveHorizontalMargin =
-        widget.horizontalMargin ?? themeData.dataTableTheme.horizontalMargin ?? DDataTable._horizontalMargin;
-    final double effectiveCheckboxHorizontalMarginStart = widget.checkboxHorizontalMargin ??
-        themeData.dataTableTheme.checkboxHorizontalMargin ??
-        effectiveHorizontalMargin;
-    final double effectiveCheckboxHorizontalMarginEnd = widget.checkboxHorizontalMargin ??
-        themeData.dataTableTheme.checkboxHorizontalMargin ??
-        effectiveHorizontalMargin / 2.0;
-    Widget contents = Semantics(
-      container: true,
-      child: Padding(
-        padding: EdgeInsetsDirectional.only(
-          start: effectiveCheckboxHorizontalMarginStart,
-          end: effectiveCheckboxHorizontalMarginEnd,
-        ),
-        child: Center(
-          child: Checkbox(
-            // TODO(per): Remove when Checkbox has theme, https://github.com/flutter/flutter/issues/53420.
-            activeColor: themeData.colorScheme.primary,
-            checkColor: themeData.colorScheme.onPrimary,
-            value: checked,
-            onChanged: onCheckboxChanged,
-            tristate: tristate,
-          ),
-        ),
-      ),
-    );
-    if (onRowTap != null) {
-      contents = TableRowInkWell(
-        onTap: onRowTap,
-        overlayColor: overlayColor,
-        child: contents,
-      );
-    }
-    return TableCell(
-      verticalAlignment: TableCellVerticalAlignment.fill,
-      child: contents,
-    );
-  }
-
   Widget _buildHeadingCell({
     required BuildContext context,
     required EdgeInsetsGeometry padding,
@@ -806,11 +747,13 @@ class _DDataTableState extends State<DDataTable> {
     required VoidCallback? onSort,
     required bool sorted,
     required bool ascending,
+    required bool center,
     required MaterialStateProperty<Color?>? overlayColor,
   }) {
     final ThemeData themeData = Theme.of(context);
     label = Row(
       textDirection: numeric ? TextDirection.rtl : null,
+      mainAxisAlignment: center ? MainAxisAlignment.spaceAround : MainAxisAlignment.start,
       children: <Widget>[
         label,
         if (onSort != null) ...<Widget>[
@@ -935,24 +878,13 @@ class _DDataTableState extends State<DDataTable> {
     );
     final bool anyRowSelectable = widget.rows.any((DDataRow row) => row.onSelectChanged != null);
     final bool displayCheckboxColumn = widget.showCheckboxColumn && anyRowSelectable;
-    final Iterable<DDataRow> rowsWithCheckbox =
-        displayCheckboxColumn ? widget.rows.where((DDataRow row) => row.onSelectChanged != null) : <DDataRow>[];
-    final Iterable<DDataRow> rowsChecked = rowsWithCheckbox.where((DDataRow row) => row.selected);
-    final bool allChecked = displayCheckboxColumn && rowsChecked.length == rowsWithCheckbox.length;
-    final bool anyChecked = displayCheckboxColumn && rowsChecked.isNotEmpty;
-    final bool someChecked = anyChecked && !allChecked;
     final double effectiveHorizontalMargin =
         widget.horizontalMargin ?? theme.dataTableTheme.horizontalMargin ?? DDataTable._horizontalMargin;
-    final double effectiveCheckboxHorizontalMarginStart =
-        widget.checkboxHorizontalMargin ?? theme.dataTableTheme.checkboxHorizontalMargin ?? effectiveHorizontalMargin;
-    final double effectiveCheckboxHorizontalMarginEnd = widget.checkboxHorizontalMargin ??
-        theme.dataTableTheme.checkboxHorizontalMargin ??
-        effectiveHorizontalMargin / 2.0;
     final double effectiveColumnSpacing =
         widget.columnSpacing ?? theme.dataTableTheme.columnSpacing ?? DDataTable._columnSpacing;
 
     final List<TableColumnWidth> tableColumns = List<TableColumnWidth>.filled(
-        widget.columns.length + (displayCheckboxColumn ? 1 : 0), const _NullTableColumnWidth());
+        widget.columns.length, const _NullTableColumnWidth());
     final List<TableRow> tableRows = List<TableRow>.generate(
       widget.rows.length + 1, // the +1 is for the header row
       (int index) {
@@ -989,34 +921,6 @@ class _DDataTableState extends State<DDataTable> {
     int rowIndex;
 
     int displayColumnIndex = 0;
-    if (displayCheckboxColumn) {
-      tableColumns[0] = FixedColumnWidth(0);
-      tableRows[0].children![0] = RectGetter.defaultKey(child: Container());
-      // tableColumns[0] = FixedColumnWidth(
-      //     effectiveCheckboxHorizontalMarginStart + Checkbox.width + effectiveCheckboxHorizontalMarginEnd);
-      // tableRows[0].children![0] = _buildCheckbox(
-      //   context: context,
-      //   checked: someChecked ? null : allChecked,
-      //   onRowTap: null,
-      //   onCheckboxChanged: (bool? checked) => _handleSelectAll(checked, someChecked),
-      //   overlayColor: null,
-      //   tristate: true,
-      // );
-      rowIndex = 1;
-      for (final DDataRow row in widget.rows) {
-        // tableRows[rowIndex].children![0] = _buildCheckbox(
-        //   context: context,
-        //   checked: row.selected,
-        //   onRowTap: row.onSelectChanged == null ? null : () => row.onSelectChanged?.call(!row.selected),
-        //   onCheckboxChanged: row.onSelectChanged,
-        //   overlayColor: row.color ?? effectiveDataRowColor,
-        //   tristate: false,
-        // );
-        tableRows[rowIndex].children![0] = Container();
-        rowIndex += 1;
-      }
-      displayColumnIndex += 1;
-    }
 
     for (int dataColumnIndex = 0; dataColumnIndex < widget.columns.length; dataColumnIndex += 1) {
       final DDataColumn column = widget.columns[dataColumnIndex];
@@ -1060,6 +964,7 @@ class _DDataTableState extends State<DDataTable> {
         sorted: dataColumnIndex == widget.sortColumnIndex,
         ascending: widget.sortAscending,
         overlayColor: effectiveHeadingRowColor,
+        center: column.center,
       );
       rowIndex = 1;
       for (final DDataRow row in widget.rows) {
@@ -1125,11 +1030,11 @@ class _DDataTableState extends State<DDataTable> {
           fit: StackFit.passthrough,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: _headersRect?.first.height ?? 0),
+              padding: EdgeInsets.only(top: _headersRect?.last.height ?? 0),
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Transform.translate(
-                  offset: Offset(0, -(_headersRect?.first.height ?? 0)),
+                  offset: Offset(0, -(_headersRect?.last.height ?? 0)),
                   child: Table(
                     columnWidths: tableColumns.asMap(),
                     children: tableRows,

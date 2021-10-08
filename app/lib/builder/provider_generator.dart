@@ -37,6 +37,7 @@ class ProviderGenerator extends GeneratorForAnnotation<ProviderModel> {
       _genImports(className, needImports),
       _genClassDefine(element.displayName),
       _genNamedConstructors(element.constructors, element.displayName),
+      _genCopyFunc(element.displayName, fields, annotation.read('copyable').boolValue),
       _genSetPropsFunc(fields),
     ].whereNotNull();
   }
@@ -69,6 +70,17 @@ String? _genNamedConstructors(List<ConstructorElement> constructors, String disp
     });
   }
   return _constructors.length > 0 ? _constructors.join('\n') : null;
+}
+
+String? _genCopyFunc(String displayName, List<AnnotationField> fields, bool copyable) {
+  if (!copyable) return null;
+  return '''
+  void copyFrom(${displayName} other) {
+    bool changed = false;    
+    ${fields.map((f) => 'if (other.${f.name}.diff(this.${f.name})) {this.${f.name} = other.${f.name}; changed = true; }').join('\n')}
+    if (changed) notifyListeners();
+  }
+  ''';
 }
 
 String _genSetPropsFunc(List<AnnotationField> fields) => '''

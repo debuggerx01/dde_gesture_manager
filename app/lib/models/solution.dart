@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 
-@ProviderModel()
+@ProviderModel(copyable: true)
 class Solution {
   @ProviderModelProp()
   String? name;
@@ -45,7 +45,7 @@ enum GestureType {
   shortcut,
 }
 
-@ProviderModel()
+@ProviderModel(copyable: true)
 class GestureProp {
   @ProviderModelProp()
   Gesture? gesture;
