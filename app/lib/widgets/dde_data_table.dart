@@ -755,7 +755,7 @@ class _DDataTableState extends State<DDataTable> {
       textDirection: numeric ? TextDirection.rtl : null,
       mainAxisAlignment: center ? MainAxisAlignment.spaceAround : MainAxisAlignment.start,
       children: <Widget>[
-        label,
+        Flexible(child: label),
         if (onSort != null) ...<Widget>[
           _SortArrow(
             visible: sorted,

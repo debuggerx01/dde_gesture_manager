@@ -21,7 +21,6 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryLinux> {
     var _supportDirectory = await getApplicationSupportDirectory();
     var directory = Directory(join(_supportDirectory.path, 'schemes'));
     if (!directory.existsSync()) directory.createSync();
-    directory.path.sout();
     return directory
         .list()
         .map<LocalSchemeEntryLinux?>((f) {

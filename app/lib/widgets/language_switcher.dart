@@ -44,7 +44,6 @@ class LanguageSwitcher extends StatelessWidget {
               ),
               onTap: () {
                 EasyLocalization.of(context)?.setLocale(locale).then((_) {
-                  context.locale.sout();
                   var localeMap = Translations(CodegenLoader.mapLocales[context.locale.toString()]!);
                   if (!kIsWeb) WindowManager.instance.setTitle(localeMap.get(LocaleKeys.app_name)!);
                   var localSchemesProvider = context.read<LocalSchemesProvider>();
