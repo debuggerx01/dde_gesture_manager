@@ -13,7 +13,7 @@ export 'local_schemes.dart';
 @ProviderModel()
 class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryLinux> {
   LocalSchemes() {
-    schemeEntries.then((value) => schemes = value);
+    schemeEntries.then((value) => schemes = [LocalSchemeEntryLinux.systemDefault(), ...value]);
   }
 
   @override
@@ -59,6 +59,13 @@ class LocalSchemeEntryLinux implements LocalSchemeEntry {
     required this.scheme,
     required this.lastModifyTime,
   });
+
+  LocalSchemeEntryLinux.systemDefault()
+      : this.path = '',
+        this.scheme = Scheme.systemDefault(),
+
+        /// max value of DateTime ![Time Values and Time Range](https://262.ecma-international.org/11.0/#sec-time-values-and-time-range)
+        this.lastModifyTime = DateTime.fromMillisecondsSinceEpoch(8640000000000000);
 
   @override
   save() {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
+import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 
 @ProviderModel(copyable: true)
@@ -20,6 +21,12 @@ class Scheme {
     name = scheme['name'];
     description = scheme['desc'];
     gestures = (scheme['gestures'] as List? ?? []).map<GestureProp>((ele) => GestureProp.parse(ele)).toList();
+  }
+
+  Scheme.systemDefault() {
+    this.name = LocaleKeys.local_manager_default_scheme_label.tr();
+    this.description = LocaleKeys.local_manager_default_scheme_description.tr();
+    this.gestures = [];
   }
 }
 

@@ -39,7 +39,7 @@ class _LocalManagerState extends State<LocalManager> {
   @override
   Widget build(BuildContext context) {
     var isOpen = context.watch<ContentLayoutProvider>().localManagerOpened == true;
-    var localschemes = context.watch<LocalSchemesProvider>().schemes ?? [];
+    var localSchemes = context.watch<LocalSchemesProvider>().schemes ?? [];
     return AnimatedContainer(
       duration: mediumDuration,
       curve: Curves.easeInOut,
@@ -91,7 +91,7 @@ class _LocalManagerState extends State<LocalManager> {
                           controller: _scrollController,
                           itemBuilder: (context, index) => GestureDetector(
                             onDoubleTap: () {
-                              context.read<SchemeProvider>().copyFrom(localschemes[index].scheme);
+                              context.read<SchemeProvider>().copyFrom(localSchemes[index].scheme);
                               setState(() {
                                 _selectedIndex = index;
                               });
@@ -115,7 +115,7 @@ class _LocalManagerState extends State<LocalManager> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(localschemes[index].scheme.name ?? ''),
+                                      Text(localSchemes[index].scheme.name ?? ''),
                                       Text('456'),
                                     ],
                                   ),
@@ -123,7 +123,7 @@ class _LocalManagerState extends State<LocalManager> {
                               ),
                             ),
                           ),
-                          itemCount: localschemes.length,
+                          itemCount: localSchemes.length,
                         ),
                       ),
                       Container(

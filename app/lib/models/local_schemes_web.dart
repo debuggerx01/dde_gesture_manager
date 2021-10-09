@@ -1,17 +1,18 @@
 import 'dart:convert';
-
-import 'package:dde_gesture_manager/builder/provider_annotation.dart';
-import 'package:dde_gesture_manager/models/scheme.dart';
-import 'package:dde_gesture_manager/extensions.dart';
 import 'dart:html';
 
+import 'package:dde_gesture_manager/builder/provider_annotation.dart';
+import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/models/scheme.dart';
+
 import 'local_schemes.dart';
+
 export 'local_schemes.dart';
 
 @ProviderModel()
 class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryWeb> {
   LocalSchemes() {
-    schemeEntries.then((value) => schemes = value);
+    schemeEntries.then((value) => schemes = [LocalSchemeEntryWeb.systemDefault(), ...value]);
   }
 
   @override
@@ -58,6 +59,13 @@ class LocalSchemeEntryWeb implements LocalSchemeEntry {
     required this.scheme,
     required this.lastModifyTime,
   });
+
+  LocalSchemeEntryWeb.systemDefault()
+      : this.path = '',
+        this.scheme = Scheme.systemDefault(),
+
+        /// max value of DateTime ![Time Values and Time Range](https://262.ecma-international.org/11.0/#sec-time-values-and-time-range)
+        this.lastModifyTime = DateTime.fromMillisecondsSinceEpoch(8640000000000000);
 
   @override
   save() {

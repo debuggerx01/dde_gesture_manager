@@ -23,7 +23,11 @@
     "title": "Scheme market"
   },
   "local_manager": {
-    "title": "Local scheme management"
+    "title": "Local scheme management",
+    "default_scheme": {
+      "label": "System default scheme",
+      "description": "System default gesture scheme, cannot be modified. (Secretly telling you that there is no actual content in this scheme, just when applying the scheme, it is achieved by deleting a custom configuration scheme."
+    }
   },
   "gesture_editor": {
     "label": "Gesture scheme editing",
