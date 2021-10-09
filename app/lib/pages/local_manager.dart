@@ -1,8 +1,8 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
-import 'package:dde_gesture_manager/models/local_solutions_provider.dart';
-import 'package:dde_gesture_manager/models/solution.provider.dart';
+import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
+import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,7 +39,7 @@ class _LocalManagerState extends State<LocalManager> {
   @override
   Widget build(BuildContext context) {
     var isOpen = context.watch<ContentLayoutProvider>().localManagerOpened == true;
-    var localSolutions = context.watch<LocalSolutionsProvider>().solutions ?? [];
+    var localschemes = context.watch<LocalSchemesProvider>().schemes ?? [];
     return AnimatedContainer(
       duration: mediumDuration,
       curve: Curves.easeInOut,
@@ -91,7 +91,7 @@ class _LocalManagerState extends State<LocalManager> {
                           controller: _scrollController,
                           itemBuilder: (context, index) => GestureDetector(
                             onDoubleTap: () {
-                              context.read<SolutionProvider>().copyFrom(localSolutions[index].solution);
+                              context.read<SchemeProvider>().copyFrom(localschemes[index].scheme);
                               setState(() {
                                 _selectedIndex = index;
                               });
@@ -115,7 +115,7 @@ class _LocalManagerState extends State<LocalManager> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(localSolutions[index].solution.name ?? ''),
+                                      Text(localschemes[index].scheme.name ?? ''),
                                       Text('456'),
                                     ],
                                   ),
@@ -123,7 +123,7 @@ class _LocalManagerState extends State<LocalManager> {
                               ),
                             ),
                           ),
-                          itemCount: localSolutions.length,
+                          itemCount: localschemes.length,
                         ),
                       ),
                       Container(

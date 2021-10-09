@@ -20,13 +20,13 @@
     "tip": "Display help documentation"
   },
   "market": {
-    "title": "Solution market"
+    "title": "Scheme market"
   },
   "local_manager": {
-    "title": "Local solution management"
+    "title": "Local scheme management"
   },
   "gesture_editor": {
-    "label": "Gesture program editing",
+    "label": "Gesture scheme editing",
     "gesture": "gesture",
     "direction": "direction",
     "fingers": "fingers",

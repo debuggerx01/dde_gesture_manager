@@ -1,8 +1,8 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
-import 'package:dde_gesture_manager/models/solution.dart';
-import 'package:dde_gesture_manager/models/solution.provider.dart';
+import 'package:dde_gesture_manager/models/scheme.dart';
+import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/dde_data_table.dart';
@@ -50,7 +50,7 @@ class GestureEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var layoutProvider = context.watch<ContentLayoutProvider>();
-    var solutionProvider = context.watch<SolutionProvider>();
+    var schemeProvider = context.watch<SchemeProvider>();
     return Flexible(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -140,7 +140,7 @@ class GestureEditor extends StatelessWidget {
                                 DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
                                 DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
                               ],
-                              rows: _buildDataRow(solutionProvider.gestures, context),
+                              rows: _buildDataRow(schemeProvider.gestures, context),
                             ),
                           ),
                         ),

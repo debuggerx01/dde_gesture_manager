@@ -1,5 +1,5 @@
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
-import 'package:dde_gesture_manager/models/solution.dart';
+import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';

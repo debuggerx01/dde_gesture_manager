@@ -1,6 +1,6 @@
 import 'package:dde_gesture_manager/extensions.dart';
-import 'package:dde_gesture_manager/models/local_solutions_provider.dart';
-import 'package:dde_gesture_manager/models/solution.provider.dart';
+import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
+import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/pages/content.dart';
 import 'package:dde_gesture_manager/pages/footer.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => SolutionProvider.parse('''
+          ChangeNotifierProvider(create: (context) => SchemeProvider.parse('''
           {
             "name": "test",
             "desc": "some desc",
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           }
           ''')),
           ChangeNotifierProvider(create: (context) => GesturePropProvider.empty()),
-          ChangeNotifierProvider(create: (context) => LocalSolutionsProvider(),lazy: false),
+          ChangeNotifierProvider(create: (context) => LocalSchemesProvider(),lazy: false),
         ],
         child: Column(
           mainAxisSize: MainAxisSize.max,

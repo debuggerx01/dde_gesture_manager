@@ -2,61 +2,61 @@ import 'dart:io';
 
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 import 'package:dde_gesture_manager/extensions.dart';
-import 'package:dde_gesture_manager/models/solution.dart';
+import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 
-import 'local_solutions.dart';
+import 'local_schemes.dart';
 
-export 'local_solutions.dart';
+export 'local_schemes.dart';
 
 @ProviderModel()
-class LocalSolutions implements LocalSolutionsInterface<LocalSolutionEntryLinux> {
-  LocalSolutions() {
-    solutionEntries.then((value) => solutions = value);
+class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryLinux> {
+  LocalSchemes() {
+    schemeEntries.then((value) => schemes = value);
   }
 
   @override
-  Future<List<LocalSolutionEntryLinux>> get solutionEntries async {
+  Future<List<LocalSchemeEntryLinux>> get schemeEntries async {
     var _supportDirectory = await getApplicationSupportDirectory();
-    var directory = Directory(join(_supportDirectory.path, 'solutions'));
+    var directory = Directory(join(_supportDirectory.path, 'schemes'));
     if (!directory.existsSync()) directory.createSync();
     directory.path.sout();
     return directory
         .list()
-        .map<LocalSolutionEntryLinux?>((f) {
-          LocalSolutionEntryLinux? entry;
+        .map<LocalSchemeEntryLinux?>((f) {
+          LocalSchemeEntryLinux? entry;
           try {
             var content = File(f.path).readAsStringSync();
-            entry = LocalSolutionEntryLinux(
-                path: f.path, solution: Solution.parse(content), lastModifyTime: f.statSync().modified);
+            entry = LocalSchemeEntryLinux(
+                path: f.path, scheme: Scheme.parse(content), lastModifyTime: f.statSync().modified);
           } catch (e) {
             e.sout();
           }
           return entry;
         })
         .where((e) => e != null)
-        .cast<LocalSolutionEntryLinux>()
+        .cast<LocalSchemeEntryLinux>()
         .toList();
   }
 
   @ProviderModelProp()
-  List<LocalSolutionEntry>? solutions;
+  List<LocalSchemeEntry>? schemes;
 }
 
-class LocalSolutionEntryLinux implements LocalSolutionEntry {
+class LocalSchemeEntryLinux implements LocalSchemeEntry {
   @override
   String path;
 
   @override
-  Solution solution;
+  Scheme scheme;
 
   @override
   DateTime lastModifyTime;
 
-  LocalSolutionEntryLinux({
+  LocalSchemeEntryLinux({
     required this.path,
-    required this.solution,
+    required this.scheme,
     required this.lastModifyTime,
   });
 
