@@ -3,6 +3,7 @@ import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
+import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/dde_data_table.dart';
@@ -12,40 +13,71 @@ import 'package:flutter/material.dart';
 class GestureEditor extends StatelessWidget {
   const GestureEditor({Key? key}) : super(key: key);
 
-  List<DDataRow> _buildDataRow(List<GestureProp>? gestures, BuildContext context) => (gestures ?? [])
-      .map((gesture) => DDataRow(
-            onSelectChanged: (selected) {
-              if (selected == true)
-                context.read<GesturePropProvider>().setProps(
-                      gesture: gesture.gesture,
-                      direction: gesture.direction,
-                      fingers: gesture.fingers,
-                      type: gesture.type,
-                      command: gesture.command,
-                      remark: gesture.remark,
-                    );
-            },
-            selected: context.watch<GesturePropProvider>() == gesture,
-            cells: [
-              Center(
-                child: Text('${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(gesture.gesture)}').tr(),
+  List<DDataRow> _buildDataRow(List<GestureProp>? gestures, BuildContext context) => (gestures ?? []).map((gesture) {
+        bool selected = context.watch<GesturePropProvider>() == gesture;
+        return DDataRow(
+          onSelectChanged: (selected) {
+            if (selected == true)
+              context.read<GesturePropProvider>().setProps(
+                    gesture: gesture.gesture,
+                    direction: gesture.direction,
+                    fingers: gesture.fingers,
+                    type: gesture.type,
+                    command: gesture.command,
+                    remark: gesture.remark,
+                  );
+          },
+          selected: selected,
+          cells: [
+            Center(
+              child: Text(
+                '${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(gesture.gesture)}',
+                style: TextStyle(
+                  color: selected ? Colors.white : null,
+                ),
+              ).tr(),
+            ),
+            Center(
+                child: Text(
+              '${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(gesture.direction)}',
+              style: TextStyle(
+                color: selected ? Colors.white : null,
               ),
-              Center(
-                  child: Text('${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(gesture.direction)}')
-                      .tr()),
-              Center(
-                child: Text('${gesture.fingers}'),
+            ).tr()),
+            Center(
+              child: Text(
+                '${gesture.fingers}',
+                style: TextStyle(
+                  color: selected ? Colors.white : null,
+                ),
               ),
-              Center(child: Text('${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(gesture.type)}').tr()),
-              Text(gesture.command ?? ''),
-              Text(gesture.remark ?? ''),
-            ]
-                .map(
-                  (ele) => DDataCell(ele),
-                )
-                .toList(),
-          ))
-      .toList();
+            ),
+            Center(
+                child: Text(
+              '${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(gesture.type)}',
+              style: TextStyle(
+                color: selected ? Colors.white : null,
+              ),
+            ).tr()),
+            Text(
+              gesture.command ?? '',
+              style: TextStyle(
+                color: selected ? Colors.white : null,
+              ),
+            ),
+            Text(
+              gesture.remark ?? '',
+              style: TextStyle(
+                color: selected ? Colors.white : null,
+              ),
+            ),
+          ]
+              .map(
+                (ele) => DDataCell(ele),
+              )
+              .toList(),
+        );
+      }).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +161,8 @@ class GestureEditor extends StatelessWidget {
                               ),
                               dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered)) return context.t.dialogBackgroundColor;
-                                if (states.contains(MaterialState.selected)) return Colors.blueAccent;
+                                if (states.contains(MaterialState.selected))
+                                  return context.read<SettingsProvider>().currentActiveColor;
                                 return null;
                               }),
                               columns: [

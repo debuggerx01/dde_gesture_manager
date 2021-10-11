@@ -96,7 +96,16 @@ class H {
         'shortcut': GestureType.shortcut,
         'commandline': GestureType.commandline,
       }[typeName] ??
-          GestureType.built_in;
+      GestureType.built_in;
+
+  static Color? parseQtActiveColor(String? inp) {
+    if (inp == null) return null;
+    var list = inp.split(',');
+    if (list.length != 4) return null;
+    var rgba = list.map<int>((e) => int.parse(e) ~/ 257).toList();
+    rgba.sout();
+    return Color.fromARGB(rgba[3], rgba[0], rgba[1], rgba[2]);
+  }
 }
 
 class PreferredPanelsStatus {

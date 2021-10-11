@@ -3,6 +3,7 @@ import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
+import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +33,7 @@ class _LocalManagerState extends State<LocalManager> {
   Color _getItemBackgroundColor(int index) {
     Color _color = index % 2 == 0 ? context.t.scaffoldBackgroundColor : context.t.backgroundColor;
     if (index == _hoveringIndex) _color = context.t.scaffoldBackgroundColor;
-    if (index == _selectedIndex) _color = Colors.blueAccent;
+    if (index == _selectedIndex) _color = context.read<SettingsProvider>().currentActiveColor;
     return _color;
   }
 
@@ -115,8 +116,18 @@ class _LocalManagerState extends State<LocalManager> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(localSchemes[index].scheme.name ?? ''),
-                                      Text('456'),
+                                      Text(
+                                        localSchemes[index].scheme.name ?? '',
+                                        style: TextStyle(
+                                          color: index == _selectedIndex ? Colors.white : null,
+                                        ),
+                                      ),
+                                      Text(
+                                        '456',
+                                        style: TextStyle(
+                                          color: index == _selectedIndex ? Colors.white : null,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
