@@ -21,11 +21,14 @@ class LocalManager extends StatefulWidget {
 class _LocalManagerState extends State<LocalManager> {
   late ScrollController _scrollController;
   int? _hoveringIndex;
-  int? _selectedIndex;
+  late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
+
+    /// todo: load from sp
+    _selectedIndex = 0;
     _scrollController = ScrollController();
   }
 
@@ -83,54 +86,77 @@ class _LocalManagerState extends State<LocalManager> {
                   ],
                 ),
                 Flexible(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemBuilder: (context, index) => GestureDetector(
-                            onDoubleTap: () {
-                              context.read<SchemeProvider>().copyFrom(localSchemes[index].scheme);
-                              setState(() {
-                                _selectedIndex = index;
-                              });
-                            },
-                            onTap: () {
-                              setState(() {
-                                _selectedIndex = index;
-                              });
-                            },
-                            child: MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              onEnter: (_) {
-                                setState(() {
-                                  _hoveringIndex = index;
-                                });
-                              },
-                              child: Container(
-                                color: _getItemBackgroundColor(index),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(localSchemes[index].scheme.name ?? ''),
-                                      Text('456'),
-                                    ],
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: .3,
+                                color: context.t.dividerColor,
+                              ),
+                              borderRadius: BorderRadius.circular(defaultBorderRadius),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                              child: ListView.builder(
+                                controller: _scrollController,
+                                itemBuilder: (context, index) => GestureDetector(
+                                  onTap: () {
+                                    context.read<SchemeProvider>().copyFrom(localSchemes[index].scheme);
+                                    setState(() {
+                                      _selectedIndex = index;
+                                    });
+                                  },
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    onEnter: (_) {
+                                      setState(() {
+                                        _hoveringIndex = index;
+                                      });
+                                    },
+                                    child: Container(
+                                      color: _getItemBackgroundColor(index),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 6, right: 12.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(localSchemes[index].scheme.name ?? ''),
+                                            Text('456'),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
+                                itemCount: localSchemes.length,
                               ),
                             ),
                           ),
-                          itemCount: localSchemes.length,
                         ),
-                      ),
-                      Container(
-                        height: 150,
-                        color: Colors.black,
-                      ),
-                    ],
+                        Container(height: 5),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              DButton.add(enabled: true),
+                              DButton.delete(enabled: _selectedIndex > 0),
+                              DButton.duplicate(enabled: _selectedIndex > 0),
+                              DButton.apply(enabled: _selectedIndex > 0),
+                            ]
+                                .map((e) => Padding(
+                                      padding: const EdgeInsets.only(right: 4),
+                                      child: e,
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

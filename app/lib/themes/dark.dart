@@ -18,9 +18,20 @@ var darkTheme = ThemeData.dark().copyWith(
         ),
       ),
   popupMenuTheme: ThemeData.dark().popupMenuTheme.copyWith(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(defaultBorderRadius),
-    ),
-  ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(defaultBorderRadius),
+        ),
+      ),
   dialogBackgroundColor: Color(0xff202020),
+  tooltipTheme: ThemeData.dark().tooltipTheme.copyWith(
+        textStyle: TextStyle(
+          color: Colors.grey,
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Color(0xff282828).withOpacity(.9),
+          border: Border.all(color: Colors.black38),
+        ),
+      ),
 );

@@ -1,4 +1,5 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
+import 'package:dde_gesture_manager/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:glass_kit/glass_kit.dart';
 
@@ -15,6 +16,74 @@ class DButton extends StatefulWidget {
     required this.child,
     this.onTap,
   }) : super(key: key);
+
+  factory DButton.add({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight * .7,
+    width = defaultButtonHeight * .7,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: onTap,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.add, size: 18)),
+            message: LocaleKeys.operation_add.tr(),
+          ));
+
+  factory DButton.delete({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight * .7,
+    width = defaultButtonHeight * .7,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: onTap,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.remove, size: 18)),
+            message: LocaleKeys.operation_delete.tr(),
+          ));
+
+  factory DButton.apply({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight * .7,
+    width = defaultButtonHeight * .7,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: onTap,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.check, size: 18)),
+            message: LocaleKeys.operation_apply.tr(),
+          ));
+
+  factory DButton.duplicate({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight * .7,
+    width = defaultButtonHeight * .7,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: onTap,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.copy_rounded, size: 18)),
+            message: LocaleKeys.operation_duplicate.tr(),
+          ));
 
   @override
   State<DButton> createState() => _DButtonState();

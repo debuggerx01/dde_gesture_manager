@@ -7,6 +7,9 @@ import 'package:dde_gesture_manager/utils/helper.dart';
 @ProviderModel(copyable: true)
 class Scheme {
   @ProviderModelProp()
+  String? id;
+
+  @ProviderModelProp()
   String? name;
 
   @ProviderModelProp()
@@ -18,6 +21,7 @@ class Scheme {
   Scheme.parse(scheme) {
     if (scheme is String) scheme = json.decode(scheme);
     assert(scheme is Map);
+    id = scheme['id'];
     name = scheme['name'];
     description = scheme['desc'];
     gestures = (scheme['gestures'] as List? ?? []).map<GestureProp>((ele) => GestureProp.parse(ele)).toList();
