@@ -158,64 +158,6 @@ class _LocalManagerState extends State<LocalManager> {
                         ),
                       ],
                     ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemBuilder: (context, index) => GestureDetector(
-                            onDoubleTap: () {
-                              context.read<SchemeProvider>().copyFrom(localSchemes[index].scheme);
-                              setState(() {
-                                _selectedIndex = index;
-                              });
-                            },
-                            onTap: () {
-                              setState(() {
-                                _selectedIndex = index;
-                              });
-                            },
-                            child: MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              onEnter: (_) {
-                                setState(() {
-                                  _hoveringIndex = index;
-                                });
-                              },
-                              child: Container(
-                                color: _getItemBackgroundColor(index),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        localSchemes[index].scheme.name ?? '',
-                                        style: TextStyle(
-                                          color: index == _selectedIndex ? Colors.white : null,
-                                        ),
-                                      ),
-                                      Text(
-                                        '456',
-                                        style: TextStyle(
-                                          color: index == _selectedIndex ? Colors.white : null,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          itemCount: localSchemes.length,
-                        ),
-                      ),
-                      Container(
-                        height: 150,
-                        color: Colors.black,
-                      ),
-                    ],
                   ),
                 ),
               ],

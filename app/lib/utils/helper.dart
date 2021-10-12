@@ -103,7 +103,6 @@ class H {
     var list = inp.split(',');
     if (list.length != 4) return null;
     var rgba = list.map<int>((e) => int.parse(e) ~/ 257).toList();
-    rgba.sout();
     return Color.fromARGB(rgba[3], rgba[0], rgba[1], rgba[2]);
   }
 }

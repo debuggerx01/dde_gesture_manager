@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
+import 'package:flutter/material.dart';
 
 @ProviderModel(copyable: true)
 class Scheme {
@@ -75,6 +76,20 @@ class GestureProp {
 
   @ProviderModelProp()
   String? remark;
+
+  @ProviderModelProp()
+  bool get editMode => _editMode;
+
+  set editMode(bool val) {
+    _editMode = val;
+    if (val == false) onEditEnd?.call();
+  }
+
+  VoidCallback? onEditEnd;
+
+  bool _editMode = false;
+
+
 
   @override
   bool operator ==(Object other) =>

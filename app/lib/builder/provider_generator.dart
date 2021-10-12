@@ -22,7 +22,9 @@ class ProviderGenerator extends GeneratorForAnnotation<ProviderModel> {
     List<AnnotationField> fields = [];
     element.fields.forEach((field) {
       var annotation = field.metadata.firstWhereOrNull(
-          (m) => m.computeConstantValue()?.type?.getDisplayString(withNullability: true) == 'ProviderModelProp');
+              (m) => m.computeConstantValue()?.type?.getDisplayString(withNullability: true) == 'ProviderModelProp') ??
+          field.getter?.metadata.firstWhereOrNull(
+              (m) => m.computeConstantValue()?.type?.getDisplayString(withNullability: true) == 'ProviderModelProp');
       if (annotation != null)
         fields.add(
           AnnotationField(
@@ -77,7 +79,7 @@ String? _genCopyFunc(String displayName, List<AnnotationField> fields, bool copy
   return '''
   void copyFrom(${displayName} other) {
     bool changed = false;    
-    ${fields.map((f) => 'if (other.${f.name}.diff(this.${f.name})) {this.${f.name} = other.${f.name}; changed = true; }').join('\n')}
+    ${fields.map((f) => 'if (other.${f.name} != this.${f.name}) {this.${f.name} = other.${f.name}; changed = true; }').join('\n')}
     if (changed) notifyListeners();
   }
   ''';
