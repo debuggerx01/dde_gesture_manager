@@ -167,7 +167,7 @@ List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context)
           }
         },
         selected: selected,
-        cells: editing ? _buildRowCellsEditing(gesture) : _buildRowCellsNormal(selected, gesture),
+        cells: editing ? _buildRowCellsEditing(gesture) : _buildRowCellsNormal(context, selected, gesture),
       );
     }).toList();
 
@@ -180,51 +180,37 @@ List<DDataCell> _buildRowCellsEditing(GestureProp gesture) => [
       TextField(controller: TextEditingController(text: gesture.remark)),
     ].map((e) => DDataCell(e)).toList();
 
-List<DDataCell> _buildRowCellsNormal(bool selected, GestureProp gesture) => [
+List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, GestureProp gesture) => [
       Center(
         child: Text(
           '${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(gesture.gesture)}',
-          style: TextStyle(
-            color: selected ? Colors.white : null,
-          ),
         ).tr(),
       ),
       Center(
           child: Text(
         '${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(gesture.direction)}',
-        style: TextStyle(
-          color: selected ? Colors.white : null,
-        ),
       ).tr()),
       Center(
         child: Text(
           '${gesture.fingers}',
-          style: TextStyle(
-            color: selected ? Colors.white : null,
-          ),
         ),
       ),
       Center(
           child: Text(
         '${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(gesture.type)}',
-        style: TextStyle(
-          color: selected ? Colors.white : null,
-        ),
       ).tr()),
       Text(
         gesture.command ?? '',
-        style: TextStyle(
-          color: selected ? Colors.white : null,
-        ),
       ),
       Text(
         gesture.remark ?? '',
-        style: TextStyle(
-          color: selected ? Colors.white : null,
-        ),
       ),
     ]
         .map(
-          (ele) => DDataCell(ele),
+          (ele) => DDataCell(DefaultTextStyle(
+              style: context.t.textTheme.bodyText2!.copyWith(
+                color: selected ? Colors.white : null,
+              ),
+              child: ele)),
         )
         .toList();

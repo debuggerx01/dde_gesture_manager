@@ -123,12 +123,17 @@ class _LocalManagerState extends State<LocalManager> {
                                       color: _getItemBackgroundColor(index),
                                       child: Padding(
                                         padding: const EdgeInsets.only(left: 6, right: 12.0),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(localSchemes[index].scheme.name ?? ''),
-                                            Text('456'),
-                                          ],
+                                        child: DefaultTextStyle(
+                                          style: context.t.textTheme.bodyText2!.copyWith(
+                                            color: _selectedIndex == index ? Colors.white : null,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(localSchemes[index].scheme.name ?? ''),
+                                              Text('456'),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),

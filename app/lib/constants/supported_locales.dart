@@ -18,5 +18,7 @@ const supportedLocaleNames = {
   SupportedLocale.en: 'English',
 };
 
-Locale getSupportedLocale(SupportedLocale supportedLocale) => supportedLocales[supportedLocale.index];
+Locale transformSupportedLocale(SupportedLocale supportedLocale) => supportedLocales[supportedLocale.index];
 
+SupportedLocale? getSupportedLocale(Locale? locale) =>
+    supportedLocales.contains(locale) ? SupportedLocale.values[supportedLocales.indexOf(locale!)] : null;
