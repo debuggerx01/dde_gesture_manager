@@ -420,6 +420,7 @@ class DDataCell {
 ///  * <https://material.io/design/components/data-tables.html>
 class DDataTable extends StatefulWidget {
   final Color headerBackgroundColor;
+  final ScrollController verticalScrollController;
 
   /// Creates a widget describing a data table.
   ///
@@ -466,6 +467,7 @@ class DDataTable extends StatefulWidget {
     required this.rows,
     this.checkboxHorizontalMargin,
     required this.headerBackgroundColor,
+    required this.verticalScrollController,
   })  : assert(columns != null),
         assert(columns.isNotEmpty),
         assert(sortColumnIndex == null || (sortColumnIndex >= 0 && sortColumnIndex < columns.length)),
@@ -1033,6 +1035,7 @@ class _DDataTableState extends State<DDataTable> {
               padding: EdgeInsets.only(top: _headersRect?.last.height ?? 0),
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
+                controller: widget.verticalScrollController,
                 child: Transform.translate(
                   offset: Offset(0, -(_headersRect?.last.height ?? 0)),
                   child: Table(

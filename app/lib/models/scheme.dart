@@ -4,6 +4,7 @@ import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 @ProviderModel(copyable: true)
 class Scheme {
@@ -29,9 +30,14 @@ class Scheme {
   }
 
   Scheme.systemDefault() {
+    this.id = Uuid.NAMESPACE_NIL;
     this.name = LocaleKeys.local_manager_default_scheme_label.tr();
     this.description = LocaleKeys.local_manager_default_scheme_description.tr();
     this.gestures = [];
+  }
+
+  Scheme.create({this.name, this.description, this.gestures}) {
+    this.id = Uuid().v1();
   }
 }
 
@@ -59,6 +65,9 @@ enum GestureType {
 
 @ProviderModel(copyable: true)
 class GestureProp {
+  @ProviderModelProp()
+  String? id;
+
   @ProviderModelProp()
   Gesture? gesture;
 
@@ -89,25 +98,20 @@ class GestureProp {
 
   bool _editMode = false;
 
-
-
   @override
-  bool operator ==(Object other) =>
-      other is GestureProp &&
-      other.gesture == this.gesture &&
-      other.direction == this.direction &&
-      other.fingers == this.fingers;
+  bool operator ==(Object other) => other is GestureProp && other.id == this.id;
 
   @override
   String toString() {
     return 'GestureProp{gesture: $gesture, direction: $direction, fingers: $fingers, type: $type, command: $command, remark: $remark}';
   }
 
-  GestureProp.empty();
+  GestureProp.empty() : this.id = Uuid.NAMESPACE_NIL;
 
   GestureProp.parse(props) {
     if (props is String) props = json.decode(props);
     assert(props is Map);
+    id = Uuid().v1();
     gesture = H.getGestureByName(props['gesture']);
     direction = H.getGestureDirectionByName(props['direction']);
     fingers = props['fingers'];

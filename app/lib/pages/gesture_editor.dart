@@ -1,3 +1,4 @@
+import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
@@ -10,6 +11,9 @@ import 'package:dde_gesture_manager/widgets/dde_data_table.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+const double _headingRowHeight = 56;
+const double _scrollBarWidth = 14;
+
 class GestureEditor extends StatelessWidget {
   const GestureEditor({Key? key}) : super(key: key);
 
@@ -17,6 +21,9 @@ class GestureEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     var layoutProvider = context.watch<ContentLayoutProvider>();
     var schemeProvider = context.watch<SchemeProvider>();
+    final horizontalCtrl = ScrollController();
+    final verticalCtrl = ScrollController();
+
     return Flexible(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -80,38 +87,60 @@ class GestureEditor extends StatelessWidget {
                       width: double.infinity,
                       clipBehavior: Clip.antiAlias,
                       child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
-                        return Scrollbar(
-                          isAlwaysShown: true,
-                          child: SingleChildScrollView(
-                            primary: true,
-                            scrollDirection: Axis.horizontal,
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(minWidth: constraints.maxWidth),
-                              child: DDataTable(
-                                showCheckboxColumn: true,
-                                headerBackgroundColor: context.t.dialogBackgroundColor,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(defaultBorderRadius),
-                                  border: Border.all(
-                                    width: .2,
-                                    color: context.t.dividerColor,
-                                  ),
+                        return AdaptiveScrollbar(
+                          controller: verticalCtrl,
+                          underColor: Colors.transparent,
+                          sliderDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(_scrollBarWidth / 2),
+                            color: Colors.grey.withOpacity(.4),
+                          ),
+                          sliderActiveDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(_scrollBarWidth / 2),
+                            color: Colors.grey.withOpacity(.6),
+                          ),
+                          position: ScrollbarPosition.right,
+                          underSpacing: EdgeInsets.only(top: _headingRowHeight),
+                          width: _scrollBarWidth,
+                          child: AdaptiveScrollbar(
+                            width: _scrollBarWidth,
+                            underColor: Colors.transparent,
+                            sliderDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(_scrollBarWidth / 2),
+                              color: Colors.grey.withOpacity(.4),
+                            ),
+                            sliderActiveDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(_scrollBarWidth / 2),
+                              color: Colors.grey.withOpacity(.6),
+                            ),
+                            controller: horizontalCtrl,
+                            position: ScrollbarPosition.bottom,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              controller: horizontalCtrl,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                                child: DDataTable(
+                                  showBottomBorder: true,
+                                  headingRowHeight: _headingRowHeight,
+                                  showCheckboxColumn: true,
+                                  headerBackgroundColor: context.t.dialogBackgroundColor,
+                                  verticalScrollController: verticalCtrl,
+                                  dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.hovered)) return context.t.dialogBackgroundColor;
+                                    if (states.contains(MaterialState.selected))
+                                      return context.read<SettingsProvider>().currentActiveColor;
+                                    return null;
+                                  }),
+                                  columns: [
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
+                                  ],
+                                  rows: _buildDataRows(schemeProvider.gestures, context),
                                 ),
-                                dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.hovered)) return context.t.dialogBackgroundColor;
-                                  if (states.contains(MaterialState.selected))
-                                    return context.read<SettingsProvider>().currentActiveColor;
-                                  return null;
-                                }),
-                                columns: [
-                                  DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr()), center: true),
-                                  DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr()), center: true),
-                                  DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr()), center: true),
-                                  DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr()), center: true),
-                                  DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
-                                  DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
-                                ],
-                                rows: _buildDataRows(schemeProvider.gestures, context),
                               ),
                             ),
                           ),
@@ -148,12 +177,7 @@ List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context)
         onSelectChanged: (selected) {
           if (selected == true)
             context.read<GesturePropProvider>().setProps(
-                  gesture: gesture.gesture,
-                  direction: gesture.direction,
-                  fingers: gesture.fingers,
-                  type: gesture.type,
-                  command: gesture.command,
-                  remark: gesture.remark,
+                  id: gesture.id,
                   editMode: false,
                 );
           else if (selected == false) {
@@ -172,15 +196,20 @@ List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context)
     }).toList();
 
 List<DDataCell> _buildRowCellsEditing(GestureProp gesture) => [
-      Text('1'),
-      Text('2'),
-      Text('3'),
-      Text('4'),
+      Center(child: Text('1')),
+      Center(child: Text('2')),
+      Center(child: Text('3')),
+      Center(child: Text('4')),
       TextField(controller: TextEditingController(text: gesture.command)),
       TextField(controller: TextEditingController(text: gesture.remark)),
     ].map((e) => DDataCell(e)).toList();
 
 List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, GestureProp gesture) => [
+      Center(
+        child: Text(
+          '${gesture.fingers}',
+        ),
+      ),
       Center(
         child: Text(
           '${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(gesture.gesture)}',
@@ -190,11 +219,6 @@ List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, Gestur
           child: Text(
         '${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(gesture.direction)}',
       ).tr()),
-      Center(
-        child: Text(
-          '${gesture.fingers}',
-        ),
-      ),
       Center(
           child: Text(
         '${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(gesture.type)}',
