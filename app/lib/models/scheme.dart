@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/extensions/compare_extension.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
-import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+
+typedef OnEditEnd(GestureProp prop);
 
 @ProviderModel(copyable: true)
 class Scheme {
@@ -26,7 +28,7 @@ class Scheme {
     id = scheme['id'];
     name = scheme['name'];
     description = scheme['desc'];
-    gestures = (scheme['gestures'] as List? ?? []).map<GestureProp>((ele) => GestureProp.parse(ele)).toList();
+    gestures = (scheme['gestures'] as List? ?? []).map<GestureProp>((ele) => GestureProp.parse(ele)).toList()..sort();
   }
 
   Scheme.systemDefault() {
@@ -42,8 +44,8 @@ class Scheme {
 }
 
 enum Gesture {
-  swipe,
   tap,
+  swipe,
   pinch,
 }
 
@@ -64,7 +66,7 @@ enum GestureType {
 }
 
 @ProviderModel(copyable: true)
-class GestureProp {
+class GestureProp implements Comparable {
   @ProviderModelProp()
   String? id;
 
@@ -87,14 +89,14 @@ class GestureProp {
   String? remark;
 
   @ProviderModelProp()
-  bool get editMode => _editMode;
+  bool? get editMode => _editMode;
 
-  set editMode(bool val) {
-    _editMode = val;
-    if (val == false) onEditEnd?.call();
+  set editMode(bool? val) {
+    _editMode = val ?? false;
+    if (val == false) onEditEnd?.call(this);
   }
 
-  VoidCallback? onEditEnd;
+  OnEditEnd? onEditEnd;
 
   bool _editMode = false;
 
@@ -118,5 +120,25 @@ class GestureProp {
     type = H.getGestureTypeByName(props['type']);
     command = props['command'];
     remark = props['remark'];
+  }
+
+  copyFrom(GestureProp prop) {
+    this.id = prop.id;
+    this.gesture = prop.gesture;
+    this.direction = prop.direction;
+    this.fingers = prop.fingers;
+    this.type = prop.type;
+    this.command = prop.command;
+    this.remark = prop.remark;
+  }
+
+  @override
+  int compareTo(other) {
+    assert(other is GestureProp);
+    if (fingers.diff(other.fingers) && other.fingers != null) return fingers! - other.fingers as int;
+    if (gesture.diff(other.gesture) && other.gesture != null) return gesture!.index - other.gesture!.index as int;
+    if (direction.diff(other.direction) && other.direction != null)
+      return direction!.index - other.direction!.index as int;
+    return 0;
   }
 }

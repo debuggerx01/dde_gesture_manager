@@ -74,7 +74,7 @@ class GestureEditor extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      context.read<GesturePropProvider>().copyFrom(GestureProp.empty());
+                      context.read<GesturePropProvider>().setProps(editMode: false);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -175,28 +175,53 @@ List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context)
       bool selected = gesturePropProvider == gesture && !editing;
       return DDataRow(
         onSelectChanged: (selected) {
-          if (selected == true)
-            context.read<GesturePropProvider>().setProps(
-                  id: gesture.id,
-                  editMode: false,
-                );
-          else if (selected == false) {
-            var provider = context.read<GesturePropProvider>();
-            provider.onEditEnd = () {
-              /// todo: resort rows && check where changed
-            };
+          var provider = context.read<GesturePropProvider>();
+          if (selected == true) {
             provider.setProps(
-              editMode: true,
+              editMode: false,
+            );
+            Future.microtask(() => provider.setProps(
+                  id: gesture.id,
+                ));
+          } else if (selected == false) {
+            provider.onEditEnd = (prop) {
+              var schemeProvider = context.read<SchemeProvider>();
+              var newGestures = List<GestureProp>.of(schemeProvider.gestures!);
+              var index = newGestures.indexWhere((element) => element == prop);
+              newGestures[index].copyFrom(prop);
+              context.read<SchemeProvider>().setProps(
+                    gestures: newGestures..sort(),
+                  );
+            };
+            provider.copyFrom(
+              gesture..editMode = true,
             );
           }
         },
         selected: selected,
-        cells: editing ? _buildRowCellsEditing(gesture) : _buildRowCellsNormal(context, selected, gesture),
+        cells: editing ? _buildRowCellsEditing(context, gesture) : _buildRowCellsNormal(context, selected, gesture),
       );
     }).toList();
 
-List<DDataCell> _buildRowCellsEditing(GestureProp gesture) => [
-      Center(child: Text('1')),
+List<DDataCell> _buildRowCellsEditing(BuildContext context, GestureProp gesture) => [
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.lightBlue,
+        ),
+        child: DropdownButton<int>(
+          items: [3, 4, 5]
+              .map(
+                (e) => DropdownMenuItem<int>(
+                  child: Text('$e'),
+                  value: e,
+                ),
+              )
+              .toList(),
+          value: context.watch<GesturePropProvider>().fingers,
+          onChanged: (value) => context.read<GesturePropProvider>().setProps(fingers: value, editMode: true),
+          isExpanded: true,
+        ),
+      ),
       Center(child: Text('2')),
       Center(child: Text('3')),
       Center(child: Text('4')),
