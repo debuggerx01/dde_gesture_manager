@@ -8,6 +8,7 @@ import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/dde_data_table.dart';
+import 'package:dde_gesture_manager/widgets/table_cell_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -204,11 +205,10 @@ List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context)
     }).toList();
 
 List<DDataCell> _buildRowCellsEditing(BuildContext context, GestureProp gesture) => [
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.lightBlue,
-        ),
+      DButton.dropdown(
+        enabled: true,
         child: DropdownButton<int>(
+          icon: Icon(Icons.keyboard_arrow_down_rounded),
           items: [3, 4, 5]
               .map(
                 (e) => DropdownMenuItem<int>(
@@ -218,15 +218,101 @@ List<DDataCell> _buildRowCellsEditing(BuildContext context, GestureProp gesture)
               )
               .toList(),
           value: context.watch<GesturePropProvider>().fingers,
-          onChanged: (value) => context.read<GesturePropProvider>().setProps(fingers: value, editMode: true),
+          onChanged: (value) => context.read<GesturePropProvider>().setProps(
+                fingers: value,
+                editMode: true,
+              ),
           isExpanded: true,
         ),
       ),
-      Center(child: Text('2')),
-      Center(child: Text('3')),
-      Center(child: Text('4')),
-      TextField(controller: TextEditingController(text: gesture.command)),
-      TextField(controller: TextEditingController(text: gesture.remark)),
+      DButton.dropdown(
+        enabled: true,
+        width: 60.0,
+        child: DropdownButton<Gesture>(
+          icon: Icon(Icons.keyboard_arrow_down_rounded),
+          items: Gesture.values
+              .map(
+                (e) => DropdownMenuItem<Gesture>(
+                  child: Text(
+                    '${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(e)}',
+                    textScaleFactor: .8,
+                  ).tr(),
+                  value: e,
+                ),
+              )
+              .toList(),
+          value: context.watch<GesturePropProvider>().gesture,
+          onChanged: (value) => context.read<GesturePropProvider>().setProps(
+                gesture: value,
+                editMode: true,
+              ),
+          isExpanded: true,
+        ),
+      ),
+      DButton.dropdown(
+        enabled: true,
+        width: 100.0,
+        child: DropdownButton<GestureDirection>(
+          icon: Icon(Icons.keyboard_arrow_down_rounded),
+          items: GestureDirection.values
+              .map(
+                (e) => DropdownMenuItem<GestureDirection>(
+                  child: Text(
+                    '${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(e)}',
+                    textScaleFactor: .8,
+                  ).tr(),
+                  value: e,
+                ),
+              )
+              .toList(),
+          value: context.watch<GesturePropProvider>().direction,
+          onChanged: (value) => context.read<GesturePropProvider>().setProps(
+                direction: value,
+                editMode: true,
+              ),
+          isExpanded: true,
+        ),
+      ),
+      DButton.dropdown(
+        enabled: true,
+        width: 100.0,
+        child: DropdownButton<GestureType>(
+          icon: Icon(Icons.keyboard_arrow_down_rounded),
+          items: GestureType.values
+              .map(
+                (e) => DropdownMenuItem<GestureType>(
+                  child: Text(
+                    '${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(e)}',
+                    textScaleFactor: .8,
+                  ).tr(),
+                  value: e,
+                ),
+              )
+              .toList(),
+          value: context.watch<GesturePropProvider>().type,
+          onChanged: (value) => context.read<GesturePropProvider>().setProps(
+                type: value,
+                editMode: true,
+              ),
+          isExpanded: true,
+        ),
+      ),
+      TableCellTextField(
+        initText: gesture.command,
+        hint: 'pls input cmd',
+        onComplete: (value) => context.read<GesturePropProvider>().setProps(
+              command: value,
+              editMode: true,
+            ),
+      ),
+      TableCellTextField(
+        initText: gesture.remark,
+        hint: 'pls input cmd',
+        onComplete: (value) => context.read<GesturePropProvider>().setProps(
+              remark: value,
+              editMode: true,
+            ),
+      ),
     ].map((e) => DDataCell(e)).toList();
 
 List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, GestureProp gesture) => [
