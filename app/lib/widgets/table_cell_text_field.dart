@@ -20,7 +20,9 @@ class TableCellTextField extends StatefulWidget {
 }
 
 class _TableCellTextFieldState extends State<TableCellTextField> {
-  final FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode(
+    onKeyEvent: (_, __) => KeyEventResult.skipRemainingHandlers,
+  );
   final TextEditingController _controller = TextEditingController();
 
   @override
