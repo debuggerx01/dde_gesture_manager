@@ -126,8 +126,9 @@ class _DButtonState extends State<DButton> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
-        borderColor:
-            _hovering ? widget.activeBorderColor ?? context.watch<SettingsProvider>().activeColor : Color(0xff565656),
+        borderColor: _hovering
+            ? (widget.activeBorderColor ?? context.watch<SettingsProvider>().currentActiveColor)
+            : Color(0xff565656),
         borderWidth: 2,
         borderRadius: BorderRadius.circular(defaultBorderRadius),
         child: MouseRegion(

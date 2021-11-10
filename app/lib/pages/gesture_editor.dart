@@ -47,8 +47,7 @@ class GestureEditor extends StatelessWidget {
                       visible: layoutProvider.localManagerOpened == false,
                       child: DButton(
                         width: defaultButtonHeight,
-                        onTap: () =>
-                            H.openPanel(context, PanelType.local_manager),
+                        onTap: () => H.openPanel(context, PanelType.local_manager),
                         child: Icon(
                           CupertinoIcons.square_list,
                         ),
@@ -77,14 +76,11 @@ class GestureEditor extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      context
-                          .read<GesturePropProvider>()
-                          .setProps(editMode: false);
+                      context.read<GesturePropProvider>().setProps(editMode: false);
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(defaultBorderRadius),
+                        borderRadius: BorderRadius.circular(defaultBorderRadius),
                         border: Border.all(
                           width: .2,
                           color: context.t.dividerColor,
@@ -92,19 +88,16 @@ class GestureEditor extends StatelessWidget {
                       ),
                       width: double.infinity,
                       clipBehavior: Clip.antiAlias,
-                      child: LayoutBuilder(builder:
-                          (BuildContext context, BoxConstraints constraints) {
+                      child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
                         return AdaptiveScrollbar(
                           controller: verticalCtrl,
                           underColor: Colors.transparent,
                           sliderDecoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(_scrollBarWidth / 2),
+                            borderRadius: BorderRadius.circular(_scrollBarWidth / 2),
                             color: Colors.grey.withOpacity(.4),
                           ),
                           sliderActiveDecoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(_scrollBarWidth / 2),
+                            borderRadius: BorderRadius.circular(_scrollBarWidth / 2),
                             color: Colors.grey.withOpacity(.6),
                           ),
                           position: ScrollbarPosition.right,
@@ -114,13 +107,11 @@ class GestureEditor extends StatelessWidget {
                             width: _scrollBarWidth,
                             underColor: Colors.transparent,
                             sliderDecoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(_scrollBarWidth / 2),
+                              borderRadius: BorderRadius.circular(_scrollBarWidth / 2),
                               color: Colors.grey.withOpacity(.4),
                             ),
                             sliderActiveDecoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(_scrollBarWidth / 2),
+                              borderRadius: BorderRadius.circular(_scrollBarWidth / 2),
                               color: Colors.grey.withOpacity(.6),
                             ),
                             controller: horizontalCtrl,
@@ -129,58 +120,28 @@ class GestureEditor extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               controller: horizontalCtrl,
                               child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                    minWidth: constraints.maxWidth),
+                                constraints: BoxConstraints(minWidth: constraints.maxWidth),
                                 child: DDataTable(
                                   showBottomBorder: true,
                                   headingRowHeight: _headingRowHeight,
                                   showCheckboxColumn: true,
-                                  headerBackgroundColor:
-                                      context.t.dialogBackgroundColor,
+                                  headerBackgroundColor: context.t.dialogBackgroundColor,
                                   verticalScrollController: verticalCtrl,
-                                  dataRowColor:
-                                      MaterialStateProperty.resolveWith<Color?>(
-                                          (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.hovered))
-                                      return context.t.dialogBackgroundColor;
+                                  dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.hovered)) return context.t.dialogBackgroundColor;
                                     if (states.contains(MaterialState.selected))
-                                      return context
-                                          .read<SettingsProvider>()
-                                          .currentActiveColor;
+                                      return context.read<SettingsProvider>().currentActiveColor;
                                     return null;
                                   }),
                                   columns: [
-                                    DDataColumn(
-                                        label: Text(LocaleKeys
-                                            .gesture_editor_fingers
-                                            .tr()),
-                                        center: true),
-                                    DDataColumn(
-                                        label: Text(LocaleKeys
-                                            .gesture_editor_gesture
-                                            .tr()),
-                                        center: true),
-                                    DDataColumn(
-                                        label: Text(LocaleKeys
-                                            .gesture_editor_direction
-                                            .tr()),
-                                        center: true),
-                                    DDataColumn(
-                                        label: Text(LocaleKeys
-                                            .gesture_editor_type
-                                            .tr()),
-                                        center: true),
-                                    DDataColumn(
-                                        label: Text(LocaleKeys
-                                            .gesture_editor_command
-                                            .tr())),
-                                    DDataColumn(
-                                        label: Text(LocaleKeys
-                                            .gesture_editor_remark
-                                            .tr())),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
                                   ],
-                                  rows: _buildDataRows(
-                                      schemeProvider.gestures, context),
+                                  rows: _buildDataRows(schemeProvider.gestures, context),
                                 ),
                               ),
                             ),
@@ -210,12 +171,9 @@ class GestureEditor extends StatelessWidget {
   }
 }
 
-List<DDataRow> _buildDataRows(
-        List<GestureProp>? gestures, BuildContext context) =>
-    (gestures ?? []).map((gesture) {
+List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context) => (gestures ?? []).map((gesture) {
       var gesturePropProvider = context.watch<GesturePropProvider>();
-      bool editing = gesturePropProvider == gesture &&
-          gesturePropProvider.editMode == true;
+      bool editing = gesturePropProvider == gesture && gesturePropProvider.editMode == true;
       bool selected = gesturePropProvider == gesture && !editing;
       return DDataRow(
         onSelectChanged: (selected) {
@@ -243,15 +201,11 @@ List<DDataRow> _buildDataRows(
           }
         },
         selected: selected,
-        cells: editing
-            ? _buildRowCellsEditing(context, gesture)
-            : _buildRowCellsNormal(context, selected, gesture),
+        cells: editing ? _buildRowCellsEditing(context, gesture) : _buildRowCellsNormal(context, selected, gesture),
       );
     }).toList();
 
-List<DDataCell> _buildRowCellsEditing(
-        BuildContext context, GestureProp gesture) =>
-    [
+List<DDataCell> _buildRowCellsEditing(BuildContext context, GestureProp gesture) => [
       DButton.dropdown(
         enabled: true,
         child: DropdownButton<int>(
@@ -339,6 +293,7 @@ List<DDataCell> _buildRowCellsEditing(
           value: context.watch<GesturePropProvider>().type,
           onChanged: (value) => context.read<GesturePropProvider>().setProps(
                 type: value,
+                command: '',
                 editMode: true,
               ),
           isExpanded: true,
@@ -356,7 +311,6 @@ List<DDataCell> _buildRowCellsEditing(
     ].map((e) => DDataCell(e)).toList();
 
 Widget _buildCommandCellsEditing(BuildContext context) {
-  'build cmd cell'.sout();
   var gesture = context.read<GesturePropProvider>();
   switch (gesture.type) {
     case GestureType.commandline:
@@ -385,9 +339,7 @@ Widget _buildCommandCellsEditing(BuildContext context) {
                 ),
               )
               .toList(),
-          value: builtInCommands.contains(gesture.command)
-              ? gesture.command
-              : builtInCommands.first,
+          value: builtInCommands.contains(gesture.command) ? gesture.command : builtInCommands.first,
           onChanged: (value) => context.read<GesturePropProvider>().setProps(
                 command: value,
                 editMode: true,
@@ -397,7 +349,7 @@ Widget _buildCommandCellsEditing(BuildContext context) {
       );
     case GestureType.shortcut:
       return TableCellShortcutListener(
-        width: 150.0,
+        width: 250.0,
         initShortcut: gesture.command ?? '',
         onComplete: (value) => context.read<GesturePropProvider>().setProps(
               command: value,
@@ -409,9 +361,7 @@ Widget _buildCommandCellsEditing(BuildContext context) {
   }
 }
 
-List<DDataCell> _buildRowCellsNormal(
-        BuildContext context, bool selected, GestureProp gesture) =>
-    [
+List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, GestureProp gesture) => [
       Center(
         child: Text(
           '${gesture.fingers}',
@@ -430,9 +380,40 @@ List<DDataCell> _buildRowCellsNormal(
           child: Text(
         '${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(gesture.type)}',
       ).tr()),
-      Text(
-        gesture.command ?? '',
-      ),
+      gesture.type == GestureType.shortcut
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: (gesture.command ?? '')
+                  .split('+')
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(defaultBorderRadius / 2),
+                          color: context.t.dialogBackgroundColor,
+                          border: Border.all(
+                            width: 1,
+                            color: Color(0xff565656),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Text(
+                            e.notNull ? e : LocaleKeys.str_null.tr(),
+                            style: TextStyle(
+                              color: context.watch<SettingsProvider>().currentActiveColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            )
+          : Text(
+              gesture.command ?? '',
+            ),
       Text(
         gesture.remark ?? '',
       ),

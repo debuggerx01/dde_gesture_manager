@@ -62,5 +62,8 @@
     "delete": "delete",
     "duplicate": "duplicate",
     "apply": "apply"
+  },
+  "str": {
+    "null": "Null"
   }
 }

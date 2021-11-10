@@ -22,6 +22,8 @@ const double defaultButtonHeight = 36;
 
 const List<String> builtInCommands = [
   'ShowWorkspace',
+  'Handle4Or5FingersSwipeUp',
+  'Handle4Or5FingersSwipeDown',
   'ToggleMaximize',
   'Minimize',
   'ShowWindow',

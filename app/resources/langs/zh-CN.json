@@ -62,5 +62,8 @@
     "delete": "删除",
     "duplicate": "复制",
     "apply": "应用"
+  },
+  "str": {
+    "null": "无"
   }
 }
