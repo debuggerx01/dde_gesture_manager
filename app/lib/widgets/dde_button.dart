@@ -33,7 +33,7 @@ class DButton extends StatefulWidget {
           key: key,
           width: width,
           height: height,
-          onTap: onTap,
+          onTap: enabled ? onTap : null,
           child: Tooltip(
             child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.add, size: 18)),
             message: LocaleKeys.operation_add.tr(),
@@ -50,7 +50,7 @@ class DButton extends StatefulWidget {
           key: key,
           width: width,
           height: height,
-          onTap: onTap,
+          onTap: enabled ? onTap : null,
           child: Tooltip(
             child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.remove, size: 18)),
             message: LocaleKeys.operation_delete.tr(),
@@ -67,7 +67,7 @@ class DButton extends StatefulWidget {
           key: key,
           width: width,
           height: height,
-          onTap: onTap,
+          onTap: enabled ? onTap : null,
           child: Tooltip(
             child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.check, size: 18)),
             message: LocaleKeys.operation_apply.tr(),
@@ -84,10 +84,27 @@ class DButton extends StatefulWidget {
           key: key,
           width: width,
           height: height,
-          onTap: onTap,
+          onTap: enabled ? onTap : null,
           child: Tooltip(
             child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.copy_rounded, size: 18)),
             message: LocaleKeys.operation_duplicate.tr(),
+          ));
+
+  factory DButton.paste({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight * .7,
+    width = defaultButtonHeight * .7,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: enabled ? onTap : null,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.paste_rounded, size: 18)),
+            message: LocaleKeys.operation_paste.tr(),
           ));
 
   factory DButton.dropdown({

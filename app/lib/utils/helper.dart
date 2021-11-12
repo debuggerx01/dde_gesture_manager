@@ -1,9 +1,10 @@
+import 'package:dde_gesture_manager/constants/constants.dart';
+import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dde_gesture_manager/constants/constants.dart';
-import 'package:dde_gesture_manager/extensions.dart';
+import 'package:uuid/uuid.dart';
 
 class H {
   H._();
@@ -85,10 +86,10 @@ class H {
       GestureDirection.none;
 
   static String? getGestureTypeName(GestureType? type) => const {
-    GestureType.built_in: 'built_in',
-    GestureType.shortcut: 'shortcut',
-    GestureType.commandline: 'commandline',
-  }[type];
+        GestureType.built_in: 'built_in',
+        GestureType.shortcut: 'shortcut',
+        GestureType.commandline: 'commandline',
+      }[type];
 
   static GestureType getGestureTypeByName(String typeName) =>
       const {
@@ -104,6 +105,19 @@ class H {
     if (list.length != 4) return null;
     var rgba = list.map<int>((e) => int.parse(e) ~/ 257).toList();
     return Color.fromARGB(rgba[3], rgba[0], rgba[1], rgba[2]);
+  }
+
+  static GestureProp? getNextAvailableGestureProp(SchemeTree tree) {
+    tree.sout();
+    var gestureProp = GestureProp.empty()
+      ..id = Uuid().v1()
+      ..type = GestureType.built_in
+      ..command = builtInCommands.first;
+    if (tree.fullFiled) return null;
+    gestureProp.fingers = tree.availableNode.fingers;
+    gestureProp.gesture = tree.availableNode.availableNode.type;
+    gestureProp.direction = tree.availableNode.availableNode.availableNode.direction;
+    return gestureProp;
   }
 }
 

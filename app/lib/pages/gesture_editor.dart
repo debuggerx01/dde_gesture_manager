@@ -5,6 +5,7 @@ import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/pages/content.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/keyboard_mapper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
@@ -152,7 +153,42 @@ class GestureEditor extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(height: 10),
+                Builder(builder: (context) {
+                  var gesturePropProvider = context.watch<GesturePropProvider>();
+                  var copiedGesturePropProvider = context.watch<CopiedGesturePropProvider>();
+                  var schemeTree = schemeProvider.buildSchemeTree();
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      DButton.add(
+                        enabled: !gesturePropProvider.editMode! && !schemeTree.fullFiled,
+                        onTap: () {
+                          var schemeProvider = context.read<SchemeProvider>();
+                          schemeProvider.gestures.sout();
+                          context.read<SchemeProvider>().setProps(gestures: [
+                            ...?schemeProvider.gestures,
+                            H.getNextAvailableGestureProp(schemeProvider.buildSchemeTree())!,
+                          ]);
+                        },
+                      ),
+                      DButton.delete(
+                        enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,
+                      ),
+                      DButton.duplicate(
+                        enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,
+                      ),
+                      DButton.paste(
+                        enabled: copiedGesturePropProvider != CopiedGesturePropProvider.empty() &&
+                            !gesturePropProvider.editMode!,
+                      ),
+                    ]
+                        .map((e) => Padding(
+                              padding: const EdgeInsets.only(top: 3.0, right: 10.0, bottom: 8.0),
+                              child: e,
+                            ))
+                        .toList(),
+                  );
+                }),
                 Container(
                   height: 300,
                   decoration: BoxDecoration(
@@ -414,9 +450,13 @@ List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, Gestur
                 },
               ).toList(),
             )
-          : Text(
-              gesture.command ?? '',
-            ),
+          : (gesture.type == GestureType.built_in
+              ? Text(
+                  ('${LocaleKeys.built_in_commands}.${(builtInCommands.contains(gesture.command) ? gesture.command : builtInCommands.first)!}')
+                      .tr())
+              : Text(
+                  gesture.command ?? '',
+                )),
       Text(
         gesture.remark ?? '',
       ),

@@ -1,16 +1,21 @@
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/models/content_layout.provider.dart';
+import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/pages/gesture_editor.dart';
 import 'package:dde_gesture_manager/pages/local_manager.dart';
 import 'package:dde_gesture_manager/pages/market.dart';
-import 'package:flutter/material.dart';
-import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
+import 'package:flutter/material.dart';
 
 class Content extends StatefulWidget {
   const Content({Key? key}) : super(key: key);
 
   @override
   _ContentState createState() => _ContentState();
+}
+
+class CopiedGesturePropProvider extends GesturePropProvider {
+  CopiedGesturePropProvider.empty() : super.empty();
 }
 
 class _ContentState extends State<Content> {
@@ -21,10 +26,17 @@ class _ContentState extends State<Content> {
     var windowWidth = MediaQuery.of(context).size.width;
     var preferredPanelsStatus = H.getPreferredPanelsStatus(windowWidth);
     var widthChanged = preWindowWidth != null && preWindowWidth != windowWidth;
-    var widget = ChangeNotifierProvider(
-      create: (context) => ContentLayoutProvider()
-        ..localManagerOpened = preferredPanelsStatus.localManagerPanelOpened
-        ..marketOpened = preferredPanelsStatus.marketPanelOpened,
+    var widget = MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ContentLayoutProvider()
+            ..localManagerOpened = preferredPanelsStatus.localManagerPanelOpened
+            ..marketOpened = preferredPanelsStatus.marketPanelOpened,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CopiedGesturePropProvider.empty(),
+        ),
+      ],
       builder: (context, child) {
         if (widthChanged && mounted) {
           Future.microtask(

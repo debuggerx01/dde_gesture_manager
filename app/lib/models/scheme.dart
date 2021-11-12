@@ -8,6 +8,109 @@ import 'package:uuid/uuid.dart';
 
 typedef OnEditEnd(GestureProp prop);
 
+class _TreeNode<T> {
+  late List<T> nodes;
+
+  bool get fullFiled => nodes.every((element) => (element as _TreeNode).fullFiled);
+
+  T get availableNode => nodes.firstWhere((element) => !(element as _TreeNode).fullFiled);
+}
+
+class GestureDirectionNode extends _TreeNode {
+  GestureDirection direction;
+  bool available = true;
+
+  GestureDirectionNode({required this.direction});
+
+  @override
+  get fullFiled => !available;
+
+  get availableNode => null;
+}
+
+class SchemeGestureNode extends _TreeNode<GestureDirectionNode> {
+  Gesture type;
+
+  SchemeGestureNode({required this.type}) {
+    switch (type) {
+      case Gesture.tap:
+        nodes = [GestureDirectionNode(direction: GestureDirection.none)];
+        break;
+      case Gesture.swipe:
+        nodes = [
+          GestureDirectionNode(direction: GestureDirection.up),
+          GestureDirectionNode(direction: GestureDirection.down),
+          GestureDirectionNode(direction: GestureDirection.left),
+          GestureDirectionNode(direction: GestureDirection.right),
+        ];
+        break;
+      case Gesture.pinch:
+        nodes = [
+          GestureDirectionNode(direction: GestureDirection.pinch_in),
+          GestureDirectionNode(direction: GestureDirection.pinch_out),
+        ];
+    }
+  }
+}
+
+class SchemeTreeNode extends _TreeNode<SchemeGestureNode> {
+  int fingers;
+
+  SchemeTreeNode({required this.fingers});
+
+  @override
+  List<SchemeGestureNode> nodes = [
+    SchemeGestureNode(type: Gesture.tap),
+    SchemeGestureNode(type: Gesture.swipe),
+    SchemeGestureNode(type: Gesture.pinch),
+  ];
+}
+
+class SchemeTree extends _TreeNode<SchemeTreeNode> {
+  @override
+  List<SchemeTreeNode> nodes = [
+    SchemeTreeNode(fingers: 3),
+    SchemeTreeNode(fingers: 4),
+    SchemeTreeNode(fingers: 5),
+  ];
+
+  @override
+  String toString() => '''
+  3:
+    tap:  ${nodes[0].nodes[0].nodes[0].available}
+    swipe:
+      ↑:  ${nodes[0].nodes[1].nodes[0].available}
+      ↓:  ${nodes[0].nodes[1].nodes[1].available}
+      ←:  ${nodes[0].nodes[1].nodes[2].available}
+      →:  ${nodes[0].nodes[1].nodes[3].available}
+    pinch:
+      in: ${nodes[0].nodes[2].nodes[0].available}
+      out:${nodes[0].nodes[2].nodes[1].available}
+      
+  4:
+    tap:  ${nodes[1].nodes[0].nodes[0].available}
+    swipe:
+      ↑:  ${nodes[1].nodes[1].nodes[0].available}
+      ↓:  ${nodes[1].nodes[1].nodes[1].available}
+      ←:  ${nodes[1].nodes[1].nodes[2].available}
+      →:  ${nodes[1].nodes[1].nodes[3].available}
+    pinch:
+      in: ${nodes[1].nodes[2].nodes[0].available}
+      out:${nodes[1].nodes[2].nodes[1].available}
+      
+  5:
+    tap:  ${nodes[2].nodes[0].nodes[0].available}
+    swipe:
+      ↑:  ${nodes[2].nodes[1].nodes[0].available}
+      ↓:  ${nodes[2].nodes[1].nodes[1].available}
+      ←:  ${nodes[2].nodes[1].nodes[2].available}
+      →:  ${nodes[2].nodes[1].nodes[3].available}
+    pinch:
+      in: ${nodes[2].nodes[2].nodes[0].available}
+      out:${nodes[2].nodes[2].nodes[1].available}
+  ''';
+}
+
 @ProviderModel(copyable: true)
 class Scheme {
   @ProviderModelProp()
@@ -40,6 +143,16 @@ class Scheme {
 
   Scheme.create({this.name, this.description, this.gestures}) {
     this.id = Uuid().v1();
+  }
+
+  SchemeTree buildSchemeTree() {
+    var schemeTree = SchemeTree();
+    this.gestures!.forEach((gesture) {
+      var schemeTreeNode = schemeTree.nodes.firstWhere((ele) => ele.fingers == gesture.fingers);
+      var schemeGestureNode = schemeTreeNode.nodes.firstWhere((element) => element.type == gesture.gesture);
+      schemeGestureNode.nodes.firstWhere((element) => element.direction == gesture.direction).available = false;
+    });
+    return schemeTree;
   }
 }
 
