@@ -164,7 +164,6 @@ class GestureEditor extends StatelessWidget {
                         enabled: !gesturePropProvider.editMode! && !schemeTree.fullFiled,
                         onTap: () {
                           var schemeProvider = context.read<SchemeProvider>();
-                          schemeProvider.gestures.sout();
                           context.read<SchemeProvider>().setProps(gestures: [
                             ...?schemeProvider.gestures,
                             H.getNextAvailableGestureProp(schemeProvider.buildSchemeTree())!,
@@ -173,6 +172,17 @@ class GestureEditor extends StatelessWidget {
                       ),
                       DButton.delete(
                         enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,
+                        onTap: () {
+                          var schemeProvider = context.read<SchemeProvider>();
+                          var index = schemeProvider.gestures?.indexWhere((e) => e.id == gesturePropProvider.id);
+                          var newGestures = [
+                            ...?schemeProvider.gestures?..removeAt(index!),
+                          ];
+                          context.read<SchemeProvider>().setProps(gestures: newGestures);
+                          if (newGestures.length > 0)
+                            gesturePropProvider.copyFrom(newGestures[
+                                (index ?? 0) > newGestures.length - 1 ? newGestures.length - 1 : index ?? 0]);
+                        },
                       ),
                       DButton.duplicate(
                         enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,

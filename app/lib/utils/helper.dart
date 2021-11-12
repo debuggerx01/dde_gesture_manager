@@ -108,7 +108,6 @@ class H {
   }
 
   static GestureProp? getNextAvailableGestureProp(SchemeTree tree) {
-    tree.sout();
     var gestureProp = GestureProp.empty()
       ..id = Uuid().v1()
       ..type = GestureType.built_in
