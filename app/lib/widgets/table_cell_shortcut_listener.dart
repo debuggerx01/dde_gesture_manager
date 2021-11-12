@@ -64,7 +64,6 @@ class _TableCellShortcutListenerState extends State<TableCellShortcutListener> {
     return RawKeyboardListener(
       focusNode: _focusNode,
       onKey: (evt) {
-        evt.physicalKey.sout();
         _tryToAddKey(evt.physicalKey);
       },
       child: GestureDetector(
