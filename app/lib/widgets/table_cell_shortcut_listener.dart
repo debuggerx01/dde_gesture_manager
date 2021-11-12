@@ -1,8 +1,8 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
-import 'package:dde_gesture_manager/constants/keyboard_mapper.dart';
-import 'package:dde_gesture_manager/models/settings.provider.dart';
-import 'package:flutter/material.dart';
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/utils/keyboard_mapper.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TableCellShortcutListener extends StatefulWidget {
@@ -22,7 +22,7 @@ class TableCellShortcutListener extends StatefulWidget {
 }
 
 class _TableCellShortcutListenerState extends State<TableCellShortcutListener> {
-  List<String> _shortcut = [];
+  List<KeyNames> _shortcut = [];
   bool inputMode = false;
   FocusNode _focusNode = FocusNode();
 
@@ -32,23 +32,23 @@ class _TableCellShortcutListenerState extends State<TableCellShortcutListener> {
     }
   }
 
-  _tryToAddKey(LogicalKeyboardKey key) {
-    if (key.keyLabel.length == 1) key.keyLabel.sout();
-    late String _key;
-    if (keyMapper.containsKey(key))
-      _key = keyMapper[key]!;
-    else if (key.keyLabel.length == 1) _key = key.keyLabel.toLowerCase();
-
-    if (!_shortcut.contains(_key)) {
+  _tryToAddKey(PhysicalKeyboardKey key) {
+    var names = getPhysicalKeyNames(key.usbHidUsage);
+    if (names != null && !_shortcut.contains(names))
       setState(() {
-        _shortcut.add(_key);
+        _shortcut.add(names);
+        _shortcut.sort();
       });
-    }
   }
 
   @override
   void initState() {
-    _shortcut = widget.initShortcut.split('+');
+    var __shortcut = widget.initShortcut.split('+');
+    __shortcut.forEach((name) {
+      var keyNames = getPhysicalKeyNamesByRealName(name);
+      if (keyNames != null) _shortcut.add(keyNames);
+    });
+    _shortcut.sort();
     _focusNode.addListener(_handleFocusChange);
     super.initState();
   }
@@ -64,8 +64,8 @@ class _TableCellShortcutListenerState extends State<TableCellShortcutListener> {
     return RawKeyboardListener(
       focusNode: _focusNode,
       onKey: (evt) {
-        RawKeyboard.instance.keysPressed.forEach(_tryToAddKey);
-        RawKeyboard.instance.keysPressed.sout();
+        evt.physicalKey.sout();
+        _tryToAddKey(evt.physicalKey);
       },
       child: GestureDetector(
         onTap: () {
@@ -108,7 +108,7 @@ class _TableCellShortcutListenerState extends State<TableCellShortcutListener> {
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 5.0),
                               child: Text(
-                                e.notNull ? e : LocaleKeys.str_null.tr(),
+                                e.displayName.notNull ? e.displayName : LocaleKeys.str_null.tr(),
                                 style: TextStyle(
                                   color: context.watch<SettingsProvider>().activeColor,
                                 ),

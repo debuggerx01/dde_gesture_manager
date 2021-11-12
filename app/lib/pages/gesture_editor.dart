@@ -6,6 +6,7 @@ import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
+import 'package:dde_gesture_manager/utils/keyboard_mapper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/dde_data_table.dart';
 import 'package:dde_gesture_manager/widgets/table_cell_shortcut_listener.dart';
@@ -383,33 +384,33 @@ List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, Gestur
       gesture.type == GestureType.shortcut
           ? Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: (gesture.command ?? '')
-                  .split('+')
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(defaultBorderRadius / 2),
-                          color: context.t.dialogBackgroundColor,
-                          border: Border.all(
-                            width: 1,
-                            color: Color(0xff565656),
-                          ),
+              children: (gesture.command ?? '').split('+').map(
+                (e) {
+                  var keyNames = getPhysicalKeyNamesByRealName(e);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(defaultBorderRadius / 2),
+                        color: context.t.dialogBackgroundColor,
+                        border: Border.all(
+                          width: 1,
+                          color: Color(0xff565656),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Text(
-                            e.notNull ? e : LocaleKeys.str_null.tr(),
-                            style: TextStyle(
-                              color: context.watch<SettingsProvider>().currentActiveColor,
-                            ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: Text(
+                          keyNames != null ? keyNames.displayName : LocaleKeys.str_null.tr(),
+                          style: TextStyle(
+                            color: context.watch<SettingsProvider>().currentActiveColor,
                           ),
                         ),
                       ),
                     ),
-                  )
-                  .toList(),
+                  );
+                },
+              ).toList(),
             )
           : Text(
               gesture.command ?? '',
