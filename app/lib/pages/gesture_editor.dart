@@ -14,6 +14,7 @@ import 'package:dde_gesture_manager/widgets/table_cell_shortcut_listener.dart';
 import 'package:dde_gesture_manager/widgets/table_cell_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 const double _headingRowHeight = 56;
 const double _scrollBarWidth = 14;
@@ -186,10 +187,41 @@ class GestureEditor extends StatelessWidget {
                       ),
                       DButton.duplicate(
                         enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,
+                        onTap: () {
+                          var schemeProvider = context.read<SchemeProvider>();
+                          context.read<CopiedGesturePropProvider>().copyFrom(
+                              schemeProvider.gestures!.firstWhere((element) => element.id == gesturePropProvider.id));
+
+                          /// todo: give some info to UI.
+                        },
                       ),
                       DButton.paste(
                         enabled: copiedGesturePropProvider != CopiedGesturePropProvider.empty() &&
-                            !gesturePropProvider.editMode!,
+                            !gesturePropProvider.editMode! &&
+                            !schemeTree.fullFiled,
+                        onTap: () {
+                          var schemeTree = context.read<SchemeProvider>().buildSchemeTree();
+                          late GestureProp newGestureProp;
+                          if (schemeTree.nodes
+                              .firstWhere((e) => e.fingers == copiedGesturePropProvider.fingers)
+                              .nodes
+                              .firstWhere((e) => e.type == copiedGesturePropProvider.gesture)
+                              .nodes
+                              .firstWhere((e) => e.direction == copiedGesturePropProvider.direction)
+                              .available) {
+                            newGestureProp = GestureProp.empty()..copyFrom(copiedGesturePropProvider);
+                          } else {
+                            newGestureProp = H.getNextAvailableGestureProp(schemeProvider.buildSchemeTree())!;
+                            newGestureProp.type = copiedGesturePropProvider.type;
+                            newGestureProp.command = copiedGesturePropProvider.command;
+                            newGestureProp.remark = copiedGesturePropProvider.remark;
+                          }
+                          newGestureProp.id = Uuid().v1();
+                          context.read<SchemeProvider>().setProps(gestures: [
+                            ...?schemeProvider.gestures,
+                            newGestureProp,
+                          ]);
+                        },
                       ),
                     ]
                         .map((e) => Padding(
