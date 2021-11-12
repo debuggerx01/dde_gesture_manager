@@ -333,14 +333,16 @@ Widget _buildCommandCellsEditing(BuildContext context) {
               .map(
                 (e) => DropdownMenuItem<String>(
                   child: Text(
-                    e,
+                    ('${LocaleKeys.built_in_commands}.$e').tr(),
                     textScaleFactor: .8,
                   ),
-                  value: e,
+                  value: ('${LocaleKeys.built_in_commands}.$e').tr(),
                 ),
               )
               .toList(),
-          value: builtInCommands.contains(gesture.command) ? gesture.command : builtInCommands.first,
+          value:
+              ('${LocaleKeys.built_in_commands}.${(builtInCommands.contains(gesture.command) ? gesture.command : builtInCommands.first)!}')
+                  .tr(),
           onChanged: (value) => context.read<GesturePropProvider>().setProps(
                 command: value,
                 editMode: true,

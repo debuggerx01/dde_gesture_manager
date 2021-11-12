@@ -65,5 +65,21 @@
   },
   "str": {
     "null": "无"
+  },
+  "built_in_commands": {
+    "ShowWorkspace": "显示工作区",
+    "Handle4Or5FingersSwipeUp": "4/5指向上划",
+    "Handle4Or5FingersSwipeDown": "4/5指向下划",
+    "ToggleMaximize": "全屏切换",
+    "Minimize": "最小化",
+    "ShowWindow": "显示桌面",
+    "ShowAllWindow": "查看所有窗口",
+    "SwitchApplication": "切换应用窗口",
+    "ReverseSwitchApplication": "反向切换应用窗口",
+    "SwitchWorkspace": "切换工作区",
+    "ReverseSwitchWorkspace": "反向切换工作区",
+    "SplitWindowLeft": "向左分屏",
+    "SplitWindowRight": "向右分屏",
+    "MoveWindow": "移动窗口"
   }
 }

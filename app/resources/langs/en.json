@@ -65,5 +65,21 @@
   },
   "str": {
     "null": "Null"
+  },
+  "built_in_commands": {
+    "ShowWorkspace": "ShowWorkspace",
+    "Handle4Or5FingersSwipeUp": "4/5FingersSwipeUp",
+    "Handle4Or5FingersSwipeDown": "4/5FingersSwipeDown",
+    "ToggleMaximize": "ToggleMaximize",
+    "Minimize": "Minimize",
+    "ShowWindow": "ShowWindow",
+    "ShowAllWindow": "ShowAllWindow",
+    "SwitchApplication": "SwitchApplication",
+    "ReverseSwitchApplication": "ReverseSwitchApplication",
+    "SwitchWorkspace": "SwitchWorkspace",
+    "ReverseSwitchWorkspace": "ReverseSwitchWorkspace",
+    "SplitWindowLeft": "SplitWindowLeft",
+    "SplitWindowRight": "SplitWindowRight",
+    "MoveWindow": "MoveWindow"
   }
 }
