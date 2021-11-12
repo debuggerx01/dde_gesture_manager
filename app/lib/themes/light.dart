@@ -23,4 +23,15 @@ var lightTheme = ThemeData.light().copyWith(
         ),
       ),
   dialogBackgroundColor: Color(0xfffefefe),
+  tooltipTheme: ThemeData.dark().tooltipTheme.copyWith(
+        textStyle: TextStyle(
+          color: Colors.grey.shade600,
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Color(0xfff8f8f8).withOpacity(.9),
+          border: Border.all(color: Colors.grey.shade400),
+        ),
+      ),
 );

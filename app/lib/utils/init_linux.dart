@@ -18,8 +18,11 @@ Future<void> initEvents(BuildContext context) async {
   } else {
     var xsettings = GSettings('com.deepin.xsettings');
     String? themeName;
+    Color? activeColor;
     try {
       themeName = (await xsettings.get('theme-name')).toString();
+      var _activeColor = (await xsettings.get('qt-active-color'));
+      activeColor = H.parseQtActiveColor(_activeColor.toNative());
     } catch (e) {
       print(e);
       context.read<SettingsProvider>().setProps(isDarkMode: false);
@@ -27,9 +30,13 @@ Future<void> initEvents(BuildContext context) async {
 
     if (themeName != null) {
       context.read<SettingsProvider>().setProps(isDarkMode: themeName.contains('dark'));
+      context.read<SettingsProvider>().setProps(activeColor: activeColor);
       xsettings.keysChanged.listen((event) {
         xsettings.get('theme-name').then((value) {
           context.read<SettingsProvider>().setProps(isDarkMode: value.toString().contains('dark'));
+        });
+        xsettings.get('qt-active-color').then((value) {
+          context.read<SettingsProvider>().setProps(activeColor: H.parseQtActiveColor(value.toNative()));
         });
       });
     }

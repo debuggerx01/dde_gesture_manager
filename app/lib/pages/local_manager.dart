@@ -1,8 +1,9 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
-import 'package:dde_gesture_manager/models/local_solutions_provider.dart';
-import 'package:dde_gesture_manager/models/solution.provider.dart';
+import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
+import 'package:dde_gesture_manager/models/scheme.provider.dart';
+import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,25 +22,28 @@ class LocalManager extends StatefulWidget {
 class _LocalManagerState extends State<LocalManager> {
   late ScrollController _scrollController;
   int? _hoveringIndex;
-  int? _selectedIndex;
+  late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
+
+    /// todo: load from sp
+    _selectedIndex = 0;
     _scrollController = ScrollController();
   }
 
   Color _getItemBackgroundColor(int index) {
     Color _color = index % 2 == 0 ? context.t.scaffoldBackgroundColor : context.t.backgroundColor;
     if (index == _hoveringIndex) _color = context.t.scaffoldBackgroundColor;
-    if (index == _selectedIndex) _color = Colors.blueAccent;
+    if (index == _selectedIndex) _color = context.read<SettingsProvider>().currentActiveColor;
     return _color;
   }
 
   @override
   Widget build(BuildContext context) {
     var isOpen = context.watch<ContentLayoutProvider>().localManagerOpened == true;
-    var localSolutions = context.watch<LocalSolutionsProvider>().solutions ?? [];
+    var localSchemes = context.watch<LocalSchemesProvider>().schemes ?? [];
     return AnimatedContainer(
       duration: mediumDuration,
       curve: Curves.easeInOut,
@@ -83,54 +87,82 @@ class _LocalManagerState extends State<LocalManager> {
                   ],
                 ),
                 Flexible(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemBuilder: (context, index) => GestureDetector(
-                            onDoubleTap: () {
-                              context.read<SolutionProvider>().copyFrom(localSolutions[index].solution);
-                              setState(() {
-                                _selectedIndex = index;
-                              });
-                            },
-                            onTap: () {
-                              setState(() {
-                                _selectedIndex = index;
-                              });
-                            },
-                            child: MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              onEnter: (_) {
-                                setState(() {
-                                  _hoveringIndex = index;
-                                });
-                              },
-                              child: Container(
-                                color: _getItemBackgroundColor(index),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(localSolutions[index].solution.name ?? ''),
-                                      Text('456'),
-                                    ],
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: .3,
+                                color: context.t.dividerColor,
+                              ),
+                              borderRadius: BorderRadius.circular(defaultBorderRadius),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                              child: ListView.builder(
+                                controller: _scrollController,
+                                itemBuilder: (context, index) => GestureDetector(
+                                  onTap: () {
+                                    context.read<SchemeProvider>().copyFrom(localSchemes[index].scheme);
+                                    setState(() {
+                                      _selectedIndex = index;
+                                    });
+                                  },
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    onEnter: (_) {
+                                      setState(() {
+                                        _hoveringIndex = index;
+                                      });
+                                    },
+                                    child: Container(
+                                      color: _getItemBackgroundColor(index),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 6, right: 12.0),
+                                        child: DefaultTextStyle(
+                                          style: context.t.textTheme.bodyText2!.copyWith(
+                                            color: _selectedIndex == index ? Colors.white : null,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(localSchemes[index].scheme.name ?? ''),
+                                              Text('456'),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
+                                itemCount: localSchemes.length,
                               ),
                             ),
                           ),
-                          itemCount: localSolutions.length,
                         ),
-                      ),
-                      Container(
-                        height: 150,
-                        color: Colors.black,
-                      ),
-                    ],
+                        Container(height: 5),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              DButton.add(enabled: true),
+                              DButton.delete(enabled: _selectedIndex > 0),
+                              DButton.duplicate(enabled: _selectedIndex > 0),
+                              DButton.apply(enabled: _selectedIndex > 0),
+                            ]
+                                .map((e) => Padding(
+                                      padding: const EdgeInsets.only(right: 4),
+                                      child: e,
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

@@ -11,7 +11,7 @@ class ThemeSwitcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _brightnessMode = context.watch<ConfigsProvider>().brightnessMode;
-    return PopupMenuButton(
+    return PopupMenuButton<BrightnessMode>(
       initialValue: _brightnessMode,
       child: Row(
         children: [
@@ -23,35 +23,23 @@ class ThemeSwitcher extends StatelessWidget {
         ],
       ),
       padding: EdgeInsets.zero,
+      onSelected: (value) => context.read<ConfigsProvider>().setProps(brightnessMode: value),
       tooltip: LocaleKeys.theme_tip.tr(),
       itemBuilder: (BuildContext context) => [
-        PopupMenuItem<BrightnessMode>(
-          child: ListTile(
-            leading: Visibility(
-              child: Icon(CupertinoIcons.check_mark),
-              visible: _brightnessMode == BrightnessMode.system,
-            ),
-            title: Text(LocaleKeys.theme_system).tr(),
-          ),
-          onTap: () => context.read<ConfigsProvider>().setProps(brightnessMode: BrightnessMode.system),
+        CheckedPopupMenuItem<BrightnessMode>(
+          child: Text(LocaleKeys.theme_system).tr(),
+          checked: _brightnessMode == BrightnessMode.system,
+          value: BrightnessMode.system,
         ),
-        PopupMenuItem<BrightnessMode>(
-          child: ListTile(
-              leading: Visibility(
-                child: Icon(CupertinoIcons.check_mark),
-                visible: _brightnessMode == BrightnessMode.light,
-              ),
-              title: Text(LocaleKeys.theme_light).tr()),
-          onTap: () => context.read<ConfigsProvider>().setProps(brightnessMode: BrightnessMode.light),
+        CheckedPopupMenuItem<BrightnessMode>(
+          child: Text(LocaleKeys.theme_light).tr(),
+          checked: _brightnessMode == BrightnessMode.light,
+          value: BrightnessMode.light,
         ),
-        PopupMenuItem<BrightnessMode>(
-          child: ListTile(
-              leading: Visibility(
-                child: Icon(CupertinoIcons.check_mark),
-                visible: _brightnessMode == BrightnessMode.dark,
-              ),
-              title: Text(LocaleKeys.theme_dark).tr()),
-          onTap: () => context.read<ConfigsProvider>().setProps(brightnessMode: BrightnessMode.dark),
+        CheckedPopupMenuItem<BrightnessMode>(
+          child: Text(LocaleKeys.theme_dark).tr(),
+          checked: _brightnessMode == BrightnessMode.dark,
+          value: BrightnessMode.dark,
         ),
       ],
     );

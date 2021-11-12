@@ -1,5 +1,5 @@
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
-import 'package:dde_gesture_manager/models/solution.dart';
+import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
@@ -96,7 +96,15 @@ class H {
         'shortcut': GestureType.shortcut,
         'commandline': GestureType.commandline,
       }[typeName] ??
-          GestureType.built_in;
+      GestureType.built_in;
+
+  static Color? parseQtActiveColor(String? inp) {
+    if (inp == null) return null;
+    var list = inp.split(',');
+    if (list.length != 4) return null;
+    var rgba = list.map<int>((e) => int.parse(e) ~/ 257).toList();
+    return Color.fromARGB(rgba[3], rgba[0], rgba[1], rgba[2]);
+  }
 }
 
 class PreferredPanelsStatus {

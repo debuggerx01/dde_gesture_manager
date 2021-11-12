@@ -20,6 +20,23 @@ const double defaultBorderRadius = 8;
 
 const double defaultButtonHeight = 36;
 
+const List<String> builtInCommands = [
+  'ShowWorkspace',
+  'Handle4Or5FingersSwipeUp',
+  'Handle4Or5FingersSwipeDown',
+  'ToggleMaximize',
+  'Minimize',
+  'ShowWindow',
+  'ShowAllWindow',
+  'SwitchApplication',
+  'ReverseSwitchApplication',
+  'SwitchWorkspace',
+  'ReverseSwitchWorkspace',
+  'SplitWindowLeft',
+  'SplitWindowRight',
+  'MoveWindow',
+];
+
 enum PanelType {
   local_manager,
   market,

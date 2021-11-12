@@ -20,13 +20,17 @@
     "tip": "Display help documentation"
   },
   "market": {
-    "title": "Solution market"
+    "title": "Scheme market"
   },
   "local_manager": {
-    "title": "Local solution management"
+    "title": "Local scheme management",
+    "default_scheme": {
+      "label": "System default scheme",
+      "description": "System default gesture scheme, cannot be modified. (Secretly telling you that there is no actual content in this scheme, just when applying the scheme, it is achieved by deleting a custom configuration scheme."
+    }
   },
   "gesture_editor": {
-    "label": "Gesture program editing",
+    "label": "Gesture scheme editing",
     "gesture": "gesture",
     "direction": "direction",
     "fingers": "fingers",
@@ -58,5 +62,24 @@
     "delete": "delete",
     "duplicate": "duplicate",
     "apply": "apply"
+  },
+  "str": {
+    "null": "Null"
+  },
+  "built_in_commands": {
+    "ShowWorkspace": "ShowWorkspace",
+    "Handle4Or5FingersSwipeUp": "4/5FingersSwipeUp",
+    "Handle4Or5FingersSwipeDown": "4/5FingersSwipeDown",
+    "ToggleMaximize": "ToggleMaximize",
+    "Minimize": "Minimize",
+    "ShowWindow": "ShowWindow",
+    "ShowAllWindow": "ShowAllWindow",
+    "SwitchApplication": "SwitchApplication",
+    "ReverseSwitchApplication": "ReverseSwitchApplication",
+    "SwitchWorkspace": "SwitchWorkspace",
+    "ReverseSwitchWorkspace": "ReverseSwitchWorkspace",
+    "SplitWindowLeft": "SplitWindowLeft",
+    "SplitWindowRight": "SplitWindowRight",
+    "MoveWindow": "MoveWindow"
   }
 }

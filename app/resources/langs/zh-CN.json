@@ -23,7 +23,11 @@
     "title": "方案市场"
   },
   "local_manager": {
-    "title": "本地方案管理"
+    "title": "本地方案管理",
+    "default_scheme": {
+      "label": "系统默认方案",
+      "description": "系统默认的手势方案，不可修改。（偷偷告诉你，这个这个方案里没有任何实际内容，应用该方案时不过是通过删除自定义配置方案的方式来实现恢复系统默认方案～）"
+    }
   },
   "gesture_editor": {
     "label": "手势方案编辑",
@@ -58,5 +62,24 @@
     "delete": "删除",
     "duplicate": "复制",
     "apply": "应用"
+  },
+  "str": {
+    "null": "无"
+  },
+  "built_in_commands": {
+    "ShowWorkspace": "显示工作区",
+    "Handle4Or5FingersSwipeUp": "4/5指向上划",
+    "Handle4Or5FingersSwipeDown": "4/5指向下划",
+    "ToggleMaximize": "全屏切换",
+    "Minimize": "最小化",
+    "ShowWindow": "显示桌面",
+    "ShowAllWindow": "查看所有窗口",
+    "SwitchApplication": "切换应用窗口",
+    "ReverseSwitchApplication": "反向切换应用窗口",
+    "SwitchWorkspace": "切换工作区",
+    "ReverseSwitchWorkspace": "反向切换工作区",
+    "SplitWindowLeft": "向左分屏",
+    "SplitWindowRight": "向右分屏",
+    "MoveWindow": "移动窗口"
   }
 }
