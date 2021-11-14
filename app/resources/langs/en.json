@@ -49,7 +49,7 @@
     "gestures": {
       "swipe": "swipe",
       "pinch": "pinch",
-      "tap": "pinch"
+      "tap": "tap"
     },
     "types": {
       "built_in": "built-in",
