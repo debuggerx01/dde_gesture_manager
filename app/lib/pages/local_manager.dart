@@ -2,6 +2,7 @@ import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
+import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
@@ -111,6 +112,7 @@ class _LocalManagerState extends State<LocalManager> {
                                     setState(() {
                                       _selectedIndex = index;
                                     });
+                                    context.read<GesturePropProvider>().copyFrom(GestureProp.empty());
                                   },
                                   child: MouseRegion(
                                     cursor: SystemMouseCursors.click,

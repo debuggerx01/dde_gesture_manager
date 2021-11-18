@@ -5,6 +5,7 @@ import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/pages/content.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/keyboard_mapper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
@@ -13,6 +14,7 @@ import 'package:dde_gesture_manager/widgets/table_cell_shortcut_listener.dart';
 import 'package:dde_gesture_manager/widgets/table_cell_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 const double _headingRowHeight = 56;
 const double _scrollBarWidth = 14;
@@ -152,7 +154,86 @@ class GestureEditor extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(height: 10),
+                Builder(builder: (context) {
+                  var gesturePropProvider = context.watch<GesturePropProvider>();
+                  var copiedGesturePropProvider = context.watch<CopiedGesturePropProvider>();
+                  var schemeTree = schemeProvider.buildSchemeTree();
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      DButton.add(
+                        enabled: !gesturePropProvider.editMode! && !schemeTree.fullFiled,
+                        onTap: () {
+                          var schemeProvider = context.read<SchemeProvider>();
+                          context.read<SchemeProvider>().setProps(
+                                  gestures: [
+                                ...?schemeProvider.gestures,
+                                H.getNextAvailableGestureProp(schemeProvider.buildSchemeTree())!,
+                              ]..sort());
+                        },
+                      ),
+                      DButton.delete(
+                        enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,
+                        onTap: () {
+                          var schemeProvider = context.read<SchemeProvider>();
+                          var index = schemeProvider.gestures?.indexWhere((e) => e.id == gesturePropProvider.id);
+                          var newGestures = [
+                            ...?schemeProvider.gestures?..removeAt(index!),
+                          ];
+                          context.read<SchemeProvider>().setProps(gestures: newGestures);
+                          if (newGestures.length > 0)
+                            gesturePropProvider.copyFrom(
+                                newGestures[(index ?? 0) > newGestures.length - 1 ? newGestures.length - 1 : index ?? 0]
+                                  ..editMode = false);
+                        },
+                      ),
+                      DButton.duplicate(
+                        enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,
+                        onTap: () {
+                          var schemeProvider = context.read<SchemeProvider>();
+                          context.read<CopiedGesturePropProvider>().copyFrom(
+                              schemeProvider.gestures!.firstWhere((element) => element.id == gesturePropProvider.id));
+
+                          /// todo: give some info to UI.
+                        },
+                      ),
+                      DButton.paste(
+                        enabled: copiedGesturePropProvider != CopiedGesturePropProvider.empty() &&
+                            !gesturePropProvider.editMode! &&
+                            !schemeTree.fullFiled,
+                        onTap: () {
+                          var schemeTree = context.read<SchemeProvider>().buildSchemeTree();
+                          late GestureProp newGestureProp;
+                          if (schemeTree.nodes
+                              .firstWhere((e) => e.fingers == copiedGesturePropProvider.fingers)
+                              .nodes
+                              .firstWhere((e) => e.type == copiedGesturePropProvider.gesture)
+                              .nodes
+                              .firstWhere((e) => e.direction == copiedGesturePropProvider.direction)
+                              .available) {
+                            newGestureProp = GestureProp.empty()..copyFrom(copiedGesturePropProvider);
+                          } else {
+                            newGestureProp = H.getNextAvailableGestureProp(schemeProvider.buildSchemeTree())!;
+                            newGestureProp.type = copiedGesturePropProvider.type;
+                            newGestureProp.command = copiedGesturePropProvider.command;
+                            newGestureProp.remark = copiedGesturePropProvider.remark;
+                          }
+                          newGestureProp.id = Uuid().v1();
+                          context.read<SchemeProvider>().setProps(
+                                  gestures: [
+                                ...?schemeProvider.gestures,
+                                newGestureProp,
+                              ]..sort());
+                        },
+                      ),
+                    ]
+                        .map((e) => Padding(
+                              padding: const EdgeInsets.only(top: 3.0, right: 10.0, bottom: 8.0),
+                              child: e,
+                            ))
+                        .toList(),
+                  );
+                }),
                 Container(
                   height: 300,
                   decoration: BoxDecoration(
@@ -202,114 +283,144 @@ List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context)
           }
         },
         selected: selected,
-        cells: editing ? _buildRowCellsEditing(context, gesture) : _buildRowCellsNormal(context, selected, gesture),
+        cells: editing ? _buildRowCellsEditing(context) : _buildRowCellsNormal(context, selected, gesture),
       );
     }).toList();
 
-List<DDataCell> _buildRowCellsEditing(BuildContext context, GestureProp gesture) => [
-      DButton.dropdown(
-        enabled: true,
-        child: DropdownButton<int>(
-          icon: Icon(Icons.keyboard_arrow_down_rounded),
-          items: [3, 4, 5]
-              .map(
-                (e) => DropdownMenuItem<int>(
-                  child: Text('$e'),
-                  value: e,
-                ),
-              )
-              .toList(),
-          value: context.watch<GesturePropProvider>().fingers,
-          onChanged: (value) => context.read<GesturePropProvider>().setProps(
-                fingers: value,
-                editMode: true,
+List<DDataCell> _buildRowCellsEditing(BuildContext context) {
+  var gesture = context.read<GesturePropProvider>();
+  var schemeTree = context.read<SchemeProvider>().buildSchemeTree();
+  var availableFingers = schemeTree.nodes.where((node) => !node.fullFiled).map((e) => e.fingers);
+  if (!availableFingers.contains(gesture.fingers)) {
+    availableFingers = [...availableFingers, gesture.fingers!]..sort();
+  }
+
+  var availableGestures = schemeTree.nodes
+      .firstWhere((node) => node.fingers == gesture.fingers)
+      .nodes
+      .where((node) => !node.fullFiled)
+      .map((e) => e.type);
+  if (!availableGestures.any((type) => type == gesture.gesture)) {
+    availableGestures = [...availableGestures, gesture.gesture!]..sort();
+  }
+
+  var availableDirection = schemeTree.nodes
+      .firstWhere((node) => node.fingers == gesture.fingers)
+      .nodes
+      .firstWhere((node) => node.type == gesture.gesture)
+      .nodes
+      .where((node) => !node.fullFiled)
+      .map((e) => e.direction);
+
+  if (!availableDirection.any((direction) => direction == gesture.direction)) {
+    availableDirection = [...availableDirection, gesture.direction!]..sort((a, b) => a.index - b.index);
+  }
+
+  return [
+    DButton.dropdown(
+      enabled: true,
+      child: DropdownButton<int>(
+        icon: Icon(Icons.keyboard_arrow_down_rounded),
+        items: availableFingers
+            .map(
+              (e) => DropdownMenuItem<int>(
+                child: Text('$e'),
+                value: e,
               ),
-          isExpanded: true,
-        ),
-      ),
-      DButton.dropdown(
-        enabled: true,
-        width: 60.0,
-        child: DropdownButton<Gesture>(
-          icon: Icon(Icons.keyboard_arrow_down_rounded),
-          items: Gesture.values
-              .map(
-                (e) => DropdownMenuItem<Gesture>(
-                  child: Text(
-                    '${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(e)}',
-                    textScaleFactor: .8,
-                  ).tr(),
-                  value: e,
-                ),
-              )
-              .toList(),
-          value: context.watch<GesturePropProvider>().gesture,
-          onChanged: (value) => context.read<GesturePropProvider>().setProps(
-                gesture: value,
-                editMode: true,
-              ),
-          isExpanded: true,
-        ),
-      ),
-      DButton.dropdown(
-        enabled: true,
-        width: 100.0,
-        child: DropdownButton<GestureDirection>(
-          icon: Icon(Icons.keyboard_arrow_down_rounded),
-          items: GestureDirection.values
-              .map(
-                (e) => DropdownMenuItem<GestureDirection>(
-                  child: Text(
-                    '${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(e)}',
-                    textScaleFactor: .8,
-                  ).tr(),
-                  value: e,
-                ),
-              )
-              .toList(),
-          value: context.watch<GesturePropProvider>().direction,
-          onChanged: (value) => context.read<GesturePropProvider>().setProps(
-                direction: value,
-                editMode: true,
-              ),
-          isExpanded: true,
-        ),
-      ),
-      DButton.dropdown(
-        enabled: true,
-        width: 100.0,
-        child: DropdownButton<GestureType>(
-          icon: Icon(Icons.keyboard_arrow_down_rounded),
-          items: GestureType.values
-              .map(
-                (e) => DropdownMenuItem<GestureType>(
-                  child: Text(
-                    '${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(e)}',
-                    textScaleFactor: .8,
-                  ).tr(),
-                  value: e,
-                ),
-              )
-              .toList(),
-          value: context.watch<GesturePropProvider>().type,
-          onChanged: (value) => context.read<GesturePropProvider>().setProps(
-                type: value,
-                command: '',
-                editMode: true,
-              ),
-          isExpanded: true,
-        ),
-      ),
-      _buildCommandCellsEditing(context),
-      TableCellTextField(
-        initText: gesture.remark,
-        hint: 'pls input cmd',
-        onComplete: (value) => context.read<GesturePropProvider>().setProps(
-              remark: value,
+            )
+            .toList(),
+        value: gesture.fingers,
+        onChanged: (value) => context.read<GesturePropProvider>().setProps(
+              fingers: value,
               editMode: true,
             ),
+        isExpanded: true,
       ),
-    ].map((e) => DDataCell(e)).toList();
+    ),
+    DButton.dropdown(
+      enabled: true,
+      width: 100.0,
+      child: DropdownButton<Gesture>(
+        icon: Icon(Icons.keyboard_arrow_down_rounded),
+        items: availableGestures
+            .map(
+              (e) => DropdownMenuItem<Gesture>(
+                child: Text(
+                  '${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(e)}',
+                  textScaleFactor: .8,
+                ).tr(),
+                value: e,
+              ),
+            )
+            .toList(),
+        value: gesture.gesture,
+        onChanged: (value) => context.read<GesturePropProvider>().setProps(
+              gesture: value,
+              editMode: true,
+            ),
+        isExpanded: true,
+      ),
+    ),
+    DButton.dropdown(
+      enabled: true,
+      width: 100.0,
+      child: DropdownButton<GestureDirection>(
+        icon: Icon(Icons.keyboard_arrow_down_rounded),
+        items: availableDirection
+            .map(
+              (e) => DropdownMenuItem<GestureDirection>(
+                child: Text(
+                  '${LocaleKeys.gesture_editor_directions}.${H.getGestureDirectionName(e)}',
+                  textScaleFactor: .8,
+                ).tr(),
+                value: e,
+              ),
+            )
+            .toList(),
+        value: gesture.direction,
+        onChanged: (value) => context.read<GesturePropProvider>().setProps(
+              direction: value,
+              editMode: true,
+            ),
+        isExpanded: true,
+      ),
+    ),
+    DButton.dropdown(
+      enabled: true,
+      width: 100.0,
+      child: DropdownButton<GestureType>(
+        icon: Icon(Icons.keyboard_arrow_down_rounded),
+        items: GestureType.values
+            .map(
+              (e) => DropdownMenuItem<GestureType>(
+                child: Text(
+                  '${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(e)}',
+                  textScaleFactor: .8,
+                ).tr(),
+                value: e,
+              ),
+            )
+            .toList(),
+        value: gesture.type,
+        onChanged: (value) => context.read<GesturePropProvider>().setProps(
+              type: value,
+              command: '',
+              editMode: true,
+            ),
+        isExpanded: true,
+      ),
+    ),
+    _buildCommandCellsEditing(context),
+    TableCellTextField(
+      initText: gesture.remark,
+      hint: 'pls input cmd',
+      onComplete: (value) => context.read<GesturePropProvider>().setProps(
+            remark: value,
+            editMode: true,
+          ),
+    ),
+  ].map((e) => DDataCell(e)).toList();
+}
 
 Widget _buildCommandCellsEditing(BuildContext context) {
   var gesture = context.read<GesturePropProvider>();
@@ -414,9 +525,13 @@ List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, Gestur
                 },
               ).toList(),
             )
-          : Text(
-              gesture.command ?? '',
-            ),
+          : (gesture.type == GestureType.built_in
+              ? Text(
+                  ('${LocaleKeys.built_in_commands}.${(builtInCommands.contains(gesture.command) ? gesture.command : builtInCommands.first)!}')
+                      .tr())
+              : Text(
+                  gesture.command ?? '',
+                )),
       Text(
         gesture.remark ?? '',
       ),

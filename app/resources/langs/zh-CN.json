@@ -61,7 +61,8 @@
     "add": "新增",
     "delete": "删除",
     "duplicate": "复制",
-    "apply": "应用"
+    "apply": "应用",
+    "paste": "粘贴"
   },
   "str": {
     "null": "无"

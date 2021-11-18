@@ -1,6 +1,7 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class TableCellTextField extends StatefulWidget {
@@ -21,7 +22,9 @@ class TableCellTextField extends StatefulWidget {
 
 class _TableCellTextFieldState extends State<TableCellTextField> {
   final FocusNode _focusNode = FocusNode(
-    onKeyEvent: (_, __) => KeyEventResult.skipRemainingHandlers,
+    onKeyEvent: (_, evt) => [LogicalKeyboardKey.backspace].contains(evt.logicalKey)
+        ? KeyEventResult.ignored
+        : KeyEventResult.skipRemainingHandlers,
   );
   final TextEditingController _controller = TextEditingController();
 
