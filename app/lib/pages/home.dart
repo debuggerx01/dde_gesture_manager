@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
                 "direction": "down",
                 "fingers": 3,
                 "type": "shortcut",
-                "command": "ctrl+w",
+                "command": "Control_L+w",
                 "remark": "close current page."
               },
               {
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
                 "direction": "up",
                 "fingers": 3,
                 "type": "shortcut",
-                "command": "ctrl+alt+t",
+                "command": "Control_L+Alt_L+t",
                 "remark": "reopen last closed page."
               },
               {
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                 "direction": "in",
                 "fingers": 4,
                 "type": "shortcut",
-                "command": "ctrl+alt+f",
+                "command": "Control_L+Alt_L+f",
                 "remark": "search files."
               },
               {
