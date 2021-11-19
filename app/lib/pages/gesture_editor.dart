@@ -10,6 +10,7 @@ import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/keyboard_mapper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/dde_data_table.dart';
+import 'package:dde_gesture_manager/widgets/dde_text_field.dart';
 import 'package:dde_gesture_manager/widgets/table_cell_shortcut_listener.dart';
 import 'package:dde_gesture_manager/widgets/table_cell_text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -235,12 +236,35 @@ class GestureEditor extends StatelessWidget {
                   );
                 }),
                 Container(
-                  height: 300,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(defaultBorderRadius),
                     border: Border.all(
                       width: .2,
                       color: context.t.dividerColor,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('name:'),
+                            ),
+                            Expanded(
+                              child: DTextField(
+                                onComplete: (val) {
+                                  schemeProvider.setProps(name: val);
+                                  /// todo: change name to local list.
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -301,7 +325,7 @@ List<DDataCell> _buildRowCellsEditing(BuildContext context) {
       .where((node) => !node.fullFiled)
       .map((e) => e.type);
   if (!availableGestures.any((type) => type == gesture.gesture)) {
-    availableGestures = [...availableGestures, gesture.gesture!]..sort();
+    availableGestures = [...availableGestures, gesture.gesture!]..sort((a, b) => a.index - b.index);
   }
 
   var availableDirection = schemeTree.nodes
