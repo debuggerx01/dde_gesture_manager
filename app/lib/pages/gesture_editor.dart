@@ -2,6 +2,7 @@ import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
+import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
@@ -256,9 +257,25 @@ class GestureEditor extends StatelessWidget {
                             ),
                             Expanded(
                               child: DTextField(
+                                initText: schemeProvider.name,
                                 onComplete: (val) {
+                                  val = val.trim();
                                   schemeProvider.setProps(name: val);
-                                  /// todo: change name to local list.
+                                  var localSchemesProvider = context.read<LocalSchemesProvider>();
+                                  if (!localSchemesProvider.schemes!.every((element) => element.scheme.name != val)) {
+                                    /// show error info;
+                                    'duplicate name'.sout();
+                                    return;
+                                  }
+                                  ;
+                                  var localSchemeEntry = localSchemesProvider.schemes!
+                                      .firstWhere((ele) => ele.scheme.id == schemeProvider.id);
+                                  localSchemeEntry.scheme.name = val;
+                                  localSchemeEntry.save();
+                                  localSchemesProvider.schemeEntries.then((value) {
+                                    localSchemesProvider
+                                        .setProps(schemes: [localSchemesProvider.schemes!.first, ...value..sort()]);
+                                  });
                                 },
                               ),
                             ),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
@@ -13,7 +14,7 @@ export 'local_schemes.dart';
 @ProviderModel()
 class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryLinux> {
   LocalSchemes() {
-    schemeEntries.then((value) => schemes = [LocalSchemeEntryLinux.systemDefault(), ...value]);
+    schemeEntries.then((value) => schemes = [LocalSchemeEntryLinux.systemDefault(), ...value..sort()]);
   }
 
   @override
@@ -68,7 +69,13 @@ class LocalSchemeEntryLinux implements LocalSchemeEntry {
 
   @override
   save() {
-    // TODO: implement save
-    throw UnimplementedError();
+    var file = File(path);
+    file.writeAsStringSync(json.encode(scheme));
+  }
+
+  @override
+  int compareTo(other) {
+    assert(other is LocalSchemeEntry);
+    return lastModifyTime.isAfter(other.lastModifyTime) ? -1 : 1;
   }
 }

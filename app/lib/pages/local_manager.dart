@@ -10,6 +10,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:uuid/uuid.dart';
 
 class LocalManager extends StatefulWidget {
   const LocalManager({
@@ -22,22 +23,22 @@ class LocalManager extends StatefulWidget {
 
 class _LocalManagerState extends State<LocalManager> {
   late ScrollController _scrollController;
-  int? _hoveringIndex;
-  late int _selectedIndex;
+  String? _hoveringItem;
+  late String _selectedItem;
 
   @override
   void initState() {
     super.initState();
 
     /// todo: load from sp
-    _selectedIndex = 0;
+    _selectedItem = Uuid.NAMESPACE_NIL;
     _scrollController = ScrollController();
   }
 
-  Color _getItemBackgroundColor(int index) {
+  Color _getItemBackgroundColor(int index, String itemId) {
     Color _color = index % 2 == 0 ? context.t.scaffoldBackgroundColor : context.t.backgroundColor;
-    if (index == _hoveringIndex) _color = context.t.scaffoldBackgroundColor;
-    if (index == _selectedIndex) _color = context.read<SettingsProvider>().currentActiveColor;
+    if (itemId == _hoveringItem) _color = context.t.scaffoldBackgroundColor;
+    if (itemId == _selectedItem) _color = context.read<SettingsProvider>().currentActiveColor;
     return _color;
   }
 
@@ -110,7 +111,7 @@ class _LocalManagerState extends State<LocalManager> {
                                   onTap: () {
                                     context.read<SchemeProvider>().copyFrom(localSchemes[index].scheme);
                                     setState(() {
-                                      _selectedIndex = index;
+                                      _selectedItem = localSchemes[index].scheme.id!;
                                     });
                                     context.read<GesturePropProvider>().copyFrom(GestureProp.empty());
                                   },
@@ -118,16 +119,17 @@ class _LocalManagerState extends State<LocalManager> {
                                     cursor: SystemMouseCursors.click,
                                     onEnter: (_) {
                                       setState(() {
-                                        _hoveringIndex = index;
+                                        _hoveringItem = localSchemes[index].scheme.id!;
                                       });
                                     },
                                     child: Container(
-                                      color: _getItemBackgroundColor(index),
+                                      color: _getItemBackgroundColor(index, localSchemes[index].scheme.id!),
                                       child: Padding(
                                         padding: const EdgeInsets.only(left: 6, right: 12.0),
                                         child: DefaultTextStyle(
                                           style: context.t.textTheme.bodyText2!.copyWith(
-                                            color: _selectedIndex == index ? Colors.white : null,
+                                            color:
+                                                _selectedItem == localSchemes[index].scheme.id! ? Colors.white : null,
                                           ),
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,9 +154,9 @@ class _LocalManagerState extends State<LocalManager> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               DButton.add(enabled: true),
-                              DButton.delete(enabled: _selectedIndex > 0),
-                              DButton.duplicate(enabled: _selectedIndex > 0),
-                              DButton.apply(enabled: _selectedIndex > 0),
+                              DButton.delete(enabled: _selectedItem != Uuid.NAMESPACE_NIL),
+                              DButton.duplicate(enabled: _selectedItem != Uuid.NAMESPACE_NIL),
+                              DButton.apply(enabled: _selectedItem != Uuid.NAMESPACE_NIL),
                             ]
                                 .map((e) => Padding(
                                       padding: const EdgeInsets.only(right: 4),

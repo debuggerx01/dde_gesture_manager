@@ -1,8 +1,8 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
+import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dde_gesture_manager/extensions.dart';
 
 class DTextField extends StatefulWidget {
   final String? initText;
@@ -41,6 +41,14 @@ class _DTextFieldState extends State<DTextField> {
     if (!_focusNode.hasFocus) {
       widget.onComplete(_controller.text);
     }
+  }
+
+  @override
+  void didUpdateWidget(covariant DTextField oldWidget) {
+    if (oldWidget.initText != widget.initText) {
+      _controller.text = widget.initText ?? '';
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

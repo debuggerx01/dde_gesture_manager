@@ -2,7 +2,7 @@ import 'package:dde_gesture_manager/models/scheme.dart';
 
 export 'local_schemes_web.dart' if (dart.library.io) 'local_schemes_linux.dart';
 
-abstract class LocalSchemeEntry {
+abstract class LocalSchemeEntry implements Comparable {
   Scheme scheme;
   DateTime lastModifyTime;
   String path;

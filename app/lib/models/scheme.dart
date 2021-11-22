@@ -128,7 +128,7 @@ class Scheme {
   Scheme.parse(scheme) {
     if (scheme is String) scheme = json.decode(scheme);
     assert(scheme is Map);
-    id = scheme['id'];
+    id = scheme['id'] ?? Uuid().v1();
     name = scheme['name'];
     description = scheme['desc'];
     gestures = (scheme['gestures'] as List? ?? []).map<GestureProp>((ele) => GestureProp.parse(ele)).toList()..sort();
@@ -154,6 +154,13 @@ class Scheme {
     });
     return schemeTree;
   }
+
+  Map toJson() => {
+        'id': id,
+        'name': name,
+        'desc': description,
+        'gestures': gestures,
+      };
 }
 
 enum Gesture {
@@ -220,6 +227,16 @@ class GestureProp implements Comparable {
   String toString() {
     return 'GestureProp{gesture: $gesture, direction: $direction, fingers: $fingers, type: $type, command: $command, remark: $remark}';
   }
+
+  Map toJson() => {
+        'id': id,
+        'gesture': H.getGestureName(gesture),
+        'direction': H.getGestureDirectionName(direction),
+        'fingers': fingers,
+        'type': H.getGestureTypeName(type),
+        'command': command,
+        'remark': remark,
+      };
 
   GestureProp.empty() : this.id = Uuid.NAMESPACE_NIL;
 

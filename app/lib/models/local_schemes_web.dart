@@ -12,7 +12,7 @@ export 'local_schemes.dart';
 @ProviderModel()
 class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryWeb> {
   LocalSchemes() {
-    schemeEntries.then((value) => schemes = [LocalSchemeEntryWeb.systemDefault(), ...value]);
+    schemeEntries.then((value) => schemes = [LocalSchemeEntryWeb.systemDefault(), ...value..sort()]);
   }
 
   @override
@@ -71,5 +71,11 @@ class LocalSchemeEntryWeb implements LocalSchemeEntry {
   save() {
     // TODO: implement save
     throw UnimplementedError();
+  }
+
+  @override
+  int compareTo(other) {
+    assert(other is LocalSchemeEntry);
+    return lastModifyTime.isAfter(other.lastModifyTime) ? -1 : 1;
   }
 }
