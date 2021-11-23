@@ -3,6 +3,7 @@ import 'dart:html';
 
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 
 import 'local_schemes.dart';
@@ -68,7 +69,7 @@ class LocalSchemeEntryWeb implements LocalSchemeEntry {
         this.lastModifyTime = DateTime.fromMillisecondsSinceEpoch(8640000000000000);
 
   @override
-  save() {
+  save(LocalSchemesProvider provider) {
     // TODO: implement save
     throw UnimplementedError();
   }

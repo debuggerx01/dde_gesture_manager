@@ -143,7 +143,7 @@ class _DButtonState extends State<DButton> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
-        borderColor: _hovering
+        borderColor: _hovering && widget.onTap != null
             ? (widget.activeBorderColor ?? context.watch<SettingsProvider>().currentActiveColor)
             : Color(0xff565656),
         borderWidth: 2,

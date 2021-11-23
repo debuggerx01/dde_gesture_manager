@@ -7,12 +7,14 @@ import 'package:provider/provider.dart';
 class DTextField extends StatefulWidget {
   final String? initText;
   final String? hint;
+  final bool readOnly;
   final Function(String value) onComplete;
 
   const DTextField({
     Key? key,
     this.initText,
     this.hint,
+    this.readOnly = false,
     required this.onComplete,
   }) : super(key: key);
 
@@ -62,7 +64,7 @@ class _DTextFieldState extends State<DTextField> {
             color: Colors.grey.withOpacity(.3),
             border: Border.all(
                 width: 2,
-                color: Focus.of(context).hasFocus
+                color: Focus.of(context).hasFocus && !widget.readOnly
                     ? context.watch<SettingsProvider>().activeColor ?? Color(0xff565656)
                     : Color(0xff565656)),
           ),
@@ -71,6 +73,7 @@ class _DTextFieldState extends State<DTextField> {
             child: Padding(
               padding: const EdgeInsets.only(left: 15),
               child: TextField(
+                readOnly: widget.readOnly,
                 focusNode: _focusNode,
                 cursorColor: context.watch<SettingsProvider>().activeColor,
                 decoration: InputDecoration.collapsed(hintText: widget.hint),

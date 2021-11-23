@@ -126,27 +126,32 @@ class GestureEditor extends StatelessWidget {
                               controller: horizontalCtrl,
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(minWidth: constraints.maxWidth),
-                                child: DDataTable(
-                                  showBottomBorder: true,
-                                  headingRowHeight: _headingRowHeight,
-                                  showCheckboxColumn: true,
-                                  headerBackgroundColor: context.t.dialogBackgroundColor,
-                                  verticalScrollController: verticalCtrl,
-                                  dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.hovered)) return context.t.dialogBackgroundColor;
-                                    if (states.contains(MaterialState.selected))
-                                      return context.read<SettingsProvider>().currentActiveColor;
-                                    return null;
-                                  }),
-                                  columns: [
-                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr()), center: true),
-                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr()), center: true),
-                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr()), center: true),
-                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr()), center: true),
-                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
-                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
-                                  ],
-                                  rows: _buildDataRows(schemeProvider.gestures, context),
+                                child: IgnorePointer(
+                                  ignoring: schemeProvider.readOnly ?? false,
+                                  child: DDataTable(
+                                    showBottomBorder: true,
+                                    headingRowHeight: _headingRowHeight,
+                                    showCheckboxColumn: true,
+                                    headerBackgroundColor: context.t.dialogBackgroundColor,
+                                    verticalScrollController: verticalCtrl,
+                                    dataRowColor:
+                                        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+                                      if (states.contains(MaterialState.hovered))
+                                        return context.t.dialogBackgroundColor;
+                                      if (states.contains(MaterialState.selected))
+                                        return context.read<SettingsProvider>().currentActiveColor;
+                                      return null;
+                                    }),
+                                    columns: [
+                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr()), center: true),
+                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr()), center: true),
+                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr()), center: true),
+                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr()), center: true),
+                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
+                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
+                                    ],
+                                    rows: _buildDataRows(schemeProvider.gestures, context),
+                                  ),
                                 ),
                               ),
                             ),
@@ -164,18 +169,23 @@ class GestureEditor extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       DButton.add(
-                        enabled: !gesturePropProvider.editMode! && !schemeTree.fullFiled,
+                        enabled: !(schemeProvider.readOnly ?? false) &&
+                            !gesturePropProvider.editMode! &&
+                            !schemeTree.fullFiled,
                         onTap: () {
                           var schemeProvider = context.read<SchemeProvider>();
-                          context.read<SchemeProvider>().setProps(
-                                  gestures: [
-                                ...?schemeProvider.gestures,
-                                H.getNextAvailableGestureProp(schemeProvider.buildSchemeTree())!,
-                              ]..sort());
+                          var newGestures = [
+                            ...?schemeProvider.gestures,
+                            H.getNextAvailableGestureProp(schemeProvider.buildSchemeTree())!,
+                          ]..sort();
+                          context.read<SchemeProvider>().setProps(gestures: newGestures);
+                          saveGesturesToLocal(context, schemeProvider, newGestures);
                         },
                       ),
                       DButton.delete(
-                        enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,
+                        enabled: !(schemeProvider.readOnly ?? false) &&
+                            gesturePropProvider != GestureProp.empty() &&
+                            !gesturePropProvider.editMode!,
                         onTap: () {
                           var schemeProvider = context.read<SchemeProvider>();
                           var index = schemeProvider.gestures?.indexWhere((e) => e.id == gesturePropProvider.id);
@@ -187,10 +197,13 @@ class GestureEditor extends StatelessWidget {
                             gesturePropProvider.copyFrom(
                                 newGestures[(index ?? 0) > newGestures.length - 1 ? newGestures.length - 1 : index ?? 0]
                                   ..editMode = false);
+                          saveGesturesToLocal(context, schemeProvider, newGestures);
                         },
                       ),
                       DButton.duplicate(
-                        enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,
+                        enabled: !(schemeProvider.readOnly ?? false) &&
+                            gesturePropProvider != GestureProp.empty() &&
+                            !gesturePropProvider.editMode!,
                         onTap: () {
                           var schemeProvider = context.read<SchemeProvider>();
                           context.read<CopiedGesturePropProvider>().copyFrom(
@@ -200,7 +213,8 @@ class GestureEditor extends StatelessWidget {
                         },
                       ),
                       DButton.paste(
-                        enabled: copiedGesturePropProvider != CopiedGesturePropProvider.empty() &&
+                        enabled: !(schemeProvider.readOnly ?? false) &&
+                            copiedGesturePropProvider != CopiedGesturePropProvider.empty() &&
                             !gesturePropProvider.editMode! &&
                             !schemeTree.fullFiled,
                         onTap: () {
@@ -221,11 +235,12 @@ class GestureEditor extends StatelessWidget {
                             newGestureProp.remark = copiedGesturePropProvider.remark;
                           }
                           newGestureProp.id = Uuid().v1();
-                          context.read<SchemeProvider>().setProps(
-                                  gestures: [
-                                ...?schemeProvider.gestures,
-                                newGestureProp,
-                              ]..sort());
+                          var newGestures = [
+                            ...?schemeProvider.gestures,
+                            newGestureProp,
+                          ]..sort();
+                          context.read<SchemeProvider>().setProps(gestures: newGestures);
+                          saveGesturesToLocal(context, schemeProvider, newGestures);
                         },
                       ),
                     ]
@@ -258,6 +273,7 @@ class GestureEditor extends StatelessWidget {
                             Expanded(
                               child: DTextField(
                                 initText: schemeProvider.name,
+                                readOnly: schemeProvider.readOnly ?? false,
                                 onComplete: (val) {
                                   val = val.trim();
                                   schemeProvider.setProps(name: val);
@@ -271,11 +287,7 @@ class GestureEditor extends StatelessWidget {
                                   var localSchemeEntry = localSchemesProvider.schemes!
                                       .firstWhere((ele) => ele.scheme.id == schemeProvider.id);
                                   localSchemeEntry.scheme.name = val;
-                                  localSchemeEntry.save();
-                                  localSchemesProvider.schemeEntries.then((value) {
-                                    localSchemesProvider
-                                        .setProps(schemes: [localSchemesProvider.schemes!.first, ...value..sort()]);
-                                  });
+                                  localSchemeEntry.save(localSchemesProvider);
                                 },
                               ),
                             ),
@@ -314,9 +326,11 @@ List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context)
               var newGestures = List<GestureProp>.of(schemeProvider.gestures!);
               var index = newGestures.indexWhere((element) => element == prop);
               newGestures[index].copyFrom(prop);
+              newGestures.sort();
               context.read<SchemeProvider>().setProps(
-                    gestures: newGestures..sort(),
+                    gestures: newGestures,
                   );
+              saveGesturesToLocal(context, schemeProvider, newGestures);
             };
             provider.copyFrom(
               gesture..editMode = true,
@@ -327,6 +341,13 @@ List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context)
         cells: editing ? _buildRowCellsEditing(context) : _buildRowCellsNormal(context, selected, gesture),
       );
     }).toList();
+
+void saveGesturesToLocal(BuildContext context, SchemeProvider schemeProvider, List<GestureProp> newGestures) {
+  var localSchemesProvider = context.read<LocalSchemesProvider>();
+  var localSchemeEntry = localSchemesProvider.schemes!.firstWhere((ele) => ele.scheme.id == schemeProvider.id);
+  localSchemeEntry.scheme.gestures = newGestures;
+  localSchemeEntry.save(localSchemesProvider);
+}
 
 List<DDataCell> _buildRowCellsEditing(BuildContext context) {
   var gesture = context.read<GesturePropProvider>();

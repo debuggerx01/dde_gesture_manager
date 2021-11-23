@@ -8,6 +8,7 @@ import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 
 import 'local_schemes.dart';
+import 'local_schemes_provider.dart';
 
 export 'local_schemes.dart';
 
@@ -68,9 +69,11 @@ class LocalSchemeEntryLinux implements LocalSchemeEntry {
         this.lastModifyTime = DateTime.fromMillisecondsSinceEpoch(8640000000000000);
 
   @override
-  save() {
+  save(LocalSchemesProvider provider) {
     var file = File(path);
-    file.writeAsStringSync(json.encode(scheme));
+    file.writeAsStringSync(JsonEncoder.withIndent(' ' * 4).convert(scheme));
+    provider.schemes!.firstWhere((ele) => ele.scheme.id == scheme.id).lastModifyTime = DateTime.now();
+    provider.setProps(schemes: [...provider.schemes!]..sort());
   }
 
   @override

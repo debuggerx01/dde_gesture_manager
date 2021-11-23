@@ -1,5 +1,7 @@
 import 'package:dde_gesture_manager/models/scheme.dart';
 
+import 'local_schemes_provider.dart';
+
 export 'local_schemes_web.dart' if (dart.library.io) 'local_schemes_linux.dart';
 
 abstract class LocalSchemeEntry implements Comparable {
@@ -20,7 +22,7 @@ abstract class LocalSchemeEntry implements Comparable {
         /// max value of DateTime ![Time Values and Time Range](https://262.ecma-international.org/11.0/#sec-time-values-and-time-range)
         this.lastModifyTime = DateTime.fromMillisecondsSinceEpoch(8640000000000000);
 
-  save();
+  save(LocalSchemesProvider provider);
 }
 
 abstract class LocalSchemesInterface<T extends LocalSchemeEntry> {
