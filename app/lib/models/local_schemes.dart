@@ -27,4 +27,8 @@ abstract class LocalSchemeEntry implements Comparable {
 
 abstract class LocalSchemesInterface<T extends LocalSchemeEntry> {
   Future<List<T>> get schemeEntries;
+
+  Future<LocalSchemeEntry> create();
+
+  void remove(String path);
 }

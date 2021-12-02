@@ -8,6 +8,7 @@ import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:uuid/uuid.dart';
@@ -24,21 +25,21 @@ class LocalManager extends StatefulWidget {
 class _LocalManagerState extends State<LocalManager> {
   late ScrollController _scrollController;
   String? _hoveringItem;
-  late String _selectedItem;
+  late String _selectedItemPath;
 
   @override
   void initState() {
     super.initState();
 
     /// todo: load from sp
-    _selectedItem = Uuid.NAMESPACE_NIL;
+    _selectedItemPath = '';
     _scrollController = ScrollController();
   }
 
-  Color _getItemBackgroundColor(int index, String itemId) {
+  Color _getItemBackgroundColor(int index, String itemPath) {
     Color _color = index % 2 == 0 ? context.t.scaffoldBackgroundColor : context.t.backgroundColor;
-    if (itemId == _hoveringItem) _color = context.t.scaffoldBackgroundColor;
-    if (itemId == _selectedItem) _color = context.read<SettingsProvider>().currentActiveColor;
+    if (itemPath == _hoveringItem) _color = context.t.scaffoldBackgroundColor;
+    if (itemPath == _selectedItemPath) _color = context.read<SettingsProvider>().currentActiveColor;
     return _color;
   }
 
@@ -111,7 +112,7 @@ class _LocalManagerState extends State<LocalManager> {
                                   onTap: () {
                                     context.read<SchemeProvider>().copyFrom(localSchemes[index].scheme);
                                     setState(() {
-                                      _selectedItem = localSchemes[index].scheme.id!;
+                                      _selectedItemPath = localSchemes[index].path;
                                     });
                                     context.read<GesturePropProvider>().copyFrom(GestureProp.empty());
                                   },
@@ -123,13 +124,12 @@ class _LocalManagerState extends State<LocalManager> {
                                       });
                                     },
                                     child: Container(
-                                      color: _getItemBackgroundColor(index, localSchemes[index].scheme.id!),
+                                      color: _getItemBackgroundColor(index, localSchemes[index].path),
                                       child: Padding(
                                         padding: const EdgeInsets.only(left: 6, right: 12.0),
                                         child: DefaultTextStyle(
                                           style: context.t.textTheme.bodyText2!.copyWith(
-                                            color:
-                                                _selectedItem == localSchemes[index].scheme.id! ? Colors.white : null,
+                                            color: _selectedItemPath == localSchemes[index].path ? Colors.white : null,
                                           ),
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,10 +153,31 @@ class _LocalManagerState extends State<LocalManager> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              DButton.add(enabled: true),
-                              DButton.delete(enabled: _selectedItem != Uuid.NAMESPACE_NIL),
-                              DButton.duplicate(enabled: _selectedItem != Uuid.NAMESPACE_NIL),
-                              DButton.apply(enabled: _selectedItem != Uuid.NAMESPACE_NIL),
+                              DButton.add(
+                                enabled: true,
+                                onTap: () async {
+                                  var localSchemesProvider = context.read<LocalSchemesProvider>();
+                                  var newSchemes = [...?localSchemesProvider.schemes];
+                                  newSchemes.add(await localSchemesProvider.create());
+                                  localSchemesProvider.setProps(schemes: newSchemes..sort());
+                                },
+                              ),
+                              DButton.delete(
+                                enabled: _selectedItemPath.notNull,
+                                onTap: () {
+                                  var localSchemesProvider = context.read<LocalSchemesProvider>();
+                                  var newSchemes = [...?localSchemesProvider.schemes];
+                                  var index = newSchemes.indexWhere((element) => element.path == _selectedItemPath);
+                                  newSchemes.removeAt(index);
+                                  localSchemesProvider.setProps(schemes: newSchemes);
+                                  localSchemesProvider.remove(_selectedItemPath);
+                                  setState(() {
+                                    _selectedItemPath = newSchemes[(index - 1).clamp(1, newSchemes.length)].path;
+                                  });
+                                },
+                              ),
+                              DButton.duplicate(enabled: _selectedItemPath.notNull),
+                              DButton.apply(enabled: _selectedItemPath.notNull),
                             ]
                                 .map((e) => Padding(
                                       padding: const EdgeInsets.only(right: 4),

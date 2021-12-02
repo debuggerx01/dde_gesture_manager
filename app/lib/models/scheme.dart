@@ -148,6 +148,9 @@ class Scheme {
 
   Scheme.create({this.name, this.description, this.gestures}) {
     this.id = Uuid().v1();
+    this.gestures = [];
+    this.readOnly = false;
+    this.name = 'new xxx';
   }
 
   SchemeTree buildSchemeTree() {

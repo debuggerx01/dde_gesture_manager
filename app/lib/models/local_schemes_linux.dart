@@ -6,6 +6,7 @@ import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'local_schemes.dart';
 import 'local_schemes_provider.dart';
@@ -43,6 +44,21 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryLinux> {
 
   @ProviderModelProp()
   List<LocalSchemeEntry>? schemes;
+
+  @override
+  Future<LocalSchemeEntry> create() async {
+    var _supportDirectory = await getApplicationSupportDirectory();
+    return LocalSchemeEntryLinux(
+        path: join(_supportDirectory.path, 'schemes', '${Uuid().v1()}.json'),
+        scheme: Scheme.create(),
+        lastModifyTime: DateTime.now(),
+      );
+  }
+
+  @override
+  void remove(String path) {
+    File(path).delete();
+  }
 }
 
 class LocalSchemeEntryLinux implements LocalSchemeEntry {
