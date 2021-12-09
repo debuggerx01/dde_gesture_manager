@@ -6,12 +6,8 @@ import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:uuid/uuid.dart';
 
 class LocalManager extends StatefulWidget {
   const LocalManager({

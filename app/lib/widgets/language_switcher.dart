@@ -2,13 +2,12 @@ import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/constants/supported_locales.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/generated/codegen_loader.g.dart';
-import 'package:dde_gesture_manager/generated/locale_keys.g.dart';
 import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
+import 'package:easy_localization/src/translations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:easy_localization/src/translations.dart';
 
 class LanguageSwitcher extends StatelessWidget {
   const LanguageSwitcher({Key? key}) : super(key: key);

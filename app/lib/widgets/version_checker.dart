@@ -1,7 +1,6 @@
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:dde_gesture_manager/generated/locale_keys.g.dart';
 
 class VersionChecker extends StatelessWidget {
   const VersionChecker({Key? key}) : super(key: key);

@@ -127,7 +127,7 @@ class GestureEditor extends StatelessWidget {
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(minWidth: constraints.maxWidth),
                                 child: IgnorePointer(
-                                  ignoring: schemeProvider.readOnly ?? false,
+                                  ignoring: schemeProvider.readOnly,
                                   child: DDataTable(
                                     showBottomBorder: true,
                                     headingRowHeight: _headingRowHeight,
@@ -169,7 +169,7 @@ class GestureEditor extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       DButton.add(
-                        enabled: !(schemeProvider.readOnly ?? false) &&
+                        enabled: !schemeProvider.readOnly &&
                             !gesturePropProvider.editMode! &&
                             !schemeTree.fullFiled,
                         onTap: () {
@@ -183,7 +183,7 @@ class GestureEditor extends StatelessWidget {
                         },
                       ),
                       DButton.delete(
-                        enabled: !(schemeProvider.readOnly ?? false) &&
+                        enabled: !schemeProvider.readOnly &&
                             gesturePropProvider != GestureProp.empty() &&
                             !gesturePropProvider.editMode!,
                         onTap: () {
@@ -201,7 +201,7 @@ class GestureEditor extends StatelessWidget {
                         },
                       ),
                       DButton.duplicate(
-                        enabled: !(schemeProvider.readOnly ?? false) &&
+                        enabled: !schemeProvider.readOnly &&
                             gesturePropProvider != GestureProp.empty() &&
                             !gesturePropProvider.editMode!,
                         onTap: () {
@@ -213,7 +213,7 @@ class GestureEditor extends StatelessWidget {
                         },
                       ),
                       DButton.paste(
-                        enabled: !(schemeProvider.readOnly ?? false) &&
+                        enabled: !schemeProvider.readOnly &&
                             copiedGesturePropProvider != CopiedGesturePropProvider.empty() &&
                             !gesturePropProvider.editMode! &&
                             !schemeTree.fullFiled,
@@ -273,7 +273,7 @@ class GestureEditor extends StatelessWidget {
                             Expanded(
                               child: DTextField(
                                 initText: schemeProvider.name,
-                                readOnly: schemeProvider.readOnly ?? false,
+                                readOnly: schemeProvider.readOnly,
                                 onComplete: (val) {
                                   val = val.trim();
                                   schemeProvider.setProps(name: val);

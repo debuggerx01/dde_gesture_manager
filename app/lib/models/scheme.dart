@@ -117,7 +117,10 @@ class Scheme {
   String? id;
 
   @ProviderModelProp()
-  bool? readOnly;
+  bool? fromMarket;
+
+  @ProviderModelProp()
+  bool? uploaded;
 
   @ProviderModelProp()
   String? name;
@@ -128,11 +131,14 @@ class Scheme {
   @ProviderModelProp()
   List<GestureProp>? gestures;
 
+  bool get readOnly => uploaded == true || fromMarket == true || id == Uuid.NAMESPACE_NIL;
+
   Scheme.parse(scheme) {
     if (scheme is String) scheme = json.decode(scheme);
     assert(scheme is Map);
     id = scheme['id'] ?? Uuid().v1();
-    readOnly = scheme['readOnly'] ?? false;
+    fromMarket = scheme['fromMarket'] ?? false;
+    uploaded = scheme['uploaded'] ?? false;
     name = scheme['name'];
     description = scheme['desc'];
     gestures = (scheme['gestures'] as List? ?? []).map<GestureProp>((ele) => GestureProp.parse(ele)).toList()..sort();
@@ -140,7 +146,6 @@ class Scheme {
 
   Scheme.systemDefault() {
     this.id = Uuid.NAMESPACE_NIL;
-    this.readOnly = true;
     this.name = LocaleKeys.local_manager_default_scheme_label.tr();
     this.description = LocaleKeys.local_manager_default_scheme_description.tr();
     this.gestures = [];
@@ -149,7 +154,8 @@ class Scheme {
   Scheme.create({this.name, this.description, this.gestures}) {
     this.id = Uuid().v1();
     this.gestures = [];
-    this.readOnly = false;
+    this.fromMarket = false;
+    this.uploaded = false;
     this.name = 'new xxx';
   }
 
@@ -165,7 +171,8 @@ class Scheme {
 
   Map toJson() => {
         'id': id,
-        'readOnly': readOnly,
+        'fromMarket': fromMarket,
+        'uploaded': uploaded,
         'name': name,
         'desc': description,
         'gestures': gestures,

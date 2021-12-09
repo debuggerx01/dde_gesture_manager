@@ -6,10 +6,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:rect_getter/rect_getter.dart';
 
 /// Signature for [DataColumn.onSort] callback.
@@ -885,8 +883,8 @@ class _DDataTableState extends State<DDataTable> {
     final double effectiveColumnSpacing =
         widget.columnSpacing ?? theme.dataTableTheme.columnSpacing ?? DDataTable._columnSpacing;
 
-    final List<TableColumnWidth> tableColumns = List<TableColumnWidth>.filled(
-        widget.columns.length, const _NullTableColumnWidth());
+    final List<TableColumnWidth> tableColumns =
+        List<TableColumnWidth>.filled(widget.columns.length, const _NullTableColumnWidth());
     final List<TableRow> tableRows = List<TableRow>.generate(
       widget.rows.length + 1, // the +1 is for the header row
       (int index) {
@@ -1007,7 +1005,7 @@ class _DDataTableState extends State<DDataTable> {
                 colors: [
                   _headerBackgroundHSLColor
                       .withLightness(
-                        _headerBackgroundHSLColor.lightness - 0.1 < 0 ? 0 : _headerBackgroundHSLColor.lightness - 0.1)
+                          _headerBackgroundHSLColor.lightness - 0.1 < 0 ? 0 : _headerBackgroundHSLColor.lightness - 0.1)
                       .toColor(),
                   widget.headerBackgroundColor,
                 ],
@@ -1067,8 +1065,7 @@ class _DDataTableState extends State<DDataTable> {
           _headersRect = _rects;
         });
     }
-    if (_rects == null || _rects.isEmpty || _rects.first == null)
-      Future.microtask(() => _buildHeaderStack(tableRows));
+    if (_rects == null || _rects.isEmpty || _rects.first == null) Future.microtask(() => _buildHeaderStack(tableRows));
   }
 }
 

@@ -3,12 +3,10 @@ import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/constants/supported_locales.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/generated/codegen_loader.g.dart';
-import 'package:dde_gesture_manager/generated/locale_keys.g.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:gsettings/gsettings.dart';
-import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 Future<void> initEvents(BuildContext context) async {
