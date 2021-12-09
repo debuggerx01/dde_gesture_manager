@@ -13,8 +13,12 @@ class Configs {
   @ProviderModelProp()
   BrightnessMode? brightnessMode;
 
+  @ProviderModelProp()
+  String? appliedSchemeId;
+
   Configs() {
     this.brightnessMode =
         BrightnessMode.values[H().sp.getInt(SPKeys.brightnessMode)?.clamp(0, BrightnessMode.values.length - 1) ?? 0];
+    this.appliedSchemeId = H().sp.getString(SPKeys.appliedSchemeId);
   }
 }

@@ -1,13 +1,19 @@
+import 'package:collection/collection.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
+import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
+import 'package:dde_gesture_manager/models/local_schemes.dart';
 import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class LocalManager extends StatefulWidget {
   const LocalManager({
@@ -27,9 +33,20 @@ class _LocalManagerState extends State<LocalManager> {
   void initState() {
     super.initState();
 
-    /// todo: load from sp
     _selectedItemPath = '';
     _scrollController = ScrollController();
+
+    context.read<LocalSchemesProvider>().schemeEntries.then((_) {
+      var localSchemes = context.read<LocalSchemesProvider>().schemes ?? [];
+      var appliedSchemeId = context.read<ConfigsProvider>().appliedSchemeId;
+      var appliedScheme = localSchemes.firstWhereOrNull((ele) => ele.scheme.id == appliedSchemeId);
+      if (appliedScheme != null) {
+        setState(() {
+          _selectedItemPath = appliedScheme.path;
+        });
+        _handleItemClick(context, appliedScheme);
+      }
+    });
   }
 
   Color _getItemBackgroundColor(int index, String itemPath) {
@@ -37,6 +54,22 @@ class _LocalManagerState extends State<LocalManager> {
     if (itemPath == _hoveringItem) _color = context.t.scaffoldBackgroundColor;
     if (itemPath == _selectedItemPath) _color = context.read<SettingsProvider>().currentActiveColor;
     return _color;
+  }
+
+  Icon _getItemIcon(Scheme scheme, String? appliedId) {
+    if (scheme.id == appliedId) return Icon(Icons.done_rounded, size: 22);
+    if (scheme.id == Uuid.NAMESPACE_NIL) return Icon(Icons.restore_rounded, size: 22);
+    if (scheme.fromMarket == true) return Icon(Icons.local_grocery_store_rounded, size: 20);
+    if (scheme.uploaded == true) return Icon(Icons.cloud_done_rounded, size: 18);
+    return Icon(Icons.person_rounded, size: 22);
+  }
+
+  void _handleItemClick(BuildContext context, LocalSchemeEntry localScheme) {
+    context.read<SchemeProvider>().copyFrom(localScheme.scheme);
+    setState(() {
+      _selectedItemPath = localScheme.path;
+    });
+    context.read<GesturePropProvider>().copyFrom(GestureProp.empty());
   }
 
   @override
@@ -106,11 +139,7 @@ class _LocalManagerState extends State<LocalManager> {
                                 controller: _scrollController,
                                 itemBuilder: (context, index) => GestureDetector(
                                   onTap: () {
-                                    context.read<SchemeProvider>().copyFrom(localSchemes[index].scheme);
-                                    setState(() {
-                                      _selectedItemPath = localSchemes[index].path;
-                                    });
-                                    context.read<GesturePropProvider>().copyFrom(GestureProp.empty());
+                                    _handleItemClick(context, localSchemes[index]);
                                   },
                                   child: MouseRegion(
                                     cursor: SystemMouseCursors.click,
@@ -131,7 +160,8 @@ class _LocalManagerState extends State<LocalManager> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(localSchemes[index].scheme.name ?? ''),
-                                              Text('456'),
+                                              _getItemIcon(localSchemes[index].scheme,
+                                                  context.watch<ConfigsProvider>().appliedSchemeId),
                                             ],
                                           ),
                                         ),
@@ -173,7 +203,16 @@ class _LocalManagerState extends State<LocalManager> {
                                 },
                               ),
                               DButton.duplicate(enabled: _selectedItemPath.notNull),
-                              DButton.apply(enabled: _selectedItemPath.notNull),
+                              DButton.apply(
+                                enabled: _selectedItemPath.notNull,
+                                onTap: () {
+                                  var appliedId =
+                                      localSchemes.firstWhere((ele) => ele.path == _selectedItemPath).scheme.id!;
+                                  appliedId.sout();
+                                  H().sp.updateString(SPKeys.appliedSchemeId, appliedId);
+                                  context.read<ConfigsProvider>().setProps(appliedSchemeId: appliedId);
+                                },
+                              ),
                             ]
                                 .map((e) => Padding(
                                       padding: const EdgeInsets.only(right: 4),
