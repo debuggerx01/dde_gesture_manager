@@ -82,5 +82,11 @@
     "SplitWindowLeft": "向左分屏",
     "SplitWindowRight": "向右分屏",
     "MoveWindow": "移动窗口"
+  },
+  "info": {
+    "gesture_prop_duplicated": {
+      "title": "复制成功！",
+      "description": "现在可以去其他方案中点击粘贴按钮试试哦～"
+    }
   }
 }

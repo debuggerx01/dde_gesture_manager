@@ -9,6 +9,7 @@ import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/pages/content.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/keyboard_mapper.dart';
+import 'package:dde_gesture_manager/utils/notificator.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/dde_data_table.dart';
 import 'package:dde_gesture_manager/widgets/dde_text_field.dart';
@@ -126,32 +127,27 @@ class GestureEditor extends StatelessWidget {
                               controller: horizontalCtrl,
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(minWidth: constraints.maxWidth),
-                                child: IgnorePointer(
-                                  ignoring: schemeProvider.readOnly,
-                                  child: DDataTable(
-                                    showBottomBorder: true,
-                                    headingRowHeight: _headingRowHeight,
-                                    showCheckboxColumn: true,
-                                    headerBackgroundColor: context.t.dialogBackgroundColor,
-                                    verticalScrollController: verticalCtrl,
-                                    dataRowColor:
-                                        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.hovered))
-                                        return context.t.dialogBackgroundColor;
-                                      if (states.contains(MaterialState.selected))
-                                        return context.read<SettingsProvider>().currentActiveColor;
-                                      return null;
-                                    }),
-                                    columns: [
-                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr()), center: true),
-                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr()), center: true),
-                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr()), center: true),
-                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr()), center: true),
-                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
-                                      DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
-                                    ],
-                                    rows: _buildDataRows(schemeProvider.gestures, context),
-                                  ),
+                                child: DDataTable(
+                                  showBottomBorder: true,
+                                  headingRowHeight: _headingRowHeight,
+                                  showCheckboxColumn: true,
+                                  headerBackgroundColor: context.t.dialogBackgroundColor,
+                                  verticalScrollController: verticalCtrl,
+                                  dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.hovered)) return context.t.dialogBackgroundColor;
+                                    if (states.contains(MaterialState.selected))
+                                      return context.read<SettingsProvider>().currentActiveColor;
+                                    return null;
+                                  }),
+                                  columns: [
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_fingers.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_gesture.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_direction.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_type.tr()), center: true),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_command.tr())),
+                                    DDataColumn(label: Text(LocaleKeys.gesture_editor_remark.tr())),
+                                  ],
+                                  rows: _buildDataRows(context, schemeProvider.gestures, schemeProvider.readOnly),
                                 ),
                               ),
                             ),
@@ -169,9 +165,7 @@ class GestureEditor extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       DButton.add(
-                        enabled: !schemeProvider.readOnly &&
-                            !gesturePropProvider.editMode! &&
-                            !schemeTree.fullFiled,
+                        enabled: !schemeProvider.readOnly && !gesturePropProvider.editMode! && !schemeTree.fullFiled,
                         onTap: () {
                           var schemeProvider = context.read<SchemeProvider>();
                           var newGestures = [
@@ -201,15 +195,16 @@ class GestureEditor extends StatelessWidget {
                         },
                       ),
                       DButton.duplicate(
-                        enabled: !schemeProvider.readOnly &&
-                            gesturePropProvider != GestureProp.empty() &&
-                            !gesturePropProvider.editMode!,
+                        enabled: gesturePropProvider != GestureProp.empty() && !gesturePropProvider.editMode!,
                         onTap: () {
                           var schemeProvider = context.read<SchemeProvider>();
                           context.read<CopiedGesturePropProvider>().copyFrom(
                               schemeProvider.gestures!.firstWhere((element) => element.id == gesturePropProvider.id));
-
-                          /// todo: give some info to UI.
+                          Notificator.success(
+                            context,
+                            title: LocaleKeys.info_gesture_prop_duplicated_title.tr(),
+                            description: LocaleKeys.info_gesture_prop_duplicated_description.tr(),
+                          );
                         },
                       ),
                       DButton.paste(
@@ -306,7 +301,8 @@ class GestureEditor extends StatelessWidget {
   }
 }
 
-List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context) => (gestures ?? []).map((gesture) {
+List<DDataRow> _buildDataRows(BuildContext context, List<GestureProp>? gestures, bool readOnly) =>
+    (gestures ?? []).map((gesture) {
       var gesturePropProvider = context.watch<GesturePropProvider>();
       bool editing = gesturePropProvider == gesture && gesturePropProvider.editMode == true;
       bool selected = gesturePropProvider == gesture && !editing;
@@ -320,7 +316,7 @@ List<DDataRow> _buildDataRows(List<GestureProp>? gestures, BuildContext context)
             Future.microtask(() => provider.setProps(
                   id: gesture.id,
                 ));
-          } else if (selected == false) {
+          } else if (selected == false && !readOnly) {
             provider.onEditEnd = (prop) {
               var schemeProvider = context.read<SchemeProvider>();
               var newGestures = List<GestureProp>.of(schemeProvider.gestures!);
@@ -408,7 +404,7 @@ List<DDataCell> _buildRowCellsEditing(BuildContext context) {
             .map(
               (e) => DropdownMenuItem<Gesture>(
                 child: Text(
-                  '${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(e)}',
+                  '${LocaleKeys.gesture_editor_gestures}.${e.name}',
                   textScaleFactor: .8,
                 ).tr(),
                 value: e,
@@ -456,7 +452,7 @@ List<DDataCell> _buildRowCellsEditing(BuildContext context) {
             .map(
               (e) => DropdownMenuItem<GestureType>(
                 child: Text(
-                  '${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(e)}',
+                  '${LocaleKeys.gesture_editor_types}.${e.name}',
                   textScaleFactor: .8,
                 ).tr(),
                 value: e,
@@ -545,7 +541,7 @@ List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, Gestur
       ),
       Center(
         child: Text(
-          '${LocaleKeys.gesture_editor_gestures}.${H.getGestureName(gesture.gesture)}',
+          '${LocaleKeys.gesture_editor_gestures}.${gesture.gesture?.name}',
         ).tr(),
       ),
       Center(
@@ -554,7 +550,7 @@ List<DDataCell> _buildRowCellsNormal(BuildContext context, bool selected, Gestur
       ).tr()),
       Center(
           child: Text(
-        '${LocaleKeys.gesture_editor_types}.${H.getGestureTypeName(gesture.type)}',
+        '${LocaleKeys.gesture_editor_types}.${gesture.type?.name}',
       ).tr()),
       gesture.type == GestureType.shortcut
           ? Row(

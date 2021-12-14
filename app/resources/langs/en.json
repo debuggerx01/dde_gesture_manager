@@ -82,5 +82,11 @@
     "SplitWindowLeft": "SplitWindowLeft",
     "SplitWindowRight": "SplitWindowRight",
     "MoveWindow": "MoveWindow"
+  },
+  "info": {
+    "gesture_prop_duplicated": {
+      "title": "Duplicated !",
+      "description": "Now you can go to other scheme and click the paste button ~"
+    }
   }
 }

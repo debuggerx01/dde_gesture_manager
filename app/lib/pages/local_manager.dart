@@ -51,7 +51,7 @@ class _LocalManagerState extends State<LocalManager> {
 
   Color _getItemBackgroundColor(int index, String itemPath) {
     Color _color = index % 2 == 0 ? context.t.scaffoldBackgroundColor : context.t.backgroundColor;
-    if (itemPath == _hoveringItem) _color = context.t.scaffoldBackgroundColor;
+    if (itemPath == _hoveringItem) _color = context.t.dialogBackgroundColor;
     if (itemPath == _selectedItemPath) _color = context.read<SettingsProvider>().currentActiveColor;
     return _color;
   }
@@ -145,7 +145,7 @@ class _LocalManagerState extends State<LocalManager> {
                                     cursor: SystemMouseCursors.click,
                                     onEnter: (_) {
                                       setState(() {
-                                        _hoveringItem = localSchemes[index].scheme.id!;
+                                        _hoveringItem = localSchemes[index].path;
                                       });
                                     },
                                     child: Container(

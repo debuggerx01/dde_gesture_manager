@@ -246,10 +246,10 @@ class GestureProp implements Comparable {
 
   Map toJson() => {
         'id': id,
-        'gesture': H.getGestureName(gesture),
+        'gesture': gesture?.name,
         'direction': H.getGestureDirectionName(direction),
         'fingers': fingers,
-        'type': H.getGestureTypeName(type),
+        'type': type?.name,
         'command': command,
         'remark': remark,
       };

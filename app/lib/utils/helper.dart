@@ -6,6 +6,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+extension EnumByName<T extends Enum> on Iterable<T> {
+  T? findByName(String name) {
+    for (var value in this) {
+      if (value.name == name) return value;
+    }
+    return null;
+  }
+}
+
 class H {
   H._();
 
@@ -50,19 +59,7 @@ class H {
       return preferredPanelsStatus..marketPanelOpened = false;
   }
 
-  static String? getGestureName(Gesture? gesture) => const {
-        Gesture.swipe: 'swipe',
-        Gesture.tap: 'tap',
-        Gesture.pinch: 'pinch',
-      }[gesture];
-
-  static Gesture getGestureByName(String gestureName) =>
-      const {
-        'swipe': Gesture.swipe,
-        'tap': Gesture.tap,
-        'pinch': Gesture.pinch,
-      }[gestureName] ??
-      Gesture.swipe;
+  static Gesture getGestureByName(String gestureName) => Gesture.values.findByName(gestureName) ?? Gesture.swipe;
 
   static String? getGestureDirectionName(GestureDirection? direction) => const {
         GestureDirection.up: 'up',
@@ -85,19 +82,8 @@ class H {
       }[directionName] ??
       GestureDirection.none;
 
-  static String? getGestureTypeName(GestureType? type) => const {
-        GestureType.built_in: 'built_in',
-        GestureType.shortcut: 'shortcut',
-        GestureType.commandline: 'commandline',
-      }[type];
-
   static GestureType getGestureTypeByName(String typeName) =>
-      const {
-        'built_in': GestureType.built_in,
-        'shortcut': GestureType.shortcut,
-        'commandline': GestureType.commandline,
-      }[typeName] ??
-      GestureType.built_in;
+      GestureType.values.findByName(typeName) ?? GestureType.built_in;
 
   static Color? parseQtActiveColor(String? inp) {
     if (inp == null) return null;
