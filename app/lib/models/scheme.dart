@@ -156,7 +156,7 @@ class Scheme {
     this.gestures = [];
     this.fromMarket = false;
     this.uploaded = false;
-    this.name = 'new xxx';
+    this.name = LocaleKeys.str_new_scheme.tr();
   }
 
   SchemeTree buildSchemeTree() {

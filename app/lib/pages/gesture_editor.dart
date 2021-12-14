@@ -274,8 +274,11 @@ class GestureEditor extends StatelessWidget {
                                   schemeProvider.setProps(name: val);
                                   var localSchemesProvider = context.read<LocalSchemesProvider>();
                                   if (!localSchemesProvider.schemes!.every((element) => element.scheme.name != val)) {
-                                    /// show error info;
-                                    'duplicate name'.sout();
+                                    Notificator.error(
+                                      context,
+                                      title: LocaleKeys.info_scheme_name_conflict_title.tr(),
+                                      description: LocaleKeys.info_scheme_name_conflict_description.tr(),
+                                    );
                                     return;
                                   }
                                   ;

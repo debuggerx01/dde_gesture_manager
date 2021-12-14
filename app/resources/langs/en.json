@@ -65,7 +65,8 @@
     "paste": "paste"
   },
   "str": {
-    "null": "Null"
+    "null": "Null",
+    "new_scheme": "New gesture scheme"
   },
   "built_in_commands": {
     "ShowWorkspace": "ShowWorkspace",
@@ -87,6 +88,10 @@
     "gesture_prop_duplicated": {
       "title": "Duplicated !",
       "description": "Now you can go to other scheme and click the paste button ~"
+    },
+    "scheme_name_conflict": {
+      "title": "Save failed!",
+      "description": "Scheme name conflict, please rename it!"
     }
   }
 }

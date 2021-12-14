@@ -56,8 +56,7 @@ class _LocalManagerState extends State<LocalManager> {
     return _color;
   }
 
-  Icon _getItemIcon(Scheme scheme, String? appliedId) {
-    if (scheme.id == appliedId) return Icon(Icons.done_rounded, size: 22);
+  Icon _getItemIcon(Scheme scheme) {
     if (scheme.id == Uuid.NAMESPACE_NIL) return Icon(Icons.restore_rounded, size: 22);
     if (scheme.fromMarket == true) return Icon(Icons.local_grocery_store_rounded, size: 20);
     if (scheme.uploaded == true) return Icon(Icons.cloud_done_rounded, size: 18);
@@ -159,9 +158,22 @@ class _LocalManagerState extends State<LocalManager> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(localSchemes[index].scheme.name ?? ''),
-                                              _getItemIcon(localSchemes[index].scheme,
-                                                  context.watch<ConfigsProvider>().appliedSchemeId),
+                                              Row(
+                                                children: [
+                                                  Opacity(
+                                                    opacity: context.watch<ConfigsProvider>().appliedSchemeId ==
+                                                            localSchemes[index].scheme.id
+                                                        ? 1
+                                                        : 0,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                                      child: Icon(Icons.done_rounded, size: 20),
+                                                    ),
+                                                  ),
+                                                  Text(localSchemes[index].scheme.name ?? ''),
+                                                ],
+                                              ),
+                                              _getItemIcon(localSchemes[index].scheme),
                                             ],
                                           ),
                                         ),
@@ -204,7 +216,7 @@ class _LocalManagerState extends State<LocalManager> {
                               ),
                               DButton.duplicate(enabled: _selectedItemPath.notNull),
                               DButton.apply(
-                                enabled: _selectedItemPath.notNull,
+                                enabled: true,
                                 onTap: () {
                                   var appliedId =
                                       localSchemes.firstWhere((ele) => ele.path == _selectedItemPath).scheme.id!;
