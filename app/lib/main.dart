@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         var isDarkMode = context.watch<SettingsProvider>().isDarkMode;
         var brightnessMode = context.watch<ConfigsProvider>().brightnessMode;
+        var activeColor = context.watch<SettingsProvider>().currentActiveColor;
         H().sp.updateInt(SPKeys.brightnessMode, brightnessMode?.index ?? 0);
         late bool showDarkMode;
         if (brightnessMode == BrightnessMode.system) {
@@ -48,7 +49,9 @@ class MyApp extends StatelessWidget {
         }
         return MaterialApp(
           title: CodegenLoader.mapLocales[context.locale.toString()]?[LocaleKeys.app_name],
-          theme: showDarkMode ? darkTheme : lightTheme,
+          theme: (showDarkMode ? darkTheme : lightTheme).copyWith(
+            highlightColor: activeColor,
+          ),
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,

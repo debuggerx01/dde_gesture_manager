@@ -8,7 +8,7 @@ class DTextField extends StatefulWidget {
   final String? initText;
   final String? hint;
   final bool readOnly;
-  final Function(String value) onComplete;
+  final bool Function(String value) onComplete;
 
   const DTextField({
     Key? key,
@@ -40,8 +40,11 @@ class _DTextFieldState extends State<DTextField> {
   }
 
   _handleFocusChange() {
-    if (!_focusNode.hasFocus) {
-      widget.onComplete(_controller.text);
+    if (!_focusNode.hasFocus && !widget.readOnly) {
+      var ok = widget.onComplete(_controller.text);
+      if (!ok) {
+        _focusNode.requestFocus();
+      }
     }
   }
 
@@ -74,6 +77,7 @@ class _DTextFieldState extends State<DTextField> {
               padding: const EdgeInsets.only(left: 15),
               child: TextField(
                 readOnly: widget.readOnly,
+                style: widget.readOnly ? TextStyle(color: Colors.grey) : null,
                 focusNode: _focusNode,
                 cursorColor: context.watch<SettingsProvider>().activeColor,
                 decoration: InputDecoration.collapsed(hintText: widget.hint),

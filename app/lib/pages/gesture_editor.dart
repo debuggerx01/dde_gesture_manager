@@ -12,6 +12,7 @@ import 'package:dde_gesture_manager/utils/keyboard_mapper.dart';
 import 'package:dde_gesture_manager/utils/notificator.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/dde_data_table.dart';
+import 'package:dde_gesture_manager/widgets/dde_markdown_field.dart';
 import 'package:dde_gesture_manager/widgets/dde_text_field.dart';
 import 'package:dde_gesture_manager/widgets/table_cell_shortcut_listener.dart';
 import 'package:dde_gesture_manager/widgets/table_cell_text_field.dart';
@@ -263,7 +264,7 @@ class GestureEditor extends StatelessWidget {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text('name:'),
+                              child: Text(LocaleKeys.gesture_editor_info_name).tr(),
                             ),
                             Expanded(
                               child: DTextField(
@@ -273,20 +274,53 @@ class GestureEditor extends StatelessWidget {
                                   val = val.trim();
                                   schemeProvider.setProps(name: val);
                                   var localSchemesProvider = context.read<LocalSchemesProvider>();
-                                  if (!localSchemesProvider.schemes!.every((element) => element.scheme.name != val)) {
+                                  if (!localSchemesProvider.schemes!
+                                      .where((element) => element.scheme.id != schemeProvider.id)
+                                      .every((element) => element.scheme.name != val)) {
                                     Notificator.error(
                                       context,
                                       title: LocaleKeys.info_scheme_name_conflict_title.tr(),
                                       description: LocaleKeys.info_scheme_name_conflict_description.tr(),
                                     );
-                                    return;
+                                    return false;
                                   }
-                                  ;
                                   var localSchemeEntry = localSchemesProvider.schemes!
                                       .firstWhere((ele) => ele.scheme.id == schemeProvider.id);
                                   localSchemeEntry.scheme.name = val;
                                   localSchemeEntry.save(localSchemesProvider);
+                                  return true;
                                 },
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(LocaleKeys.gesture_editor_info_description).tr(),
+                              ),
+                            ),
+                            Expanded(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(minHeight: kMinInteractiveDimension, maxHeight: 300),
+                                child: DMarkdownField(
+                                  initText: schemeProvider.description,
+                                  readOnly: schemeProvider.readOnly,
+                                  onComplete: (content) {
+                                    content = content.trim();
+                                    schemeProvider.setProps(description: content);
+                                    var localSchemesProvider = context.read<LocalSchemesProvider>();
+                                    var localSchemeEntry = localSchemesProvider.schemes!
+                                        .firstWhere((ele) => ele.scheme.id == schemeProvider.id);
+                                    localSchemeEntry.scheme.description = content;
+                                    localSchemeEntry.save(localSchemesProvider);
+                                  },
+                                ),
                               ),
                             ),
                           ],

@@ -55,6 +55,10 @@
       "built_in": "内置操作",
       "commandline": "命令行",
       "shortcut": "快捷键"
+    },
+    "info": {
+      "name": "方案名称",
+      "description": "方案描述"
     }
   },
   "operation": {

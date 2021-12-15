@@ -55,6 +55,10 @@
       "built_in": "built-in",
       "commandline": "commandline",
       "shortcut": "shortcut"
+    },
+    "info": {
+      "name": "Scheme Name",
+      "description": "Description"
     }
   },
   "operation": {
