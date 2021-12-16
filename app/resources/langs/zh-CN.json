@@ -59,6 +59,10 @@
     "info": {
       "name": "方案名称",
       "description": "方案描述"
+    },
+    "hints": {
+      "command": "请输入要执行的命令",
+      "remark": "请输入备注信息"
     }
   },
   "operation": {
@@ -70,7 +74,8 @@
   },
   "str": {
     "null": "无",
-    "new_scheme": "新建手势方案"
+    "new_scheme": "新建手势方案",
+    "copy": "副本"
   },
   "built_in_commands": {
     "ShowWorkspace": "显示工作区",

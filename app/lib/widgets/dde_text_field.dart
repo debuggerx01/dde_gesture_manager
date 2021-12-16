@@ -2,7 +2,6 @@ import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DTextField extends StatefulWidget {
   final String? initText;
@@ -52,6 +51,10 @@ class _DTextFieldState extends State<DTextField> {
   void didUpdateWidget(covariant DTextField oldWidget) {
     if (oldWidget.initText != widget.initText) {
       _controller.text = widget.initText ?? '';
+      if (widget.initText == LocaleKeys.str_new_scheme.tr() ||
+          (widget.initText ?? '').contains('(${LocaleKeys.str_copy.tr()})')) {
+        _focusNode.requestFocus();
+      }
     }
     super.didUpdateWidget(oldWidget);
   }

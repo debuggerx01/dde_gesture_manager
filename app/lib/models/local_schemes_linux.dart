@@ -49,15 +49,16 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryLinux> {
   Future<LocalSchemeEntry> create() async {
     var _supportDirectory = await getApplicationSupportDirectory();
     return LocalSchemeEntryLinux(
-        path: join(_supportDirectory.path, 'schemes', '${Uuid().v1()}.json'),
-        scheme: Scheme.create(),
-        lastModifyTime: DateTime.now(),
-      );
+      path: join(_supportDirectory.path, 'schemes', '${Uuid().v1()}.json'),
+      scheme: Scheme.create(),
+      lastModifyTime: DateTime.now(),
+    );
   }
 
   @override
   void remove(String path) {
-    File(path).delete();
+    var file = File(path);
+    if (file.existsSync()) file.delete();
   }
 }
 

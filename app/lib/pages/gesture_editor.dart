@@ -508,7 +508,7 @@ List<DDataCell> _buildRowCellsEditing(BuildContext context) {
     _buildCommandCellsEditing(context),
     TableCellTextField(
       initText: gesture.remark,
-      hint: 'pls input cmd',
+      hint: LocaleKeys.gesture_editor_hints_remark.tr(),
       onComplete: (value) => context.read<GesturePropProvider>().setProps(
             remark: value,
             editMode: true,
@@ -523,7 +523,7 @@ Widget _buildCommandCellsEditing(BuildContext context) {
     case GestureType.commandline:
       return TableCellTextField(
         initText: gesture.command,
-        hint: 'pls input cmd',
+        hint: LocaleKeys.gesture_editor_hints_command.tr(),
         onComplete: (value) => context.read<GesturePropProvider>().setProps(
               command: value,
               editMode: true,

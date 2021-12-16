@@ -59,6 +59,10 @@
     "info": {
       "name": "Scheme Name",
       "description": "Description"
+    },
+    "hints": {
+      "command": "Please enter the command you want to execute",
+      "remark": "Please enter a remark information"
     }
   },
   "operation": {
@@ -70,7 +74,8 @@
   },
   "str": {
     "null": "Null",
-    "new_scheme": "New gesture scheme"
+    "new_scheme": "New gesture scheme",
+    "copy": "copy"
   },
   "built_in_commands": {
     "ShowWorkspace": "ShowWorkspace",

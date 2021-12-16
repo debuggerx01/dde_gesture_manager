@@ -175,7 +175,7 @@ class Scheme {
         'uploaded': uploaded,
         'name': name,
         'desc': description,
-        'gestures': gestures,
+        'gestures': gestures?.map((e) => e.toJson()).toList(),
       };
 }
 

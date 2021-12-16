@@ -26,7 +26,7 @@ class LocalManager extends StatefulWidget {
 
 class _LocalManagerState extends State<LocalManager> {
   late ScrollController _scrollController;
-  String? _hoveringItem;
+  String? _hoveringItemPath;
   late String _selectedItemPath;
 
   @override
@@ -51,7 +51,7 @@ class _LocalManagerState extends State<LocalManager> {
 
   Color _getItemBackgroundColor(int index, String itemPath) {
     Color _color = index % 2 == 0 ? context.t.scaffoldBackgroundColor : context.t.backgroundColor;
-    if (itemPath == _hoveringItem) _color = context.t.dialogBackgroundColor;
+    if (itemPath == _hoveringItemPath) _color = context.t.dialogBackgroundColor;
     if (itemPath == _selectedItemPath) _color = context.read<SettingsProvider>().currentActiveColor;
     return _color;
   }
@@ -144,7 +144,7 @@ class _LocalManagerState extends State<LocalManager> {
                                     cursor: SystemMouseCursors.click,
                                     onEnter: (_) {
                                       setState(() {
-                                        _hoveringItem = localSchemes[index].path;
+                                        _hoveringItemPath = localSchemes[index].path;
                                       });
                                     },
                                     child: Container(
@@ -196,8 +196,13 @@ class _LocalManagerState extends State<LocalManager> {
                                 onTap: () async {
                                   var localSchemesProvider = context.read<LocalSchemesProvider>();
                                   var newSchemes = [...?localSchemesProvider.schemes];
-                                  newSchemes.add(await localSchemesProvider.create());
+                                  var newEntry = await localSchemesProvider.create();
+                                  newSchemes.add(newEntry);
                                   localSchemesProvider.setProps(schemes: newSchemes..sort());
+                                  setState(() {
+                                    _selectedItemPath = newEntry.path;
+                                  });
+                                  _handleItemClick(context, newEntry);
                                 },
                               ),
                               DButton.delete(
@@ -209,12 +214,33 @@ class _LocalManagerState extends State<LocalManager> {
                                   newSchemes.removeAt(index);
                                   localSchemesProvider.setProps(schemes: newSchemes);
                                   localSchemesProvider.remove(_selectedItemPath);
+                                  var newSelectedItem = newSchemes[(index - 1).clamp(1, newSchemes.length)];
                                   setState(() {
-                                    _selectedItemPath = newSchemes[(index - 1).clamp(1, newSchemes.length)].path;
+                                    _selectedItemPath = newSelectedItem.path;
                                   });
+                                  _handleItemClick(context, newSelectedItem);
                                 },
                               ),
-                              DButton.duplicate(enabled: _selectedItemPath.notNull),
+                              DButton.duplicate(
+                                enabled: _selectedItemPath.notNull,
+                                onTap: () async {
+                                  var localSchemesProvider = context.read<LocalSchemesProvider>();
+                                  var newSchemes = [...?localSchemesProvider.schemes];
+                                  var index = newSchemes.indexWhere((element) => element.path == _selectedItemPath);
+                                  var newEntry = await localSchemesProvider.create();
+                                  newEntry.scheme = Scheme.parse(newSchemes[index].scheme.toJson());
+                                  newEntry.scheme.id = Uuid().v1();
+                                  newEntry.scheme.name = '${newEntry.scheme.name} (${LocaleKeys.str_copy.tr()})';
+                                  newEntry.scheme.fromMarket = false;
+                                  newEntry.scheme.uploaded = false;
+                                  newSchemes.add(newEntry);
+                                  localSchemesProvider.setProps(schemes: newSchemes..sort());
+                                  setState(() {
+                                    _selectedItemPath = newEntry.path;
+                                  });
+                                  _handleItemClick(context, newEntry);
+                                },
+                              ),
                               DButton.apply(
                                 enabled: true,
                                 onTap: () {
