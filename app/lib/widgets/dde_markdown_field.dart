@@ -99,10 +99,12 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
                   textFocusNode: _focusNode,
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   onComplete: (content) {
-                    setState(() {
-                      _previewText = content;
-                    });
-                    widget.onComplete(content);
+                    if (content == widget.initText)
+                      setState(() {
+                        _previewText = content;
+                      });
+                    else
+                      widget.onComplete(content);
                   },
                 ),
         );
