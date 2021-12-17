@@ -93,3 +93,5 @@ server_log.txt
 
 /config/production.yaml
 /config/development.yaml
+
+*.g.dart

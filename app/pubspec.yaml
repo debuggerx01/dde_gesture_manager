@@ -46,6 +46,8 @@ dependencies:
     path: 3rd_party/cherry_toast
   xdg_directories_web:
     path: 3rd_party/xdg_directories_web
+  dde_gesture_manager_api:
+    path: ../api
 
 dev_dependencies:
   flutter_test:
