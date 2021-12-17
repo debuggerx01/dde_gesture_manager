@@ -1,37 +1,62 @@
-# dde_gesture_manager
+# ORM Starter Application for Angel3 framework
 
-## Running the Application Locally
+This is an ORM starter application for [Angel3 framework](https://angel3-framework.web.app) which is a full-stack Web framework in Dart. The default database is `postgresql`. `mysql` support is still in active development.
 
-Run `conduit serve` from this directory to run the application. For running within an IDE, run `bin/main.dart`. By default, a configuration file named `config.yaml` will be used.
+## Installation & Setup
 
-You must have a `config.yaml` file that has correct database connection info, which should point to a local database. To configure a database to match your application's schema, run the following commands:
+1. Download and install [Dart](https://dart.dev/get-dart).
+2. Install `postgresql` version 9, 10, 11 or 12. **postgresql 13 is not working as the driver do not support SCRAM**
+3. Create a new user and database in postgres using `psql` cli. For example:
 
-```
-# if this is a project, run db generate first
-conduit db generate
-conduit db upgrade --connect postgres://user:password@localhost:5432/app_name
-```
+   ```sql
+    postgres=# create database appdb;
+    postgres=# create user appuser with encrypted password 'App1970#';
+    postgres=# grant all privileges on database appdb to appuser;
+   ```
 
-To generate a SwaggerUI client, run `conduit document client`.
+4. Update the `postgres` section in the `config/default.yaml` file with the newly created user and database name.
 
-## Running Application Tests
+   ```yaml
+    postgres:
+        host: localhost
+        port: 5432
+        database_name: appdb
+        username: appuser
+        password: App1970#
+        useSSL: false
+        time_zone: UTC
+   ```
 
-Tests are run with a local PostgreSQL database named `conduit_test_db`. If this database does not exist, create it from your SQL prompt:
+5. Run the migration to generate `migrations` and `greetings` tables in the database.
 
-CREATE DATABASE conduit_test_db;
-CREATE USER conduit_test_user WITH createdb;
-ALTER USER conduit_test_user WITH password 'conduit!';
-GRANT all ON DATABASE conduit_test_db TO conduit_test_user;
+    ```bash
+    dart bin/migration.dart
+    ```
 
+### Development
 
-To run all tests for this application, run the following in this directory:
+1. Run the following command to start Angel3 server in dev mode to *hot-reloaded* on file changes:
 
-```
-pub run test
-```
+    ```bash
+    dart --observe bin/dev.dart
+    ```
 
-The default configuration file used when testing is `config.src.yaml`. This file should be checked into version control. It also the template for configuration files used in deployment.
+2. Modify the code and watch the changes applied to the application
 
-## Deploying an Application
+### Production
 
-See the documentation for [Deployment](https://conduit.io/docs/deploy/).
+1. Run the following command:
+
+    ```bash
+    dart bin/prod.dart
+    ```
+
+2. Run as docker. Edit and run the provided `Dockerfile` to build the image.
+
+## Resources
+
+Visit the [Developer Guide](https://angel3-docs.dukefirehawk.com/guides) for dozens of guides and resources, including video tutorials, to get up and running as quickly as possible with Angel3.
+
+Examples and complete projects can be found [here](https://angel3-framework.web.app/#/examples).
+
+You can also view the [API Documentation](https://pub.dev/documentation/angel3_framework/latest/).

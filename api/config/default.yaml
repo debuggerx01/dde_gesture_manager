@@ -1,0 +1,12 @@
+# Default server configuration.
+host: 127.0.0.1
+port: 3000
+postgres:
+  host: localhost
+  port: 5432
+  database_name: appdb
+  username: appuser
+  password: App1970#
+  useSSL: false
+  time_zone: UTC
+jwt_secret: "OvA9SBLnncot8gFHvt8Gh1qkQ1ptGIQW"

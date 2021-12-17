@@ -1,13 +1,34 @@
-name: dde_gesture_manager
-description: An conduit application with a database connection and data model.
-version: 0.0.1
-
+name: dde_gesture_manager_api
+version: 1.0.0
+description: An ORM starter application for Angel3 framework
+publish_to: none
 environment:
-  sdk: ">=2.12.0 <3.0.0"
-
+  sdk: '>=2.12.0 <3.0.0'
 dependencies:
-  conduit: ^3.0.0
-
+  angel3_auth: ^4.0.0
+  angel3_configuration: ^4.1.0
+  angel3_framework: ^4.2.0
+  angel3_migration: ^4.0.0
+  angel3_orm: ^4.0.0
+  angel3_orm_postgres: ^3.0.0
+  angel3_serialize: ^4.1.0
+  angel3_production: ^3.1.0
+  angel3_static: ^4.1.0
+  angel3_validate: ^4.0.0
+  belatuk_pretty_logging: ^4.0.0
+  optional: ^6.0.0
+  logging: ^1.0.0
 dev_dependencies:
-  test: ^1.16.5
-  conduit_test: ^3.0.0
+  angel3_hot: ^4.2.0
+  angel3_jinja: ^2.0.1
+  angel3_migration_runner: ^4.0.0
+  angel3_orm_generator: ^4.1.0
+  angel3_serialize_generator: ^4.2.0
+  angel3_test: ^4.0.0
+  build_runner: ^2.0.3
+  io: ^1.0.0
+  test: ^1.17.5
+  lints: ^1.0.0
+
+
+
