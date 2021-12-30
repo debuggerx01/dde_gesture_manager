@@ -68,12 +68,12 @@ class GestureEditor extends StatelessWidget {
                       ),
                     ).tr(),
                     Visibility(
-                      visible: layoutProvider.marketOpened == false,
+                      visible: layoutProvider.marketOrMeOpened == false,
                       child: DButton(
                         width: defaultButtonHeight,
-                        onTap: () => H.openPanel(context, PanelType.market),
+                        onTap: () => H.openPanel(context, PanelType.market_or_me),
                         child: Icon(
-                          CupertinoIcons.cart,
+                          layoutProvider.isMarket ? CupertinoIcons.cart : CupertinoIcons.person,
                         ),
                       ),
                     ),

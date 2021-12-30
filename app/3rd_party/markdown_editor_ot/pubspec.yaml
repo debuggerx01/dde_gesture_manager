@@ -11,7 +11,9 @@ dependencies:
     sdk: flutter
 
   shared_preferences: ^2.0.4
-  markdown_core: ^1.0.0
+  markdown_core:
+    path:
+      ../markdown_core
 
 dev_dependencies:
   flutter_test:

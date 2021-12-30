@@ -70,12 +70,15 @@
     "delete": "删除",
     "duplicate": "复制",
     "apply": "应用",
-    "paste": "粘贴"
+    "paste": "粘贴",
+    "logout": "退出登录"
   },
   "str": {
     "null": "无",
     "new_scheme": "新建手势方案",
-    "copy": "副本"
+    "copy": "副本",
+    "yes": "是",
+    "no": "否"
   },
   "built_in_commands": {
     "ShowWorkspace": "显示工作区",
@@ -101,6 +104,37 @@
     "scheme_name_conflict": {
       "title": "保存失败！",
       "description": "方案名冲突，请重新命名！"
+    },
+    "code_copied": {
+      "titte": "代码已复制！",
+      "description": "请粘贴到终端中执行～"
+    },
+    "server_error": {
+      "title": "连接服务器异常",
+      "description": "请稍后再试～"
+    },
+    "login_failed": {
+      "title": "登录失败",
+      "description": "请检查账号密码是否正确～"
+    },
+    "sign_up_hint": {
+      "title": "验证码已发送",
+      "description": "请登录邮箱继续完成注册～"
+    },
+    "new_version": {
+      "title": "发现新版本(v{version})",
+      "description_for_startup": "点击[{yes}]查看，点击[{no}]忽略本次更新",
+      "title_already_latest": "已经是最新版本～",
+      "description_for_manual": "是否前去官网查看？"
+    }
+  },
+  "me": {
+    "title": "我的",
+    "login": {
+      "login_or_signup": "登录/注册",
+      "email_hint": "请输入邮箱",
+      "password_hint": "请输入8-16位密码",
+      "email_error_hint": "请输入正确的邮箱"
     }
   }
 }

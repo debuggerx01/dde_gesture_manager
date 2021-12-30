@@ -107,6 +107,23 @@ class DButton extends StatefulWidget {
             message: LocaleKeys.operation_paste.tr(),
           ));
 
+  factory DButton.logout({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight,
+    width = defaultButtonHeight,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: enabled ? onTap : null,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.logout_rounded, size: 20)),
+            message: LocaleKeys.operation_logout.tr(),
+          ));
+
   factory DButton.dropdown({
     Key? key,
     width = 60.0,

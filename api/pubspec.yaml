@@ -3,7 +3,7 @@ version: 1.0.0
 description: An ORM starter application for Angel3 framework
 publish_to: none
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.15.0 <3.0.0'
 dependencies:
   angel3_auth: ^4.0.0
   angel3_configuration: ^4.1.0
@@ -19,6 +19,10 @@ dependencies:
   optional: ^6.0.0
   logging: ^1.0.0
   yaml: ^3.1.0
+  mailer: ^5.0.2
+  uuid: ^3.0.5
+  neat_cache:
+    path: 3rd_party/neat_cache
 dev_dependencies:
   angel3_hot: ^4.2.0
   angel3_jinja: ^2.0.1

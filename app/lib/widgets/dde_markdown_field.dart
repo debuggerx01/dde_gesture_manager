@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/utils/notificator.dart';
 import 'package:flutter/material.dart';
 import 'package:markdown_editor_ot/markdown_editor.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -77,11 +78,18 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
                           });
                         },
                   child: MouseRegion(
-                    cursor: widget.readOnly ? SystemMouseCursors.basic : SystemMouseCursors.click,
+                    cursor: widget.readOnly ? SystemMouseCursors.basic : SystemMouseCursors.text,
                     child: MdPreview(
                       text: _previewText ?? '',
                       padding: EdgeInsets.only(left: 15),
                       onTapLink: _launchURL,
+                      onCodeCopied: () {
+                        Notificator.success(
+                          context,
+                          title: LocaleKeys.info_code_copied_titte.tr(),
+                          description: LocaleKeys.info_code_copied_description.tr(),
+                        );
+                      },
                       widgetImage: (imageUrl) => CachedNetworkImage(
                         imageUrl: imageUrl,
                         placeholder: (context, url) => const SizedBox(

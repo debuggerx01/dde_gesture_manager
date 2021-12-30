@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}注册结果{% endblock %}
+{% block body %}
+<h1>注册结果</h1>
+{% if success %}
+<p>注册成功~</p>
+{% else %}
+<p>注册失败..</p>
+<p>可能是因为:</p>
+<ul>
+    <li>本链接已经超过三十分钟的有效期，请重新在软件中点击注册按钮</li>
+    <li>本链接已经被点击并注册成功，请勿重复点击</li>
+    <li>其他错误……非常抱歉，如果方便的话请通过邮件联系我～</li>
+</ul>
+{% endif%}
+{% endblock %}

@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
 /// [UOS设计指南](https://docs.uniontech.com/zh/content/t_dbG3kBK9iDf9B963ok)
-
 const double localManagerPanelWidth = 260;
 
-const double marketPanelWidth = 300;
+const double marketOrMePanelWidth = 300;
 
 const shortDuration = const Duration(milliseconds: 100);
 
@@ -39,5 +38,5 @@ const List<String> builtInCommands = [
 
 enum PanelType {
   local_manager,
-  market,
+  market_or_me,
 }

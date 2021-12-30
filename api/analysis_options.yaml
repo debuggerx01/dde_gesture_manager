@@ -4,3 +4,4 @@ linter:
   rules:
     avoid_renaming_method_parameters: false
     overridden_fields: false
+    unnecessary_statements: true

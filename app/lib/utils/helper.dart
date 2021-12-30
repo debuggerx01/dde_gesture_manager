@@ -29,34 +29,42 @@ class H {
   initSharedPreference() async {
     _sp = await SharedPreferences.getInstance();
   }
+  
+  late BuildContext _topContext;
+  
+  BuildContext get topContext => _topContext;
+
+  initTopContext(BuildContext context) {
+    _topContext = context;
+  }
 
   static void openPanel(BuildContext context, PanelType panelType) {
     var windowWidth = MediaQuery.of(context).size.width;
-    if (windowWidth < minWindowSize.width + localManagerPanelWidth + marketPanelWidth) {
+    if (windowWidth < minWindowSize.width + localManagerPanelWidth + marketOrMePanelWidth) {
       context.read<ContentLayoutProvider>().setProps(
             localManagerOpened: panelType == PanelType.local_manager,
-            marketOpened: panelType == PanelType.market,
+            marketOrMeOpened: panelType == PanelType.market_or_me,
           );
     } else {
       switch (panelType) {
         case PanelType.local_manager:
           return context.read<ContentLayoutProvider>().setProps(localManagerOpened: true);
-        case PanelType.market:
-          return context.read<ContentLayoutProvider>().setProps(marketOpened: true);
+        case PanelType.market_or_me:
+          return context.read<ContentLayoutProvider>().setProps(marketOrMeOpened: true);
       }
     }
   }
 
   static PreferredPanelsStatus getPreferredPanelsStatus(double windowWidth) {
-    var preferredPanelsStatus = PreferredPanelsStatus(localManagerPanelOpened: true, marketPanelOpened: true);
-    if (windowWidth > minWindowSize.width + localManagerPanelWidth + marketPanelWidth)
+    var preferredPanelsStatus = PreferredPanelsStatus(localManagerPanelOpened: true, marketOrMePanelOpened: true);
+    if (windowWidth > minWindowSize.width + localManagerPanelWidth + marketOrMePanelWidth)
       return preferredPanelsStatus;
     else if (windowWidth < minWindowSize.width + localManagerPanelWidth)
       return preferredPanelsStatus
-        ..marketPanelOpened = false
+        ..marketOrMePanelOpened = false
         ..localManagerPanelOpened = false;
     else
-      return preferredPanelsStatus..marketPanelOpened = false;
+      return preferredPanelsStatus..marketOrMePanelOpened = false;
   }
 
   static Gesture getGestureByName(String gestureName) => Gesture.values.findByName(gestureName) ?? Gesture.swipe;
@@ -108,15 +116,15 @@ class H {
 
 class PreferredPanelsStatus {
   bool localManagerPanelOpened;
-  bool marketPanelOpened;
+  bool marketOrMePanelOpened;
 
   PreferredPanelsStatus({
     required this.localManagerPanelOpened,
-    required this.marketPanelOpened,
+    required this.marketOrMePanelOpened,
   });
 
   @override
   String toString() {
-    return 'PreferredPanelsStatus{localManagerPanelOpened: $localManagerPanelOpened, marketPanelOpened: $marketPanelOpened}';
+    return 'PreferredPanelsStatus{localManagerPanelOpened: $localManagerPanelOpened, marketOrMePanelOpened: $marketOrMePanelOpened}';
   }
 }

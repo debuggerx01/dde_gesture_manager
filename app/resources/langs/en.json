@@ -70,12 +70,15 @@
     "delete": "delete",
     "duplicate": "duplicate",
     "apply": "apply",
-    "paste": "paste"
+    "paste": "paste",
+    "logout": "sign out"
   },
   "str": {
     "null": "Null",
     "new_scheme": "New gesture scheme",
-    "copy": "copy"
+    "copy": "copy",
+    "yes": "Yes",
+    "no": "No"
   },
   "built_in_commands": {
     "ShowWorkspace": "ShowWorkspace",
@@ -101,6 +104,37 @@
     "scheme_name_conflict": {
       "title": "Save failed!",
       "description": "Scheme name conflict, please rename it!"
+    },
+    "code_copied": {
+      "titte": "Code has been copied!",
+      "description": "Please paste it into the terminal and run ~"
+    },
+    "server_error": {
+      "title": "Server connection error",
+      "description": "Please try again later ~"
+    },
+    "login_failed": {
+      "title": "Login failed",
+      "description": "Please check the password ~"
+    },
+    "sign_up_hint": {
+      "title": "Verification code has been sent",
+      "description": "Please log in to the mailbox to continue the registration ~"
+    },
+    "new_version": {
+      "title": "Update found(v{version})",
+      "description_for_startup": "Click [{YES}] to view, click [{NO}] ignore this update",
+      "title_already_latest": "Already the latest version ~",
+      "description_for_manual": "Visit the official website to see more?"
+    }
+  },
+  "me": {
+    "title": "Me",
+    "login": {
+      "login_or_signup": "Login/Signup",
+      "email_hint": "Please enter email",
+      "password_hint": "Please enter 8-16-bit password",
+      "email_error_hint": "Please enter your vaild email"
     }
   }
 }

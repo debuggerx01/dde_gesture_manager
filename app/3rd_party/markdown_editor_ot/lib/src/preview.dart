@@ -9,6 +9,7 @@ class MdPreview extends StatefulWidget {
     this.padding = const EdgeInsets.all(0.0),
     this.onTapLink,
     required this.widgetImage,
+    required this.onCodeCopied,
     this.textStyle,
   }) : super(key: key);
 
@@ -16,6 +17,8 @@ class MdPreview extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final WidgetImage widgetImage;
   final TextStyle? textStyle;
+
+  final Function onCodeCopied;
 
   /// Call this method when it tap link of markdown.
   /// If [onTapLink] is null,it will open the link with your default browser.
@@ -46,6 +49,7 @@ class MdPreviewState extends State<MdPreview>
               },
               image: widget.widgetImage,
               textStyle: widget.textStyle,
+              onCodeCopied: widget.onCodeCopied,
             );
           },
         ),

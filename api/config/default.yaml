@@ -10,3 +10,4 @@ postgres:
   useSSL: false
   time_zone: UTC
 jwt_secret: "OvA9SBLnncot8gFHvt8Gh1qkQ1ptGIQW"
+password_salt: "test"

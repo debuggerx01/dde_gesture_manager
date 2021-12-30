@@ -1,5 +1,6 @@
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
+import 'package:dde_gesture_manager/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 
@@ -27,8 +28,8 @@ class Notificator {
     return AlertImpl().showConfirm(
       windowTitle: title,
       text: description,
-      positiveButtonTitle: positiveButtonTitle,
-      negativeButtonTitle: negativeButtonTitle,
+      positiveButtonTitle: positiveButtonTitle ?? LocaleKeys.str_yes.tr(),
+      negativeButtonTitle: negativeButtonTitle ?? LocaleKeys.str_no.tr(),
     );
   }
 

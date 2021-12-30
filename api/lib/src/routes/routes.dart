@@ -1,6 +1,6 @@
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:file/file.dart';
-import 'controllers/user_controllers.dart' as user_controllers;
+import 'controllers/auth_controllers.dart' as auth_controllers;
 import 'controllers/system_controllers.dart' as system_controllers;
 
 /// Put your app routes here!
@@ -11,9 +11,17 @@ import 'controllers/system_controllers.dart' as system_controllers;
 
 AngelConfigurer configureServer(FileSystem fileSystem) {
   return (Angel app) async {
+    // ParseBody middleware
+    app.fallback((req, res) async {
+      if (req.method == "POST") {
+        await req.parseBody();
+      }
+      return true;
+    });
+
     // Typically, you want to mount controllers first, after any global middleware.
     await app.configure(system_controllers.configureServerWithFileSystem(fileSystem));
-    await app.configure(user_controllers.configureServer);
+    await app.configure(auth_controllers.configureServer);
 
     // Throw a 404 if no route matched the request.
     app.fallback((req, res) => throw AngelHttpException.notFound());

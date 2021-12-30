@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
-import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
@@ -9,7 +8,6 @@ import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
-import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -247,7 +245,6 @@ class _LocalManagerState extends State<LocalManager> {
                                   var appliedId =
                                       localSchemes.firstWhere((ele) => ele.path == _selectedItemPath).scheme.id!;
                                   appliedId.sout();
-                                  H().sp.updateString(SPKeys.appliedSchemeId, appliedId);
                                   context.read<ConfigsProvider>().setProps(appliedSchemeId: appliedId);
                                 },
                               ),
