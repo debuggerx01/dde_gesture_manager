@@ -71,14 +71,18 @@
     "duplicate": "复制",
     "apply": "应用",
     "paste": "粘贴",
-    "logout": "退出登录"
+    "logout": "退出登录",
+    "upload": "上传"
   },
   "str": {
     "null": "无",
     "new_scheme": "新建手势方案",
     "copy": "副本",
     "yes": "是",
-    "no": "否"
+    "no": "否",
+    "ok": "好的",
+    "share": "分享",
+    "cancel": "放弃"
   },
   "built_in_commands": {
     "ShowWorkspace": "显示工作区",
@@ -126,6 +130,14 @@
       "description_for_startup": "点击[{yes}]查看，点击[{no}]忽略本次更新",
       "title_already_latest": "已经是最新版本～",
       "description_for_manual": "是否前去官网查看？"
+    },
+    "login_for_upload": {
+      "title": "请登录",
+      "description": "您需要先登录才能进行上传操作"
+    },
+    "upload_and_share": {
+      "title": "是否同时分享到方案市场？",
+      "description": "如果选择[分享]，其他用户可以看到本方案并下载使用；\n如果选择[放弃]，您仍可以稍后在[我的上传]列表中找到本方案进行操作。"
     }
   },
   "me": {
