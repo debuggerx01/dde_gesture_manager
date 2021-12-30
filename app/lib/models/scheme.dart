@@ -117,6 +117,12 @@ class Scheme {
   String? id;
 
   @ProviderModelProp()
+  bool? fromMarket;
+
+  @ProviderModelProp()
+  bool? uploaded;
+
+  @ProviderModelProp()
   String? name;
 
   @ProviderModelProp()
@@ -125,10 +131,14 @@ class Scheme {
   @ProviderModelProp()
   List<GestureProp>? gestures;
 
+  bool get readOnly => uploaded == true || fromMarket == true || id == Uuid.NAMESPACE_NIL;
+
   Scheme.parse(scheme) {
     if (scheme is String) scheme = json.decode(scheme);
     assert(scheme is Map);
-    id = scheme['id'];
+    id = scheme['id'] ?? Uuid().v1();
+    fromMarket = scheme['fromMarket'] ?? false;
+    uploaded = scheme['uploaded'] ?? false;
     name = scheme['name'];
     description = scheme['desc'];
     gestures = (scheme['gestures'] as List? ?? []).map<GestureProp>((ele) => GestureProp.parse(ele)).toList()..sort();
@@ -143,6 +153,10 @@ class Scheme {
 
   Scheme.create({this.name, this.description, this.gestures}) {
     this.id = Uuid().v1();
+    this.gestures = [];
+    this.fromMarket = false;
+    this.uploaded = false;
+    this.name = LocaleKeys.str_new_scheme.tr();
   }
 
   SchemeTree buildSchemeTree() {
@@ -154,6 +168,15 @@ class Scheme {
     });
     return schemeTree;
   }
+
+  Map toJson() => {
+        'id': id,
+        'fromMarket': fromMarket,
+        'uploaded': uploaded,
+        'name': name,
+        'desc': description,
+        'gestures': gestures?.map((e) => e.toJson()).toList(),
+      };
 }
 
 enum Gesture {
@@ -220,6 +243,16 @@ class GestureProp implements Comparable {
   String toString() {
     return 'GestureProp{gesture: $gesture, direction: $direction, fingers: $fingers, type: $type, command: $command, remark: $remark}';
   }
+
+  Map toJson() => {
+        'id': id,
+        'gesture': gesture?.name,
+        'direction': H.getGestureDirectionName(direction),
+        'fingers': fingers,
+        'type': type?.name,
+        'command': command,
+        'remark': remark,
+      };
 
   GestureProp.empty() : this.id = Uuid.NAMESPACE_NIL;
 

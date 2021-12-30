@@ -3,7 +3,7 @@ import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/pages/gesture_editor.dart';
 import 'package:dde_gesture_manager/pages/local_manager.dart';
-import 'package:dde_gesture_manager/pages/market.dart';
+import 'package:dde_gesture_manager/pages/market_or_me.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +31,7 @@ class _ContentState extends State<Content> {
         ChangeNotifierProvider(
           create: (context) => ContentLayoutProvider()
             ..localManagerOpened = preferredPanelsStatus.localManagerPanelOpened
-            ..marketOpened = preferredPanelsStatus.marketPanelOpened,
+            ..marketOrMeOpened = preferredPanelsStatus.marketOrMePanelOpened,
         ),
         ChangeNotifierProvider(
           create: (context) => CopiedGesturePropProvider.empty(),
@@ -42,7 +42,7 @@ class _ContentState extends State<Content> {
           Future.microtask(
             () => context.read<ContentLayoutProvider>().setProps(
                   localManagerOpened: preferredPanelsStatus.localManagerPanelOpened,
-                  marketOpened: preferredPanelsStatus.marketPanelOpened,
+                  marketOrMeOpened: preferredPanelsStatus.marketOrMePanelOpened,
                 ),
           );
         }
@@ -52,7 +52,7 @@ class _ContentState extends State<Content> {
           children: [
             LocalManager(),
             GestureEditor(),
-            Market(),
+            MarketOrMe(),
           ],
         );
       },

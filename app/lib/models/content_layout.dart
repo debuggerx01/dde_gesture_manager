@@ -6,5 +6,10 @@ class ContentLayout {
   bool? localManagerOpened;
 
   @ProviderModelProp()
-  bool? marketOpened;
+  bool? marketOrMeOpened;
+
+  @ProviderModelProp()
+  bool? currentIsMarket = true;
+
+  bool get isMarket => currentIsMarket ?? true;
 }

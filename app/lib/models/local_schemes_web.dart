@@ -3,7 +3,9 @@ import 'dart:html';
 
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
+import 'package:uuid/uuid.dart';
 
 import 'local_schemes.dart';
 
@@ -12,7 +14,7 @@ export 'local_schemes.dart';
 @ProviderModel()
 class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryWeb> {
   LocalSchemes() {
-    schemeEntries.then((value) => schemes = [LocalSchemeEntryWeb.systemDefault(), ...value]);
+    schemeEntries.then((value) => schemes = [LocalSchemeEntryWeb.systemDefault(), ...value..sort()]);
   }
 
   @override
@@ -42,6 +44,18 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryWeb> {
 
   @ProviderModelProp()
   List<LocalSchemeEntry>? schemes;
+
+  @override
+  Future<LocalSchemeEntry> create() => Future.value(
+        LocalSchemeEntryWeb(
+          path: Uuid().v1(),
+          scheme: Scheme.create(),
+          lastModifyTime: DateTime.now(),
+        ),
+      );
+
+  @override
+  remove(String path) => window.localStorage.remove(path);
 }
 
 class LocalSchemeEntryWeb implements LocalSchemeEntry {
@@ -68,8 +82,15 @@ class LocalSchemeEntryWeb implements LocalSchemeEntry {
         this.lastModifyTime = DateTime.fromMillisecondsSinceEpoch(8640000000000000);
 
   @override
-  save() {
-    // TODO: implement save
-    throw UnimplementedError();
+  save(LocalSchemesProvider provider) {
+    window.localStorage[path] = JsonEncoder.withIndent(' ' * 4).convert(scheme);
+    provider.schemes!.firstWhere((ele) => ele.scheme.id == scheme.id).lastModifyTime = DateTime.now();
+    provider.setProps(schemes: [...provider.schemes!]..sort());
+  }
+
+  @override
+  int compareTo(other) {
+    assert(other is LocalSchemeEntry);
+    return lastModifyTime.isAfter(other.lastModifyTime) ? -1 : 1;
   }
 }

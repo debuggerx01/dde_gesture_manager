@@ -1,8 +1,6 @@
 import 'package:dde_gesture_manager/extensions.dart';
-import 'package:dde_gesture_manager/generated/locale_keys.g.dart';
 import 'package:dde_gesture_manager/models/configs.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ThemeSwitcher extends StatelessWidget {

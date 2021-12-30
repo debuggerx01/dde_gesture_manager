@@ -18,55 +18,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => SchemeProvider.parse('''
-          {
-            "name": "test",
-            "desc": "some desc",
-            "gestures": [
-              {
-                "gesture": "swipe",
-                "direction": "down",
-                "fingers": 3,
-                "type": "shortcut",
-                "command": "Control_L+w",
-                "remark": "close current page."
-              },
-              {
-                "gesture": "swipe",
-                "direction": "up",
-                "fingers": 3,
-                "type": "shortcut",
-                "command": "Control_L+Alt_L+t",
-                "remark": "reopen last closed page."
-              },
-              {
-                "gesture": "pinch",
-                "direction": "in",
-                "fingers": 4,
-                "type": "shortcut",
-                "command": "Control_L+Alt_L+f",
-                "remark": "search files."
-              },
-              {
-                "gesture": "tap",
-                "fingers": 4,
-                "type": "built_in",
-                "command": "handle4FingersTap",
-                "remark": "handle4FingersTap."
-              },
-              {
-                "gesture": "swipe",
-                "direction": "down",
-                "fingers": 5,
-                "type": "commandline",
-                "command": "dbus-send --type=method_call --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle",
-                "remark": "toggle launcher."
-              }
-            ]
-          }
-          ''')),
+          ChangeNotifierProvider(create: (context) => SchemeProvider.systemDefault()),
           ChangeNotifierProvider(create: (context) => GesturePropProvider.empty()),
-          ChangeNotifierProvider(create: (context) => LocalSchemesProvider(),lazy: false),
+          ChangeNotifierProvider(create: (context) => LocalSchemesProvider(), lazy: false),
         ],
         child: Column(
           mainAxisSize: MainAxisSize.max,

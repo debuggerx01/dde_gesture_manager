@@ -6,6 +6,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+extension EnumByName<T extends Enum> on Iterable<T> {
+  T? findByName(String name) {
+    for (var value in this) {
+      if (value.name == name) return value;
+    }
+    return null;
+  }
+}
+
 class H {
   H._();
 
@@ -20,49 +29,45 @@ class H {
   initSharedPreference() async {
     _sp = await SharedPreferences.getInstance();
   }
+  
+  late BuildContext _topContext;
+  
+  BuildContext get topContext => _topContext;
+
+  initTopContext(BuildContext context) {
+    _topContext = context;
+  }
 
   static void openPanel(BuildContext context, PanelType panelType) {
     var windowWidth = MediaQuery.of(context).size.width;
-    if (windowWidth < minWindowSize.width + localManagerPanelWidth + marketPanelWidth) {
+    if (windowWidth < minWindowSize.width + localManagerPanelWidth + marketOrMePanelWidth) {
       context.read<ContentLayoutProvider>().setProps(
             localManagerOpened: panelType == PanelType.local_manager,
-            marketOpened: panelType == PanelType.market,
+            marketOrMeOpened: panelType == PanelType.market_or_me,
           );
     } else {
       switch (panelType) {
         case PanelType.local_manager:
           return context.read<ContentLayoutProvider>().setProps(localManagerOpened: true);
-        case PanelType.market:
-          return context.read<ContentLayoutProvider>().setProps(marketOpened: true);
+        case PanelType.market_or_me:
+          return context.read<ContentLayoutProvider>().setProps(marketOrMeOpened: true);
       }
     }
   }
 
   static PreferredPanelsStatus getPreferredPanelsStatus(double windowWidth) {
-    var preferredPanelsStatus = PreferredPanelsStatus(localManagerPanelOpened: true, marketPanelOpened: true);
-    if (windowWidth > minWindowSize.width + localManagerPanelWidth + marketPanelWidth)
+    var preferredPanelsStatus = PreferredPanelsStatus(localManagerPanelOpened: true, marketOrMePanelOpened: true);
+    if (windowWidth > minWindowSize.width + localManagerPanelWidth + marketOrMePanelWidth)
       return preferredPanelsStatus;
     else if (windowWidth < minWindowSize.width + localManagerPanelWidth)
       return preferredPanelsStatus
-        ..marketPanelOpened = false
+        ..marketOrMePanelOpened = false
         ..localManagerPanelOpened = false;
     else
-      return preferredPanelsStatus..marketPanelOpened = false;
+      return preferredPanelsStatus..marketOrMePanelOpened = false;
   }
 
-  static String? getGestureName(Gesture? gesture) => const {
-        Gesture.swipe: 'swipe',
-        Gesture.tap: 'tap',
-        Gesture.pinch: 'pinch',
-      }[gesture];
-
-  static Gesture getGestureByName(String gestureName) =>
-      const {
-        'swipe': Gesture.swipe,
-        'tap': Gesture.tap,
-        'pinch': Gesture.pinch,
-      }[gestureName] ??
-      Gesture.swipe;
+  static Gesture getGestureByName(String gestureName) => Gesture.values.findByName(gestureName) ?? Gesture.swipe;
 
   static String? getGestureDirectionName(GestureDirection? direction) => const {
         GestureDirection.up: 'up',
@@ -85,19 +90,8 @@ class H {
       }[directionName] ??
       GestureDirection.none;
 
-  static String? getGestureTypeName(GestureType? type) => const {
-        GestureType.built_in: 'built_in',
-        GestureType.shortcut: 'shortcut',
-        GestureType.commandline: 'commandline',
-      }[type];
-
   static GestureType getGestureTypeByName(String typeName) =>
-      const {
-        'built_in': GestureType.built_in,
-        'shortcut': GestureType.shortcut,
-        'commandline': GestureType.commandline,
-      }[typeName] ??
-      GestureType.built_in;
+      GestureType.values.findByName(typeName) ?? GestureType.built_in;
 
   static Color? parseQtActiveColor(String? inp) {
     if (inp == null) return null;
@@ -122,15 +116,15 @@ class H {
 
 class PreferredPanelsStatus {
   bool localManagerPanelOpened;
-  bool marketPanelOpened;
+  bool marketOrMePanelOpened;
 
   PreferredPanelsStatus({
     required this.localManagerPanelOpened,
-    required this.marketPanelOpened,
+    required this.marketOrMePanelOpened,
   });
 
   @override
   String toString() {
-    return 'PreferredPanelsStatus{localManagerPanelOpened: $localManagerPanelOpened, marketPanelOpened: $marketPanelOpened}';
+    return 'PreferredPanelsStatus{localManagerPanelOpened: $localManagerPanelOpened, marketOrMePanelOpened: $marketOrMePanelOpened}';
   }
 }

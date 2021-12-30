@@ -3,7 +3,6 @@ import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/constants/supported_locales.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/generated/codegen_loader.g.dart';
-import 'package:dde_gesture_manager/generated/locale_keys.g.dart';
 import 'package:dde_gesture_manager/models/configs.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
@@ -11,9 +10,7 @@ import 'package:dde_gesture_manager/themes/dark.dart';
 import 'package:dde_gesture_manager/themes/light.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/init.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'pages/home.dart';
 
@@ -42,6 +39,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         var isDarkMode = context.watch<SettingsProvider>().isDarkMode;
         var brightnessMode = context.watch<ConfigsProvider>().brightnessMode;
+        var activeColor = context.watch<SettingsProvider>().currentActiveColor;
         H().sp.updateInt(SPKeys.brightnessMode, brightnessMode?.index ?? 0);
         late bool showDarkMode;
         if (brightnessMode == BrightnessMode.system) {
@@ -51,7 +49,9 @@ class MyApp extends StatelessWidget {
         }
         return MaterialApp(
           title: CodegenLoader.mapLocales[context.locale.toString()]?[LocaleKeys.app_name],
-          theme: showDarkMode ? darkTheme : lightTheme,
+          theme: (showDarkMode ? darkTheme : lightTheme).copyWith(
+            highlightColor: activeColor,
+          ),
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,

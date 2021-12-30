@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.15.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -37,8 +37,19 @@ dependencies:
   path_provider: ^2.0.5
   uuid: ^3.0.5
   adaptive_scrollbar: ^2.1.0
+  flutter_platform_alert: ^0.2.1
+  cached_network_image: ^3.2.0
+  url_launcher: ^6.0.17
+  flutter_login: ^3.1.0
+  auto_size_text: ^3.0.0
+  markdown_editor_ot:
+    path: 3rd_party/markdown_editor_ot
+  cherry_toast:
+    path: 3rd_party/cherry_toast
   xdg_directories_web:
     path: 3rd_party/xdg_directories_web
+  dde_gesture_manager_api:
+    path: ../api
 
 dev_dependencies:
   flutter_test:

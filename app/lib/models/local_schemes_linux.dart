@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
@@ -5,15 +6,17 @@ import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'local_schemes.dart';
+import 'local_schemes_provider.dart';
 
 export 'local_schemes.dart';
 
 @ProviderModel()
 class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryLinux> {
   LocalSchemes() {
-    schemeEntries.then((value) => schemes = [LocalSchemeEntryLinux.systemDefault(), ...value]);
+    schemeEntries.then((value) => schemes = [LocalSchemeEntryLinux.systemDefault(), ...value..sort()]);
   }
 
   @override
@@ -41,6 +44,22 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryLinux> {
 
   @ProviderModelProp()
   List<LocalSchemeEntry>? schemes;
+
+  @override
+  Future<LocalSchemeEntry> create() async {
+    var _supportDirectory = await getApplicationSupportDirectory();
+    return LocalSchemeEntryLinux(
+      path: join(_supportDirectory.path, 'schemes', '${Uuid().v1()}.json'),
+      scheme: Scheme.create(),
+      lastModifyTime: DateTime.now(),
+    );
+  }
+
+  @override
+  void remove(String path) {
+    var file = File(path);
+    if (file.existsSync()) file.delete();
+  }
 }
 
 class LocalSchemeEntryLinux implements LocalSchemeEntry {
@@ -67,8 +86,16 @@ class LocalSchemeEntryLinux implements LocalSchemeEntry {
         this.lastModifyTime = DateTime.fromMillisecondsSinceEpoch(8640000000000000);
 
   @override
-  save() {
-    // TODO: implement save
-    throw UnimplementedError();
+  save(LocalSchemesProvider provider) {
+    var file = File(path);
+    file.writeAsStringSync(JsonEncoder.withIndent(' ' * 4).convert(scheme));
+    provider.schemes!.firstWhere((ele) => ele.scheme.id == scheme.id).lastModifyTime = DateTime.now();
+    provider.setProps(schemes: [...provider.schemes!]..sort());
+  }
+
+  @override
+  int compareTo(other) {
+    assert(other is LocalSchemeEntry);
+    return lastModifyTime.isAfter(other.lastModifyTime) ? -1 : 1;
   }
 }

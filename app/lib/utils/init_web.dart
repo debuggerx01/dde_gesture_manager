@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Future<void> initEvents(BuildContext context) async {
+  H().initTopContext(context);
   var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
   context.read<SettingsProvider>().setProps(isDarkMode: isDark);
 }
