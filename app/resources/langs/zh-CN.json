@@ -138,6 +138,14 @@
     "upload_and_share": {
       "title": "是否同时分享到方案市场？",
       "description": "如果选择[分享]，其他用户可以看到本方案并下载使用；\n如果选择[放弃]，您仍可以稍后在[我的上传]列表中找到本方案进行操作。"
+    },
+    "user_blocked_hint": {
+      "title": "该账号已被封禁！",
+      "description": "如有疑问请通过发送邮件联系"
+    },
+    "upload": {
+      "success": "上传成功～",
+      "failed": "上传失败。。"
     }
   },
   "me": {

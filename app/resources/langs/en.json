@@ -138,6 +138,14 @@
     "upload_and_share": {
       "title": "Share the scheme at the same time?",
       "description": "If you select [Share], other users can see this scheme and download it;\nIf you select [Cancel], you can still find this scheme in the [My Upload] list and share."
+    },
+    "user_blocked_hint": {
+      "title": "The account has been blocked!",
+      "description": "If you have any questions, please contact me using email."
+    },
+    "upload": {
+      "success": "Upload success ~",
+      "failed": "Upload failed.."
     }
   },
   "me": {

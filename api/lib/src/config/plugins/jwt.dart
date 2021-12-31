@@ -9,7 +9,7 @@ Future<void> configureServer(Angel app) async {
     allowCookie: false,
     deserializer: (p) async => (UserQuery()..where!.id.equals(int.parse(p)))
         .getOne(app.container!.make<orm.QueryExecutor>())
-        .then((value) => value.value),
+        .then((value) => value.isNotEmpty ? value.value : User(email: '')),
     serializer: (p) => p.id ?? '',
   );
   await auth.configureServer(app);

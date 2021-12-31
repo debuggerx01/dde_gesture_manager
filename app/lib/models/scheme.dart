@@ -131,7 +131,7 @@ class Scheme {
   @ProviderModelProp()
   List<GestureProp>? gestures;
 
-  bool get readOnly => uploaded == true || fromMarket == true || id == Uuid.NAMESPACE_NIL;
+  bool get readOnly => fromMarket == true || id == Uuid.NAMESPACE_NIL;
 
   Scheme.parse(scheme) {
     if (scheme is String) scheme = json.decode(scheme);

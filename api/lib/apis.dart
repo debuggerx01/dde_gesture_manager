@@ -7,6 +7,7 @@ class Apis {
 
   static final system = SystemApis();
   static final auth = AuthApis();
+  static final scheme = SchemeApis();
 }
 
 class AuthApis {
@@ -15,12 +16,22 @@ class AuthApis {
   String get loginOrSignup => [path, 'login_or_signup'].joinPath();
 
   String confirmSignup({required StringParam accessKey}) => [path, 'confirm_sign_up', accessKey].joinPath();
+
+  String get status => [path, 'status'].joinPath();
 }
 
 class SystemApis {
   static final String path = '/system';
 
   String get appVersion => [path, 'app-version'].joinPath();
+}
+
+class SchemeApis {
+  static final String path = '/scheme';
+
+  String get upload => [path, 'upload'].joinPath();
+
+  String get userUploads => [path, 'user', 'uploads'].joinPath();
 }
 
 final _paramsMap = {

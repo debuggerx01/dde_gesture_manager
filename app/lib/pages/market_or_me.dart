@@ -1,10 +1,10 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/login.dart';
+import 'package:dde_gesture_manager/widgets/me.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -82,33 +82,7 @@ class MarketOrMe extends StatelessWidget {
   Widget buildMeContent(BuildContext context) {
     var accessToken = context.watch<ConfigsProvider>().accessToken;
     if (accessToken.isNull) return LoginWidget();
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(Icons.person, size: defaultButtonHeight),
-              Flexible(
-                child: AutoSizeText(
-                  context.watch<ConfigsProvider>().email ?? '',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                  maxLines: 1,
-                ),
-              ),
-              DButton.logout(
-                enabled: true,
-                onTap: () => context.read<ConfigsProvider>().setProps(accessToken: '', email: ''),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return MeWidget();
   }
 
   Widget buildMarketContent(BuildContext context) {

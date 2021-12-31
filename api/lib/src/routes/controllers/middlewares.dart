@@ -2,16 +2,15 @@ import 'package:angel3_auth/angel3_auth.dart';
 import 'package:angel3_framework/angel3_framework.dart';
 
 import 'package:dde_gesture_manager_api/models.dart';
+import '../controllers/controller_extensions.dart';
 
 RequestHandler jwtMiddleware() {
   return (RequestContext req, ResponseContext res, {bool throwError = true}) async {
     bool _reject(ResponseContext res) {
       if (throwError) {
-        res.statusCode = 403;
-        throw AngelHttpException.forbidden();
-      } else {
-        return false;
+        res.forbidden();
       }
+      return false;
     }
 
     if (req.container != null) {

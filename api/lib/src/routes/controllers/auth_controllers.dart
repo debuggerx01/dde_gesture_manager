@@ -5,6 +5,7 @@ import 'package:angel3_auth/angel3_auth.dart';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:dde_gesture_manager_api/apis.dart';
 import 'package:dde_gesture_manager_api/models.dart';
+import 'package:dde_gesture_manager_api/src/routes/controllers/middlewares.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:uuid/uuid.dart';
@@ -48,6 +49,8 @@ Future configureServer(Angel app) async {
       return res.notFound();
     } else if (user.value.password != userParams.password) {
       return res.unauthorized();
+    } else if (user.value.blocked == true) {
+      return res.forbidden();
     } else {
       var angelAuth = req.container!.make<AngelAuth>();
       await angelAuth.loginById(user.value.id!, req, res);
@@ -75,4 +78,14 @@ Future configureServer(Angel app) async {
     }
     return res.render('sign_up_result.html', {'success': false});
   });
+
+  app.get(
+    Apis.auth.status,
+    chain(
+      [
+        jwtMiddleware(),
+        (req, res) => req.user.blocked == false ? res.noContent() : res.forbidden(),
+      ],
+    ),
+  );
 }

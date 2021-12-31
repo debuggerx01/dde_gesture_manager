@@ -3,6 +3,7 @@ import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/constants/supported_locales.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/generated/codegen_loader.g.dart';
+import 'package:dde_gesture_manager/http/api.dart';
 import 'package:dde_gesture_manager/models/configs.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
@@ -68,7 +69,18 @@ class MyApp extends StatelessWidget {
               ],
             ),
             firstChild: Builder(builder: (context) {
-              Future.microtask(() => initEvents(context));
+              Future.microtask(() {
+                initEvents(context);
+                if (H().lastCheckAuthStatusTime != null &&
+                    H().lastCheckAuthStatusTime!.difference(DateTime.now()) < Duration(minutes: 10)) return;
+                if (context.read<ConfigsProvider>().accessToken.notNull) {
+                  Api.checkAuthStatus().then((value) {
+                    if (!value) context.read<ConfigsProvider>().setProps(email: '', accessToken: '');
+                  });
+                } else {
+                  H().lastCheckAuthStatusTime = DateTime.now();
+                }
+              });
               return Container();
             }),
             secondChild: HomePage(),
