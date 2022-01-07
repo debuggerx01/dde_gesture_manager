@@ -57,6 +57,10 @@ dev_dependencies:
   build_runner: 2.1.2
   source_gen: 1.1.0
 
+dependency_overrides:
+  angel3_orm:
+    path: ../api/3rd_party/angel3_orm
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

@@ -31,10 +31,17 @@ class SchemeApis {
 
   String get upload => [path, 'upload'].joinPath();
 
-  String get userUploads => [path, 'user', 'uploads'].joinPath();
+  String markAsShared({required StringParam schemeId}) => [path, 'mark_as_shared', schemeId].joinPath();
+
+  String user({required StringParam type}) => [path, 'user', type].joinPath();
+
+  String download({required StringParam schemeId}) => [path, 'download', schemeId].joinPath();
+
+  String like({required StringParam schemeId, required StringParam isLike}) => [path, 'like', schemeId, isLike].joinPath();
 }
 
 final _paramsMap = {
+  'BoolParam': BoolParam.nameOnRoute,
   'IntParam': IntParam.nameOnRoute,
   'DoubleParam': DoubleParam.nameOnRoute,
   'StringParam': StringParam.nameOnRoute,
@@ -56,6 +63,18 @@ extension RouteUrl on Function {
     }
     return Function.apply(this, [], params);
   }
+}
+
+class BoolParam {
+  final bool val;
+  String? name;
+
+  BoolParam(this.val);
+
+  BoolParam.nameOnRoute(this.name) : val = true;
+
+  @override
+  String toString() => name == null ? val.toString() : 'bool:$name';
 }
 
 class IntParam {
@@ -92,6 +111,10 @@ class StringParam {
 
   @override
   String toString() => name == null ? val.toString() : ':$name';
+}
+
+extension BoolParamExt on bool {
+  BoolParam get param => BoolParam(this);
 }
 
 extension IntParamExt on int {

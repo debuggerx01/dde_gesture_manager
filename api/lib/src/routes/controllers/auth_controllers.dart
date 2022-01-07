@@ -84,7 +84,7 @@ Future configureServer(Angel app) async {
     chain(
       [
         jwtMiddleware(),
-        (req, res) => req.user.blocked == false ? res.noContent() : res.forbidden(),
+        (req, res) => req.user!.blocked == false ? res.noContent() : res.forbidden(),
       ],
     ),
   );

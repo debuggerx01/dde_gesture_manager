@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:dde_gesture_manager_api/apis.dart';
+import 'package:dde_gesture_manager_api/src/models/download_history.dart';
+import 'package:dde_gesture_manager_api/src/models/like_record.dart';
 import 'package:dde_gesture_manager_api/src/models/scheme.dart';
 import 'package:dde_gesture_manager_api/src/routes/controllers/middlewares.dart';
 import 'package:logging/logging.dart';
@@ -20,16 +22,18 @@ Future configureServer(Angel app) async {
             var scheme = SchemeSerializer.fromMap(req.bodyAsMap);
             var schemeQuery = SchemeQuery();
             schemeQuery.where!.uuid.equals(scheme.uuid!);
-            var one = await schemeQuery.getOne(req.queryExecutor);
-            schemeQuery = SchemeQuery();
-            schemeQuery.values.copyFrom(scheme);
-            schemeQuery.values.uid = int.parse(req.user.id!);
-            if (one.isEmpty) {
-              await schemeQuery.insert(req.queryExecutor);
-            } else {
-              schemeQuery.whereId = int.parse(one.value.id!);
-              await schemeQuery.updateOne(req.queryExecutor);
-            }
+            req.queryExecutor.transaction((tx) async {
+              var one = await schemeQuery.getOne(tx);
+              schemeQuery = SchemeQuery();
+              schemeQuery.values.copyFrom(scheme);
+              schemeQuery.values.uid = req.user!.idAsInt;
+              if (one.isEmpty) {
+                return await schemeQuery.insert(tx);
+              } else {
+                schemeQuery.whereId = one.value.idAsInt;
+                return await schemeQuery.updateOne(tx);
+              }
+            });
           } catch (e) {
             _log.severe(e);
             return res.unProcessableEntity();
@@ -40,19 +44,143 @@ Future configureServer(Angel app) async {
     ),
   );
 
-  app.get(
-    Apis.scheme.userUploads,
+  app.post(
+    Apis.scheme.markAsShared.route,
     chain(
       [
         jwtMiddleware(),
         (req, res) async {
+          var schemeId = req.params['schemeId'];
           var schemeQuery = SchemeQuery();
-          schemeQuery.where!.uid.equals(int.parse(req.user.id!));
-          schemeQuery.orderBy(SchemeFields.updatedAt, descending: true);
-          return schemeQuery.get(req.queryExecutor).then((value) => value.map((e) => {
-            'name': e.name,
-            'description': e.description,
-          }).toList());
+          schemeQuery.where!.uuid.equals(schemeId);
+          schemeQuery.values.shared = true;
+          await schemeQuery.updateOne(req.queryExecutor);
+          return res.noContent();
+        },
+      ],
+    ),
+  );
+
+  app.get(
+    Apis.scheme.user.route,
+    chain(
+      [
+        jwtMiddleware(),
+        (req, res) async {
+          var schemeQuery = SimpleSchemeQuery();
+          var type = req.params['type'];
+          var likeRecordTableName = LikeRecordQuery().tableName;
+          schemeQuery.leftJoin(likeRecordTableName, SchemeFields.id, LikeRecordFields.schemeId, alias: 'lr');
+
+          switch (type) {
+            case 'uploaded':
+              schemeQuery.where!.uid.equals(req.user!.idAsInt);
+              break;
+            case 'downloaded':
+              var downloadHistoryTableName = DownloadHistoryQuery().tableName;
+              schemeQuery.leftJoin(downloadHistoryTableName, SchemeFields.id, DownloadHistoryFields.schemeId,
+                  alias: 'dh');
+              schemeQuery.where!.raw('dh.${DownloadHistoryFields.uid} = ${req.user!.idAsInt}');
+              break;
+            case 'liked':
+              schemeQuery.where!.raw('lr.${LikeRecordFields.uid} = ${req.user!.idAsInt}');
+              schemeQuery.where!.raw('lr.${LikeRecordFields.liked} = true');
+              break;
+            default:
+              return res.unProcessableEntity();
+          }
+          schemeQuery.orderBy('${schemeQuery.tableName}.${SchemeFields.updatedAt}', descending: true);
+          return schemeQuery.get(req.queryExecutor).then((value) => value.map(transSimpleSchemeMetaData).toList());
+        },
+      ],
+    ),
+  );
+
+  app.get(
+    Apis.scheme.download.route,
+    chain(
+      [
+        jwtMiddleware(ignoreError: true),
+        (req, res) async {
+          var schemeQuery = SchemeQuery();
+          schemeQuery.where?.uuid.equals(req.params['schemeId']);
+          var optionalScheme = await schemeQuery.getOne(req.queryExecutor);
+          if (optionalScheme.isNotEmpty) {
+            var scheme = optionalScheme.value;
+            if (req.user != null) {
+              /// 增加用户下载记录
+              var downloadHistoryQuery = DownloadHistoryQuery();
+              downloadHistoryQuery.where?.uid.equals(req.user!.idAsInt);
+              downloadHistoryQuery.where?.schemeId.equals(scheme.idAsInt);
+              var notExist = (await downloadHistoryQuery.getOne(req.queryExecutor)).isEmpty;
+              if (notExist) {
+                downloadHistoryQuery = DownloadHistoryQuery();
+                downloadHistoryQuery.values.copyFrom(DownloadHistory(uid: req.user!.idAsInt, schemeId: scheme.idAsInt));
+                await downloadHistoryQuery.insert(req.queryExecutor);
+              }
+            }
+
+            /// 增加方案的下载数量
+            schemeQuery = SchemeQuery();
+            schemeQuery.whereId = scheme.idAsInt;
+            Map<String, dynamic> metadata = Map.from(scheme.metadata!);
+            metadata.update('downloads', (value) => ++value, ifAbsent: () => 1);
+            schemeQuery.values.metadata = metadata;
+            schemeQuery.updateOne(req.queryExecutor);
+
+            return res.json(transSchemeForDownload(scheme));
+          }
+          return res.notFound();
+        },
+      ],
+    ),
+  );
+
+  app.get(
+    Apis.scheme.like.route,
+    chain(
+      [
+        jwtMiddleware(),
+        (req, res) async {
+          bool isLike = req.params['isLike'] == 'like';
+          bool needUpdate = true;
+          var schemeQuery = SchemeQuery();
+          schemeQuery.where?.uuid.equals(req.params['schemeId']);
+          var optionalScheme = await schemeQuery.getOne(req.queryExecutor);
+          if (optionalScheme.isNotEmpty) {
+            var scheme = optionalScheme.value;
+            if (req.user != null) {
+              /// 增加用户点赞记录
+              var likeRecordQuery = LikeRecordQuery();
+              likeRecordQuery.where?.uid.equals(req.user!.idAsInt);
+              likeRecordQuery.where?.schemeId.equals(scheme.idAsInt);
+              var likeRecordCheck = await likeRecordQuery.getOne(req.queryExecutor);
+              likeRecordQuery = LikeRecordQuery();
+              likeRecordQuery.values
+                  .copyFrom(LikeRecord(uid: req.user!.idAsInt, schemeId: scheme.idAsInt, liked: isLike));
+              if (likeRecordCheck.isEmpty) {
+                likeRecordQuery.insert(req.queryExecutor);
+              } else if (likeRecordCheck.value.liked != isLike) {
+                likeRecordQuery.whereId = likeRecordCheck.value.idAsInt;
+                likeRecordQuery.updateOne(req.queryExecutor);
+              } else {
+                needUpdate = false;
+              }
+            }
+
+            if (needUpdate) {
+              /// 增加/减少方案的点赞数量
+              schemeQuery = SchemeQuery();
+              schemeQuery.whereId = scheme.idAsInt;
+              Map<String, dynamic> metadata = Map.from(scheme.metadata!);
+              metadata.update('likes', (value) => isLike ? ++value : --value, ifAbsent: () => 1);
+              schemeQuery.values.metadata = metadata;
+              schemeQuery.updateOne(req.queryExecutor);
+            }
+
+            return res.noContent();
+          }
+          return res.notFound();
         },
       ],
     ),

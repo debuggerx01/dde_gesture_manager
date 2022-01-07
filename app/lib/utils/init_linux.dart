@@ -49,9 +49,9 @@ Future<void> initEvents(BuildContext context) async {
     }
   }
 
-  if (!_updateChecked)
+  if (!_updateChecked) {
+    _updateChecked = true;
     Api.checkAppVersion(ignoreErrorHandle: true).then((value) async {
-      _updateChecked = true;
       var info = await PackageInfo.fromPlatform();
       var _buildNumber = int.parse(info.buildNumber);
       var _newVersionCode = value?.versionCode ?? 0;
@@ -74,6 +74,7 @@ Future<void> initEvents(BuildContext context) async {
         });
       }
     });
+  }
 }
 
 Future<void> initConfigs() async {

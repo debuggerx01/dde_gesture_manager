@@ -48,5 +48,11 @@ extension RedisClient on RequestContext {
 }
 
 extension JWTUserInstance on RequestContext {
-  User get user => container!.make<User>();
+  User? get user {
+    try {
+      return container!.make<User>();
+    } catch (_) {
+      return null;
+    }
+  }
 }

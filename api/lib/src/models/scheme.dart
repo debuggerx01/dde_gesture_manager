@@ -33,3 +33,91 @@ abstract class _Scheme extends BaseModel {
   @DefaultsTo([])
   List? get gestures;
 }
+
+@serializable
+@Orm(tableName: 'schemes', generateMigrations: false)
+abstract class _SimpleScheme {
+  @Column()
+  int? id;
+
+  @Column(isNullable: false, indexType: IndexType.unique)
+  @SerializableField(isNullable: false)
+  String? get uuid;
+
+  @Column(isNullable: false)
+  @SerializableField(isNullable: false)
+  String? get name;
+
+  @Column(isNullable: false, indexType: IndexType.standardIndex)
+  @SerializableField(isNullable: true, exclude: true)
+  int? uid;
+
+  @Column(type: ColumnType.text)
+  String? description;
+
+  @Column(isNullable: false, indexType: IndexType.standardIndex)
+  @SerializableField(defaultValue: false, isNullable: false)
+  bool? get shared;
+
+  @SerializableField(isNullable: true)
+  @Column(type: ColumnType.json)
+  Map<String, dynamic>? get metadata;
+
+  @SerializableField(isNullable: true)
+  @Column(expression: 'lr.liked')
+  bool? get liked;
+}
+
+@serializable
+abstract class _SimpleSchemeTransMetaData {
+  @SerializableField(isNullable: false)
+  String? get uuid;
+
+  @SerializableField(isNullable: false)
+  String? get name;
+
+  @SerializableField(isNullable: false)
+  String? description;
+
+  @SerializableField(defaultValue: false, isNullable: false)
+  bool? get shared;
+
+  int? get downloads;
+
+  int? get likes;
+
+  bool? get liked;
+}
+
+SimpleSchemeTransMetaData transSimpleSchemeMetaData(SimpleScheme scheme) => SimpleSchemeTransMetaData(
+      description: scheme.description,
+      uuid: scheme.uuid,
+      name: scheme.name,
+      shared: scheme.shared,
+      liked: scheme.liked,
+      likes: scheme.metadata?['likes'] ?? 0,
+      downloads: scheme.metadata?['downloads'] ?? 0,
+    );
+
+@serializable
+abstract class _SchemeForDownload {
+  @SerializableField(isNullable: false)
+  String? get uuid;
+
+  @SerializableField(isNullable: false)
+  String? get name;
+
+  @Column(type: ColumnType.text)
+  String? description;
+
+  @SerializableField()
+  @DefaultsTo([])
+  List? get gestures;
+}
+
+SchemeForDownload transSchemeForDownload(Scheme scheme) => SchemeForDownload(
+      uuid: scheme.uuid,
+      name: scheme.name,
+      description: scheme.description,
+      gestures: scheme.gestures,
+    );

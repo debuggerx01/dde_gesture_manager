@@ -72,7 +72,10 @@
     "apply": "apply",
     "paste": "paste",
     "logout": "sign out",
-    "upload": "upload"
+    "upload": "upload",
+    "download": "download",
+    "share": "share to market",
+    "like": "like"
   },
   "str": {
     "null": "Null",
@@ -146,6 +149,11 @@
     "upload": {
       "success": "Upload success ~",
       "failed": "Upload failed.."
+    },
+    "share": {
+      "title": "Are you sure to sharing?",
+      "description": "Other users can see this scheme and download it after share",
+      "success": "Share success"
     }
   },
   "me": {
@@ -155,6 +163,11 @@
       "email_hint": "Please enter email",
       "password_hint": "Please enter 8-16-bit password",
       "email_error_hint": "Please enter your vaild email"
+    },
+    "scheme_types": {
+      "uploaded": "Uploaded",
+      "downloaded": "Downloaded",
+      "liked": "Liked"
     }
   }
 }

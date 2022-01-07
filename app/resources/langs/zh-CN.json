@@ -72,7 +72,10 @@
     "apply": "应用",
     "paste": "粘贴",
     "logout": "退出登录",
-    "upload": "上传"
+    "upload": "上传",
+    "download": "下载",
+    "share": "分享到市场",
+    "like": "点赞"
   },
   "str": {
     "null": "无",
@@ -146,6 +149,11 @@
     "upload": {
       "success": "上传成功～",
       "failed": "上传失败。。"
+    },
+    "share": {
+      "title": "确定分享？",
+      "description": "分享后其他用户可以看到本方案并下载使用",
+      "success": "分享成功"
     }
   },
   "me": {
@@ -155,6 +163,11 @@
       "email_hint": "请输入邮箱",
       "password_hint": "请输入8-16位密码",
       "email_error_hint": "请输入正确的邮箱"
+    },
+    "scheme_types": {
+      "uploaded": "我的上传",
+      "downloaded": "我的下载",
+      "liked": "我的点赞"
     }
   }
 }

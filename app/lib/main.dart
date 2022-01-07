@@ -11,6 +11,7 @@ import 'package:dde_gesture_manager/themes/dark.dart';
 import 'package:dde_gesture_manager/themes/light.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/init.dart';
+import 'package:dde_gesture_manager/utils/simple_throttle.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/home.dart';
@@ -71,15 +72,7 @@ class MyApp extends StatelessWidget {
             firstChild: Builder(builder: (context) {
               Future.microtask(() {
                 initEvents(context);
-                if (H().lastCheckAuthStatusTime != null &&
-                    H().lastCheckAuthStatusTime!.difference(DateTime.now()) < Duration(minutes: 10)) return;
-                if (context.read<ConfigsProvider>().accessToken.notNull) {
-                  Api.checkAuthStatus().then((value) {
-                    if (!value) context.read<ConfigsProvider>().setProps(email: '', accessToken: '');
-                  });
-                } else {
-                  H().lastCheckAuthStatusTime = DateTime.now();
-                }
+                SimpleThrottle.throttledFunc(_checkAuthStatus, timeout: const Duration(minutes: 5))?.call(context);
               });
               return Container();
             }),
@@ -89,5 +82,17 @@ class MyApp extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+void _checkAuthStatus(BuildContext context) {
+  if (H().lastCheckAuthStatusTime != null &&
+      H().lastCheckAuthStatusTime!.difference(DateTime.now()) < Duration(minutes: 10)) return;
+  if (context.read<ConfigsProvider>().accessToken.notNull) {
+    Api.checkAuthStatus().then((value) {
+      if (!value) context.read<ConfigsProvider>().setProps(email: '', accessToken: '');
+    });
+  } else {
+    H().lastCheckAuthStatusTime = DateTime.now();
   }
 }

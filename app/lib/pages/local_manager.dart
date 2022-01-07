@@ -184,8 +184,8 @@ class _LocalManagerState extends State<LocalManager> {
                             ),
                           ),
                         ),
-                        Container(height: 5),
-                        Container(
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [

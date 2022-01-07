@@ -82,7 +82,7 @@ class MarketOrMe extends StatelessWidget {
   Widget buildMeContent(BuildContext context) {
     var accessToken = context.watch<ConfigsProvider>().accessToken;
     if (accessToken.isNull) return LoginWidget();
-    return MeWidget();
+    return Expanded(child: MeWidget());
   }
 
   Widget buildMarketContent(BuildContext context) {

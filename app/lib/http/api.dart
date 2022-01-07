@@ -6,6 +6,7 @@ import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/scheme.dart' as AppScheme;
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/notificator.dart';
+import 'package:dde_gesture_manager/widgets/me.dart';
 import 'package:dde_gesture_manager_api/apis.dart';
 import 'package:dde_gesture_manager_api/models.dart';
 import 'package:http/http.dart' as http;
@@ -85,7 +86,7 @@ class Api {
           if (ignoreErrorHandle)
             throw e;
           else
-            return _handleHttpError(e);
+            _handleHttpError(e);
         },
       );
 
@@ -116,7 +117,7 @@ class Api {
           if (ignoreErrorHandle)
             throw e;
           else
-            return _handleHttpError(e);
+            _handleHttpError(e);
         },
       );
 
@@ -158,6 +159,19 @@ class Api {
         ),
       ).then((value) => value == HttpStatus.noContent);
 
-  static Future<List<Scheme>> userUploads() =>
-      _get(Apis.scheme.userUploads, listRespBuilderWrap(SchemeSerializer.fromMap));
+  static Future<List<SimpleSchemeTransMetaData>> userSchemes({required SchemeListType type}) =>
+      _get(Apis.scheme.user(type: type.name.param), listRespBuilderWrap(SimpleSchemeTransMetaDataSerializer.fromMap));
+
+  static Future<bool> likeScheme({required String schemeId, required bool isLike}) => _get(
+              Apis.scheme.like(schemeId: schemeId.param, isLike: StringParam(isLike ? 'like' : 'unlike')),
+              getStatusCodeFunc)
+          .then((value) {
+        123.sout();
+        return value == HttpStatus.noContent;
+      });
+
+  static Future<SchemeForDownload> downloadScheme({required String schemeId}) => _get(
+        Apis.scheme.download(schemeId: schemeId.param),
+        SchemeForDownloadSerializer.fromMap,
+      );
 }
