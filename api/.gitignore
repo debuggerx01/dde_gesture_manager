@@ -91,7 +91,7 @@ server_log.txt
 
 .metals/
 
-/config/production.yaml
+/config/production.yaml.bak
 /config/development.yaml
 
 *.g.dart

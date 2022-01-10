@@ -35,7 +35,7 @@ class _MeWidgetState extends State<MeWidget> {
   void initState() {
     super.initState();
     Api.userSchemes(type: _type).then((value) {
-      if (mounted)
+      if (mounted && value != null)
         setState(() {
           _schemes = value;
           _selected = value.isNotEmpty ? value.first.uuid : null;
@@ -53,7 +53,7 @@ class _MeWidgetState extends State<MeWidget> {
   _refreshList() {
     Future.delayed(const Duration(milliseconds: 100), () {
       Api.userSchemes(type: _type).then((value) {
-        if (mounted)
+        if (mounted && value != null)
           setState(() {
             _schemes = value;
           });
@@ -108,9 +108,10 @@ class _MeWidgetState extends State<MeWidget> {
                               _type = e;
                             });
                             Api.userSchemes(type: e).then((value) {
-                              if (mounted)
+                              if (mounted && value != null)
                                 setState(() {
                                   _schemes = value;
+                                  _selected = value.first.uuid;
                                 });
                             });
                           },

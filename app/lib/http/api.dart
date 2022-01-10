@@ -46,9 +46,9 @@ class Api {
     }
   }
 
-  static HandleRespBuild<T> _handleRespBuild<T>(BeanBuilder<T> builder) => (http.Response resp) {
+  static HandleRespBuild<T?> _handleRespBuild<T>(BeanBuilder<T> builder) => (http.Response resp) {
         if (builder is GetStatusCodeFunc) return builder({"statusCode": resp.statusCode});
-        T res;
+        T? res;
         try {
           var decodeBody = json.decode(utf8.decode(resp.bodyBytes));
           res = decodeBody is Map ? builder(decodeBody) : builder({'list': decodeBody});
@@ -59,7 +59,7 @@ class Api {
         return res;
       };
 
-  static Future<T> _get<T>(
+  static Future<T?> _get<T>(
     String path,
     BeanBuilder<T> builder, {
     Map<String, dynamic>? queryParams,
@@ -80,7 +80,7 @@ class Api {
         }..addAll(
             ignoreToken ? {} : {HttpHeaders.authorizationHeader: 'Bearer ${H().sp.getString(SPKeys.accessToken)}'}),
       )
-          .then(
+          .then<T?>(
         _handleRespBuild<T>(builder),
         onError: (e) {
           if (ignoreErrorHandle)
@@ -90,7 +90,7 @@ class Api {
         },
       );
 
-  static Future<T> _post<T>(
+  static Future<T?> _post<T>(
     String path,
     BeanBuilder<T> builder, {
     Map<String, dynamic>? body,
@@ -111,7 +111,7 @@ class Api {
         }..addAll(
             ignoreToken ? {} : {HttpHeaders.authorizationHeader: 'Bearer ${H().sp.getString(SPKeys.accessToken)}'}),
       )
-          .then(
+          .then<T?>(
         _handleRespBuild<T>(builder),
         onError: (e) {
           if (ignoreErrorHandle)
@@ -159,18 +159,17 @@ class Api {
         ),
       ).then((value) => value == HttpStatus.noContent);
 
-  static Future<List<SimpleSchemeTransMetaData>> userSchemes({required SchemeListType type}) =>
+  static Future<List<SimpleSchemeTransMetaData>?> userSchemes({required SchemeListType type}) =>
       _get(Apis.scheme.user(type: type.name.param), listRespBuilderWrap(SimpleSchemeTransMetaDataSerializer.fromMap));
 
   static Future<bool> likeScheme({required String schemeId, required bool isLike}) => _get(
               Apis.scheme.like(schemeId: schemeId.param, isLike: StringParam(isLike ? 'like' : 'unlike')),
               getStatusCodeFunc)
           .then((value) {
-        123.sout();
         return value == HttpStatus.noContent;
       });
 
-  static Future<SchemeForDownload> downloadScheme({required String schemeId}) => _get(
+  static Future<SchemeForDownload?> downloadScheme({required String schemeId}) => _get(
         Apis.scheme.download(schemeId: schemeId.param),
         SchemeForDownloadSerializer.fromMap,
       );
