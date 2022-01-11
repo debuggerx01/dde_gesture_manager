@@ -62,41 +62,6 @@ Future configureServer(Angel app) async {
   );
 
   app.get(
-    Apis.scheme.user.route,
-    chain(
-      [
-        jwtMiddleware(),
-        (req, res) async {
-          var schemeQuery = SimpleSchemeQuery();
-          var type = req.params['type'];
-          var likeRecordTableName = LikeRecordQuery().tableName;
-          schemeQuery.leftJoin(likeRecordTableName, SchemeFields.id, LikeRecordFields.schemeId, alias: 'lr');
-
-          switch (type) {
-            case 'uploaded':
-              schemeQuery.where!.uid.equals(req.user!.idAsInt);
-              break;
-            case 'downloaded':
-              var downloadHistoryTableName = DownloadHistoryQuery().tableName;
-              schemeQuery.leftJoin(downloadHistoryTableName, SchemeFields.id, DownloadHistoryFields.schemeId,
-                  alias: 'dh');
-              schemeQuery.where!.raw('dh.${DownloadHistoryFields.uid} = ${req.user!.idAsInt}');
-              break;
-            case 'liked':
-              schemeQuery.where!.raw('lr.${LikeRecordFields.uid} = ${req.user!.idAsInt}');
-              schemeQuery.where!.raw('lr.${LikeRecordFields.liked} = true');
-              break;
-            default:
-              return res.unProcessableEntity();
-          }
-          schemeQuery.orderBy('${schemeQuery.tableName}.${SchemeFields.updatedAt}', descending: true);
-          return schemeQuery.get(req.queryExecutor).then((value) => value.map(transSimpleSchemeMetaData).toList());
-        },
-      ],
-    ),
-  );
-
-  app.get(
     Apis.scheme.download.route,
     chain(
       [
@@ -182,6 +147,102 @@ Future configureServer(Angel app) async {
           }
           return res.notFound();
         },
+      ],
+    ),
+  );
+
+  app.get(
+    Apis.scheme.user.route,
+    chain(
+      [
+        jwtMiddleware(),
+        (req, res) async {
+          var schemeQuery = SimpleSchemeQuery();
+          var type = req.params['type'];
+          var likeRecordTableName = LikeRecordQuery().tableName;
+          schemeQuery.leftJoin(likeRecordTableName, SchemeFields.id, LikeRecordFields.schemeId, alias: 'lr');
+
+          switch (type) {
+            case 'uploaded':
+              schemeQuery.where!.uid.equals(req.user!.idAsInt);
+              break;
+            case 'downloaded':
+              var downloadHistoryTableName = DownloadHistoryQuery().tableName;
+              schemeQuery.leftJoin(downloadHistoryTableName, SchemeFields.id, DownloadHistoryFields.schemeId,
+                  alias: 'dh');
+              schemeQuery.where!.raw('dh.${DownloadHistoryFields.uid} = ${req.user!.idAsInt}');
+              break;
+            case 'liked':
+              schemeQuery.where!.raw('lr.${LikeRecordFields.uid} = ${req.user!.idAsInt}');
+              schemeQuery.where!.raw('lr.${LikeRecordFields.liked} = true');
+              break;
+            default:
+              return res.unProcessableEntity();
+          }
+          schemeQuery.orderBy('${schemeQuery.tableName}.${SchemeFields.updatedAt}', descending: true);
+          return schemeQuery.get(req.queryExecutor).then((value) => value.map(transSimpleSchemeMetaData).toList());
+        },
+      ],
+    ),
+  );
+
+  const recommend = "(metadata->'recommends') is null ,(metadata->'recommends')::int";
+  const updated = "updated_at";
+  const likes = "(metadata->'likes') is null ,(metadata->'likes')::int";
+  const downloads = "(metadata->'downloads') is null ,(metadata->'downloads')::int";
+
+  app.get(Apis.scheme.market.route, (req, res) async {
+    var schemeQuery = MarketSchemeQuery();
+    var type = req.params['type'];
+    var page = req.params['page'] as int;
+    var pageSize = req.params['pageSize'] as int;
+    schemeQuery.where?.shared.equals(true);
+    late List<String> orders;
+
+    switch (type) {
+      case 'recommend':
+        // orders = [recommend, likes, downloads, SchemeFields.id];
+        orders = [recommend];
+        break;
+      case 'updated':
+        orders = [updated];
+        break;
+      case 'likes':
+        // orders = [likes, recommend, downloads, SchemeFields.id];
+        orders = [likes];
+        break;
+      case 'downloads':
+        // orders = [downloads, recommend, likes, SchemeFields.id];
+        orders = [downloads];
+        break;
+      default:
+        return res.unProcessableEntity();
+    }
+    for (var order in orders) {
+      schemeQuery.orderBy(order, descending: true);
+    }
+    schemeQuery.offset(page * pageSize);
+    schemeQuery.limit(pageSize + 1);
+    return schemeQuery.get(req.queryExecutor).then((value) {
+      var hasMore = value.length > pageSize;
+      if (hasMore) value.removeLast();
+      return {
+        'hasMore': hasMore,
+        'items': value.map(transMarketSchemeMetaData).toList(),
+      };
+    });
+  });
+
+  app.get(
+    Apis.scheme.userLikes,
+    chain(
+      [
+        jwtMiddleware(),
+        (req, res) async => (UserLikesQuery()
+              ..where?.uid.equals(req.user!.idAsInt)
+              ..where?.liked.equals(true))
+            .get(req.queryExecutor)
+            .then((value) => value.map((e) => e.id).toList()),
       ],
     ),
   );

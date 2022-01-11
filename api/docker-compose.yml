@@ -1,0 +1,34 @@
+version: "2.1"
+
+services:
+  mysql:
+    image: postgres:latest
+    restart: always
+    container_name: dgm_postgres
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: Dx@8917312
+      MYSQL_DATABASE: piwigo
+      MYSQL_USER: debuggerx
+      MYSQL_PASSWORD: dx8917312
+    volumes:
+      - /mnt/hd500/db:/var/lib/mysql
+    ports:
+      - "5432:5432"
+    networks:
+      - mynet
+
+  api:
+    build: .
+    container_name: dgm_api
+    links:
+      - dgm_postgres
+    ports:
+      - 8888:8888
+    networks:
+      - mynet
+    restart: unless-stopped
+
+networks:
+  mynet:
+    driver: bridge

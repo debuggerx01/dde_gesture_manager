@@ -4,6 +4,7 @@ import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/login.dart';
+import 'package:dde_gesture_manager/widgets/market.dart';
 import 'package:dde_gesture_manager/widgets/me.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,15 +19,14 @@ class MarketOrMe extends StatelessWidget {
     var layoutProvider = context.watch<ContentLayoutProvider>();
     bool isOpen = layoutProvider.marketOrMeOpened == true;
     bool isMarket = layoutProvider.isMarket;
-    bool showLogin = context.watch<ConfigsProvider>().accessToken.isNull && !isMarket;
     return AnimatedContainer(
       duration: mediumDuration,
       curve: Curves.easeInOut,
-      width: isOpen ? marketOrMePanelWidth * (showLogin ? 1.5 : 1) : 0,
+      width: isOpen ? marketOrMePanelWidth * 1 : 0,
       child: OverflowBox(
         alignment: Alignment.centerLeft,
-        maxWidth: marketOrMePanelWidth * (showLogin ? 1.5 : 1),
-        minWidth: marketOrMePanelWidth * (showLogin ? 1.5 : 1),
+        maxWidth: marketOrMePanelWidth,
+        minWidth: marketOrMePanelWidth,
         child: Material(
           color: context.t.backgroundColor,
           elevation: isOpen ? 10 : 0,
@@ -85,7 +85,5 @@ class MarketOrMe extends StatelessWidget {
     return Expanded(child: MeWidget());
   }
 
-  Widget buildMarketContent(BuildContext context) {
-    return Container();
-  }
+  Widget buildMarketContent(BuildContext context) => Expanded(child: MarketWidget());
 }

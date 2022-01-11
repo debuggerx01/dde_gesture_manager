@@ -1,14 +1,17 @@
-FROM google/dart:latest
-
-COPY ./ ./
-
-# Install dependencies, pre-build
-RUN pub get
-
-# Optionally build generaed sources.
-# RUN pub run build_runner build
-
-# Set environment, start server
+FROM dart:stable AS build-env
+LABEL stage=dart_builder
+ENV PUB_HOSTED_URL="https://pub.flutter-io.cn"
 ENV ANGEL_ENV=production
+COPY ./ ./
+RUN pub get
+RUN dart compile exe bin/prod.dart -o /server
+
+FROM scratch
+WORKDIR /app
+ENV ANGEL_ENV=production
+ADD ./views ./views
+ADD ./config ./config
+COPY --from=build-env /runtime/ /
+COPY --from=build-env /server /app
 EXPOSE 3000
-CMD dart bin/prod.dart
+ENTRYPOINT ["./server", "-a", "0.0.0.0", "--port", "3000"]

@@ -35,9 +35,13 @@ class SchemeApis {
 
   String user({required StringParam type}) => [path, 'user', type].joinPath();
 
+  String market({required StringParam type, required IntParam page, required IntParam pageSize}) => [path, 'market', type, page, pageSize].joinPath();
+
   String download({required StringParam schemeId}) => [path, 'download', schemeId].joinPath();
 
   String like({required StringParam schemeId, required StringParam isLike}) => [path, 'like', schemeId, isLike].joinPath();
+
+  String get userLikes => [path, 'user-likes'].joinPath();
 }
 
 final _paramsMap = {

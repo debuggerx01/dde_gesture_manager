@@ -20,7 +20,13 @@
     "tip": "显示帮助文档"
   },
   "market": {
-    "title": "方案市场"
+    "title": "方案市场",
+    "sort_types": {
+      "recommend": "推荐",
+      "updated": "最近更新",
+      "likes": "点赞数",
+      "downloads": "下载量"
+    }
   },
   "local_manager": {
     "title": "本地方案管理",

@@ -21,3 +21,20 @@ abstract class _LikeRecord extends BaseModel {
   @SerializableField(isNullable: false)
   bool? get liked;
 }
+
+
+@serializable
+@Orm(tableName: 'like_records', generateMigrations: false)
+abstract class _UserLikes {
+  @Column(isNullable: false)
+  @SerializableField(isNullable: false)
+  int? id;
+
+  @Column(isNullable: false)
+  @SerializableField(exclude: true)
+  int? get uid;
+
+  @Column(isNullable: false)
+  @SerializableField(exclude: true)
+  bool? get liked;
+}

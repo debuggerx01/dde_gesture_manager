@@ -71,6 +71,9 @@ abstract class _SimpleScheme {
 @serializable
 abstract class _SimpleSchemeTransMetaData {
   @SerializableField(isNullable: false)
+  int? id;
+
+  @SerializableField(isNullable: false)
   String? get uuid;
 
   @SerializableField(isNullable: false)
@@ -90,6 +93,7 @@ abstract class _SimpleSchemeTransMetaData {
 }
 
 SimpleSchemeTransMetaData transSimpleSchemeMetaData(SimpleScheme scheme) => SimpleSchemeTransMetaData(
+      id: scheme.id,
       description: scheme.description,
       uuid: scheme.uuid,
       name: scheme.name,
@@ -121,3 +125,57 @@ SchemeForDownload transSchemeForDownload(Scheme scheme) => SchemeForDownload(
       description: scheme.description,
       gestures: scheme.gestures,
     );
+
+@serializable
+@Orm(tableName: 'schemes', generateMigrations: false)
+abstract class _MarketScheme {
+  @Column()
+  int? id;
+
+  @Column(isNullable: false, indexType: IndexType.unique)
+  @SerializableField(isNullable: false)
+  String? get uuid;
+
+  @Column(isNullable: false)
+  @SerializableField(isNullable: false)
+  String? get name;
+
+  @Column(type: ColumnType.text)
+  String? description;
+
+  @Column(isNullable: false)
+  @SerializableField(exclude: true)
+  bool? get shared;
+
+  @SerializableField(isNullable: true)
+  @Column(type: ColumnType.json)
+  Map<String, dynamic>? get metadata;
+}
+
+@serializable
+abstract class _MarketSchemeTransMetaData {
+  @SerializableField(isNullable: false)
+  int? id;
+
+  @SerializableField(isNullable: false)
+  String? get uuid;
+
+  @SerializableField(isNullable: false)
+  String? get name;
+
+  @SerializableField(isNullable: false)
+  String? description;
+
+  int? get downloads;
+
+  int? get likes;
+}
+
+MarketSchemeTransMetaData transMarketSchemeMetaData(MarketScheme scheme) => MarketSchemeTransMetaData(
+  id: scheme.id,
+  description: scheme.description,
+  uuid: scheme.uuid,
+  name: scheme.name,
+  likes: scheme.metadata?['likes'] ?? 0,
+  downloads: scheme.metadata?['downloads'] ?? 0,
+);

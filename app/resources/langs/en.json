@@ -20,7 +20,13 @@
     "tip": "Display help documentation"
   },
   "market": {
-    "title": "Scheme market"
+    "title": "Scheme market",
+    "sort_types": {
+      "recommend": "Recommend",
+      "updated": "updated",
+      "likes": "likes",
+      "downloads": "downloads"
+    }
   },
   "local_manager": {
     "title": "Local scheme management",

@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
@@ -9,6 +10,8 @@ import 'package:dde_gesture_manager/utils/notificator.dart';
 import 'package:dde_gesture_manager_api/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+import 'package:markdown_editor_ot/markdown_editor.dart';
+import 'package:numeral/fun.dart';
 
 import 'dde_button.dart';
 
@@ -137,60 +140,102 @@ class _MeWidgetState extends State<MeWidget> {
                 ),
                 borderRadius: BorderRadius.circular(defaultBorderRadius),
               ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
-                child: ListView.builder(
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selected = _schemes[index].uuid;
-                      });
-                    },
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      onEnter: (_) {
-                        setState(() {
-                          _hovering = _schemes[index].uuid;
-                        });
-                      },
-                      child: Container(
-                        color: _getItemBackgroundColor(index, _schemes[index].uuid),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 6, right: 12.0),
-                          child: DefaultTextStyle(
-                            style: context.t.textTheme.bodyText2!.copyWith(
-                              color: _selected == _schemes[index].uuid ? Colors.white : null,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(_schemes[index].name ?? ''),
-                                Row(
-                                  children: [
-                                    Text('${_schemes[index].downloads ?? 0}'.padLeft(4)),
-                                    Icon(
-                                      Icons.file_download,
-                                      size: 18,
-                                    ),
-                                    Text('${_schemes[index].likes ?? 0}'.padLeft(4)),
-                                    Icon(_schemes[index].liked == true ? Icons.thumb_up : Icons.thumb_up_off_alt,
-                                        size: 17),
-                                  ]
-                                      .map((e) => Padding(
-                                            padding: const EdgeInsets.only(right: 3),
-                                            child: e,
-                                          ))
-                                      .toList(),
+              child: Column(
+                children: [
+                  Flexible(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: ListView.builder(
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selected = _schemes[index].uuid;
+                            });
+                          },
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            onEnter: (_) {
+                              setState(() {
+                                _hovering = _schemes[index].uuid;
+                              });
+                            },
+                            child: Container(
+                              color: _getItemBackgroundColor(index, _schemes[index].uuid),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 6, right: 12.0),
+                                child: DefaultTextStyle(
+                                  style: context.t.textTheme.bodyText2!.copyWith(
+                                    color: _selected == _schemes[index].uuid ? Colors.white : null,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(_schemes[index].name ?? ''),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 50,
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: AutoSizeText(
+                                                '${numeral(_schemes[index].downloads ?? 0, fractionDigits: 1)}'
+                                                    .padLeft(5),
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.file_download,
+                                            size: 18,
+                                          ),
+                                          SizedBox(
+                                            width: 50,
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: AutoSizeText(
+                                                '${numeral(_schemes[index].likes ?? 0, fractionDigits: 1)}'.padLeft(5),
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(_schemes[index].liked == true ? Icons.thumb_up : Icons.thumb_up_off_alt,
+                                              size: 17),
+                                        ]
+                                            .map((e) => Padding(
+                                                  padding: const EdgeInsets.only(right: 3),
+                                                  child: e,
+                                                ))
+                                            .toList(),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
+                        itemCount: _schemes.length,
                       ),
                     ),
                   ),
-                  itemCount: _schemes.length,
-                ),
+                  Divider(thickness: .5),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: MdPreview(
+                        text: _schemes.firstWhereOrNull((e) => e.uuid == _selected)?.description ?? '',
+                        widgetImage: (imageUrl) => CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          placeholder: (context, url) => const SizedBox(
+                            width: double.infinity,
+                            height: 300,
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        ),
+                        onCodeCopied: () {},
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
