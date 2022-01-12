@@ -1,4 +1,5 @@
 import 'package:angel3_framework/angel3_framework.dart';
+import 'package:angel3_cors/angel3_cors.dart';
 import 'package:file/file.dart';
 import 'controllers/auth_controllers.dart' as auth_controllers;
 import 'controllers/system_controllers.dart' as system_controllers;
@@ -19,6 +20,8 @@ AngelConfigurer configureServer(FileSystem fileSystem) {
       }
       return true;
     });
+
+    app.fallback(cors());
 
     // Typically, you want to mount controllers first, after any global middleware.
     await app.configure(system_controllers.configureServer);
