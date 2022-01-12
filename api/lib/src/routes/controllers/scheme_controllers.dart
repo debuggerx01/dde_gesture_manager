@@ -221,8 +221,9 @@ Future configureServer(Angel app) async {
     for (var order in orders) {
       schemeQuery.orderBy(order, descending: true);
     }
-    schemeQuery.offset(page * pageSize);
-    schemeQuery.limit(pageSize + 1);
+    schemeQuery
+      ..offset(page * pageSize)
+      ..limit(pageSize + 1);
     return schemeQuery.get(req.queryExecutor).then((value) {
       var hasMore = value.length > pageSize;
       if (hasMore) value.removeLast();

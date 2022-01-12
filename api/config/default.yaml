@@ -2,12 +2,17 @@
 host: 127.0.0.1
 port: 3000
 postgres:
-  host: localhost
+  host: db
   port: 5432
-  database_name: appdb
-  username: appuser
-  password: App1970#
-  useSSL: false
-  time_zone: UTC
+  database_name: gesture_manager
+  username: postgres
+  password: gesture_manager_secret
+  use_ssl: false
+  time_zone: Asia/Shanghai
+
+redis:
+  host: kv
+  port: 6379
+
 jwt_secret: "OvA9SBLnncot8gFHvt8Gh1qkQ1ptGIQW"
-password_salt: "test"
+password_salt: "Z5b84rrgsKmfNFNRExAC4BCJe5aZPdJq"

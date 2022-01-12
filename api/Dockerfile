@@ -5,6 +5,7 @@ ENV ANGEL_ENV=production
 COPY ./ ./
 RUN pub get
 RUN dart compile exe bin/prod.dart -o /server
+ENTRYPOINT ["dart", "bin/migrate.dart", "up"]
 
 FROM scratch
 WORKDIR /app
