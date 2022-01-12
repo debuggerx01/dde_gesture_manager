@@ -34,6 +34,7 @@ void main(List<String> args) async {
     DownloadHistoryMigration(),
     LikeRecordMigration(),
     AppVersionMigration(),
+    AppVersionSeed(),
   ]);
   await runMigrations(migrationRunner, args);
 }
