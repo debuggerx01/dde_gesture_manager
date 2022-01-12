@@ -21,7 +21,7 @@ AngelConfigurer configureServer(FileSystem fileSystem) {
     });
 
     // Typically, you want to mount controllers first, after any global middleware.
-    await app.configure(system_controllers.configureServerWithFileSystem(fileSystem));
+    await app.configure(system_controllers.configureServer);
     await app.configure(auth_controllers.configureServer);
     await app.configure(scheme_controllers.configureServer);
 

@@ -33,6 +33,7 @@ void main(List<String> args) async {
     SchemeMigration(),
     DownloadHistoryMigration(),
     LikeRecordMigration(),
+    AppVersionMigration(),
   ]);
   await runMigrations(migrationRunner, args);
 }
@@ -61,6 +62,33 @@ Future doUserSeed() async {
       password: '1234567890',
     ));
     return userQuery.insert(executor).then((value) => connection.close());
+  }
+  return connection.close();
+}
+
+class AppVersionSeed extends Migration {
+  @override
+  void up(Schema schema) async {
+    await doAppVersionSeed();
+  }
+
+  @override
+  void down(Schema schema) async {}
+}
+
+Future doAppVersionSeed() async {
+  var connection = await connectToPostgres(configuration);
+  await connection.open();
+  var executor = PostgreSqlExecutor(connection);
+  var appVersionQuery = AppVersionQuery();
+  var one = await appVersionQuery.getOne(executor);
+  if (one.isEmpty) {
+    appVersionQuery = AppVersionQuery();
+    appVersionQuery.values.copyFrom(AppVersion(
+      versionCode: 1,
+      versionName: '1.0.0',
+    ));
+    return appVersionQuery.insert(executor).then((value) => connection.close());
   }
   return connection.close();
 }
