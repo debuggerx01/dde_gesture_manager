@@ -34,6 +34,8 @@ class H {
   
   BuildContext get topContext => _topContext;
 
+  DateTime? lastCheckAuthStatusTime;
+
   initTopContext(BuildContext context) {
     _topContext = context;
   }

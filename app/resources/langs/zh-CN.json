@@ -20,7 +20,13 @@
     "tip": "显示帮助文档"
   },
   "market": {
-    "title": "方案市场"
+    "title": "方案市场",
+    "sort_types": {
+      "recommend": "推荐",
+      "updated": "最近更新",
+      "likes": "点赞数",
+      "downloads": "下载量"
+    }
   },
   "local_manager": {
     "title": "本地方案管理",
@@ -71,14 +77,21 @@
     "duplicate": "复制",
     "apply": "应用",
     "paste": "粘贴",
-    "logout": "退出登录"
+    "logout": "退出登录",
+    "upload": "上传",
+    "download": "下载",
+    "share": "分享到市场",
+    "like": "点赞"
   },
   "str": {
     "null": "无",
     "new_scheme": "新建手势方案",
     "copy": "副本",
     "yes": "是",
-    "no": "否"
+    "no": "否",
+    "ok": "好的",
+    "share": "分享",
+    "cancel": "放弃"
   },
   "built_in_commands": {
     "ShowWorkspace": "显示工作区",
@@ -126,6 +139,27 @@
       "description_for_startup": "点击[{yes}]查看，点击[{no}]忽略本次更新",
       "title_already_latest": "已经是最新版本～",
       "description_for_manual": "是否前去官网查看？"
+    },
+    "login_for_upload": {
+      "title": "请登录",
+      "description": "您需要先登录才能进行上传操作"
+    },
+    "upload_and_share": {
+      "title": "是否同时分享到方案市场？",
+      "description": "如果选择[分享]，其他用户可以看到本方案并下载使用；\n如果选择[放弃]，您仍可以稍后在[我的上传]列表中找到本方案进行操作。"
+    },
+    "user_blocked_hint": {
+      "title": "该账号已被封禁！",
+      "description": "如有疑问请通过发送邮件联系"
+    },
+    "upload": {
+      "success": "上传成功～",
+      "failed": "上传失败。。"
+    },
+    "share": {
+      "title": "确定分享？",
+      "description": "分享后其他用户可以看到本方案并下载使用",
+      "success": "分享成功"
     }
   },
   "me": {
@@ -135,6 +169,11 @@
       "email_hint": "请输入邮箱",
       "password_hint": "请输入8-16位密码",
       "email_error_hint": "请输入正确的邮箱"
+    },
+    "scheme_types": {
+      "uploaded": "我的上传",
+      "downloaded": "我的下载",
+      "liked": "我的点赞"
     }
   }
 }

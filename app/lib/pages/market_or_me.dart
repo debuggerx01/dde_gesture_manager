@@ -1,10 +1,11 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/login.dart';
+import 'package:dde_gesture_manager/widgets/market.dart';
+import 'package:dde_gesture_manager/widgets/me.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,15 +19,14 @@ class MarketOrMe extends StatelessWidget {
     var layoutProvider = context.watch<ContentLayoutProvider>();
     bool isOpen = layoutProvider.marketOrMeOpened == true;
     bool isMarket = layoutProvider.isMarket;
-    bool showLogin = context.watch<ConfigsProvider>().accessToken.isNull && !isMarket;
     return AnimatedContainer(
       duration: mediumDuration,
       curve: Curves.easeInOut,
-      width: isOpen ? marketOrMePanelWidth * (showLogin ? 1.5 : 1) : 0,
+      width: isOpen ? marketOrMePanelWidth * 1 : 0,
       child: OverflowBox(
         alignment: Alignment.centerLeft,
-        maxWidth: marketOrMePanelWidth * (showLogin ? 1.5 : 1),
-        minWidth: marketOrMePanelWidth * (showLogin ? 1.5 : 1),
+        maxWidth: marketOrMePanelWidth,
+        minWidth: marketOrMePanelWidth,
         child: Material(
           color: context.t.backgroundColor,
           elevation: isOpen ? 10 : 0,
@@ -82,36 +82,8 @@ class MarketOrMe extends StatelessWidget {
   Widget buildMeContent(BuildContext context) {
     var accessToken = context.watch<ConfigsProvider>().accessToken;
     if (accessToken.isNull) return LoginWidget();
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(Icons.person, size: defaultButtonHeight),
-              Flexible(
-                child: AutoSizeText(
-                  context.watch<ConfigsProvider>().email ?? '',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                  maxLines: 1,
-                ),
-              ),
-              DButton.logout(
-                enabled: true,
-                onTap: () => context.read<ConfigsProvider>().setProps(accessToken: '', email: ''),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return Expanded(child: MeWidget());
   }
 
-  Widget buildMarketContent(BuildContext context) {
-    return Container();
-  }
+  Widget buildMarketContent(BuildContext context) => Expanded(child: MarketWidget());
 }

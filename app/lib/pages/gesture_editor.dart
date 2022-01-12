@@ -1,6 +1,8 @@
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/http/api.dart';
+import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
@@ -18,6 +20,7 @@ import 'package:dde_gesture_manager/widgets/table_cell_shortcut_listener.dart';
 import 'package:dde_gesture_manager/widgets/table_cell_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:uuid/uuid.dart';
 
 const double _headingRowHeight = 56;
@@ -289,6 +292,52 @@ class GestureEditor extends StatelessWidget {
                                   localSchemeEntry.scheme.name = val;
                                   localSchemeEntry.save(localSchemesProvider);
                                   return true;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: DButton.upload(
+                                enabled: schemeProvider.readOnly == false,
+                                onTap: () async {
+                                  if (context.read<ConfigsProvider>().accessToken.isNull) {
+                                    return Notificator.showAlert(
+                                      title: LocaleKeys.info_login_for_upload_title.tr(),
+                                      description: LocaleKeys.info_login_for_upload_description.tr(),
+                                    ).then((value) {
+                                      if (value == CustomButton.positiveButton) {
+                                        context
+                                            .read<ContentLayoutProvider>()
+                                            .setProps(marketOrMeOpened: true, currentIsMarket: false);
+                                      }
+                                    });
+                                  }
+                                  Notificator.showConfirm(
+                                    title: LocaleKeys.info_upload_and_share_title.tr(),
+                                    description: LocaleKeys.info_upload_and_share_description.tr(),
+                                    positiveButtonTitle: LocaleKeys.str_share.tr(),
+                                    negativeButtonTitle: LocaleKeys.str_cancel.tr(),
+                                  ).then((value) {
+                                    bool? _share;
+                                    if (value == CustomButton.positiveButton)
+                                      _share = true;
+                                    else if (value == CustomButton.negativeButton) _share = false;
+
+                                    if (_share != null) {
+                                      Api.uploadScheme(scheme: schemeProvider, share: _share).then((value) {
+                                        if (value) {
+                                          Notificator.success(context, title: LocaleKeys.info_upload_success.tr());
+                                          var localSchemesProvider = context.read<LocalSchemesProvider>();
+                                          var localSchemeEntry = localSchemesProvider.schemes!
+                                              .firstWhere((ele) => ele.scheme.id == schemeProvider.id);
+                                          localSchemeEntry.scheme.uploaded = true;
+                                          localSchemeEntry.save(localSchemesProvider);
+                                        } else {
+                                          Notificator.error(context, title: LocaleKeys.info_upload_failed.tr());
+                                        }
+                                      });
+                                    }
+                                  });
                                 },
                               ),
                             ),

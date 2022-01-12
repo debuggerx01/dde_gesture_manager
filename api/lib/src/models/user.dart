@@ -20,5 +20,9 @@ abstract class _User extends BaseModel {
   @SerializableField(isNullable: true, exclude: true)
   String? get password;
 
+  @Column(isNullable: false)
+  @SerializableField(defaultValue: false)
+  bool? get blocked;
+
   String secret(String salt) => base64.encode(Hmac(sha256, salt.codeUnits).convert((password ?? '').codeUnits).bytes);
 }

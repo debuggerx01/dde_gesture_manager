@@ -124,6 +124,74 @@ class DButton extends StatefulWidget {
             message: LocaleKeys.operation_logout.tr(),
           ));
 
+  factory DButton.upload({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight,
+    width = defaultButtonHeight,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: enabled ? onTap : null,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.cloud_upload, size: 20)),
+            message: LocaleKeys.operation_upload.tr(),
+          ));
+
+  factory DButton.download({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight * .7,
+    width = defaultButtonHeight * .7,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: enabled ? onTap : null,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.file_download, size: 18)),
+            message: LocaleKeys.operation_download.tr(),
+          ));
+
+  factory DButton.share({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight * .7,
+    width = defaultButtonHeight * .7,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: enabled ? onTap : null,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.share, size: 18)),
+            message: LocaleKeys.operation_share.tr(),
+          ));
+
+  factory DButton.like({
+    Key? key,
+    required enabled,
+    GestureTapCallback? onTap,
+    height = defaultButtonHeight * .7,
+    width = defaultButtonHeight * .7,
+  }) =>
+      DButton(
+          key: key,
+          width: width,
+          height: height,
+          onTap: enabled ? onTap : null,
+          child: Tooltip(
+            child: Opacity(opacity: enabled ? 1 : 0.4, child: const Icon(Icons.thumb_up, size: 16)),
+            message: LocaleKeys.operation_like.tr(),
+          ));
+
   factory DButton.dropdown({
     Key? key,
     width = 60.0,

@@ -15,7 +15,7 @@ class Notificator {
     return AlertImpl().showAlert(
       windowTitle: title,
       text: description,
-      positiveButtonTitle: positiveButtonTitle,
+      positiveButtonTitle: positiveButtonTitle ?? LocaleKeys.str_ok.tr(),
     );
   }
 

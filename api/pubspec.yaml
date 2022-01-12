@@ -8,13 +8,11 @@ dependencies:
   angel3_auth: ^4.0.0
   angel3_configuration: ^4.1.0
   angel3_framework: ^4.2.0
-  angel3_migration: ^4.0.0
-  angel3_orm: ^4.0.0
-  angel3_orm_postgres: ^3.0.0
+  angel3_migration: ^4.0.3
+  angel3_orm: ^4.0.5
+  angel3_orm_postgres: ^3.3.0
   angel3_serialize: ^4.1.0
-  angel3_production: ^3.1.0
-  angel3_static: ^4.1.0
-  angel3_validate: ^4.0.0
+  angel3_production: ^3.1.2
   belatuk_pretty_logging: ^4.0.0
   optional: ^6.0.0
   logging: ^1.0.0
@@ -24,16 +22,13 @@ dependencies:
   neat_cache:
     path: 3rd_party/neat_cache
 dev_dependencies:
-  angel3_hot: ^4.2.0
+  angel3_hot: ^4.3.0
   angel3_jinja: ^2.0.1
-  angel3_migration_runner: ^4.0.0
-  angel3_orm_generator: ^4.1.0
-  angel3_serialize_generator: ^4.2.0
+  angel3_migration_runner: ^4.1.1
+  angel3_orm_generator: ^4.3.0
+  angel3_serialize_generator: ^4.3.0
   angel3_test: ^4.0.0
   build_runner: ^2.0.3
   io: ^1.0.0
   test: ^1.17.5
   lints: ^1.0.0
-
-
-

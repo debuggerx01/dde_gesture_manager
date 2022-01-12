@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/extensions.dart';
+import 'package:dde_gesture_manager/models/scheme.dart' as AppScheme;
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/notificator.dart';
+import 'package:dde_gesture_manager/widgets/me.dart';
 import 'package:dde_gesture_manager_api/apis.dart';
 import 'package:dde_gesture_manager_api/models.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +15,12 @@ typedef T BeanBuilder<T>(Map res);
 
 typedef T HandleRespBuild<T>(http.Response resp);
 
-getStatusCodeFunc<int>(Map resp) => resp["statusCode"];
+typedef int GetStatusCodeFunc(Map resp);
+
+int getStatusCodeFunc(Map resp) => resp["statusCode"] as int;
+
+BeanBuilder<List<T>> listRespBuilderWrap<T>(BeanBuilder<T> builder) =>
+    (Map resp) => (resp['list'] as List).map<T>((e) => builder(e)).toList();
 
 class HttpErrorCode extends Error {
   int statusCode;
@@ -39,18 +46,20 @@ class Api {
     }
   }
 
-  static HandleRespBuild<T> _handleRespBuild<T>(BeanBuilder<T> builder) => (http.Response resp) {
-        if (builder == getStatusCodeFunc) return builder({"statusCode": resp.statusCode});
-        T res;
+  static HandleRespBuild<T?> _handleRespBuild<T>(BeanBuilder<T> builder) => (http.Response resp) {
+        if (builder is GetStatusCodeFunc) return builder({"statusCode": resp.statusCode});
+        T? res;
         try {
-          res = builder(json.decode(resp.body));
+          var decodeBody = json.decode(utf8.decode(resp.bodyBytes));
+          res = decodeBody is Map ? builder(decodeBody) : builder({'list': decodeBody});
         } catch (e) {
+          e.sout();
           throw HttpErrorCode(resp.statusCode, message: resp.body);
         }
         return res;
       };
 
-  static Future<T> _get<T>(
+  static Future<T?> _get<T>(
     String path,
     BeanBuilder<T> builder, {
     Map<String, dynamic>? queryParams,
@@ -67,21 +76,21 @@ class Api {
           path: path,
         ),
         headers: <String, String>{
-          HttpHeaders.contentTypeHeader: ContentType.json.value,
+          HttpHeaders.contentTypeHeader: ContentType.json.toString(),
         }..addAll(
             ignoreToken ? {} : {HttpHeaders.authorizationHeader: 'Bearer ${H().sp.getString(SPKeys.accessToken)}'}),
       )
-          .then(
+          .then<T?>(
         _handleRespBuild<T>(builder),
         onError: (e) {
           if (ignoreErrorHandle)
             throw e;
           else
-            return _handleHttpError(e);
+            _handleHttpError(e);
         },
       );
 
-  static Future<T> _post<T>(
+  static Future<T?> _post<T>(
     String path,
     BeanBuilder<T> builder, {
     Map<String, dynamic>? body,
@@ -98,17 +107,17 @@ class Api {
         ),
         body: jsonEncode(body),
         headers: <String, String>{
-          HttpHeaders.contentTypeHeader: ContentType.json.value,
+          HttpHeaders.contentTypeHeader: ContentType.json.toString(),
         }..addAll(
             ignoreToken ? {} : {HttpHeaders.authorizationHeader: 'Bearer ${H().sp.getString(SPKeys.accessToken)}'}),
       )
-          .then(
+          .then<T?>(
         _handleRespBuild<T>(builder),
         onError: (e) {
           if (ignoreErrorHandle)
             throw e;
           else
-            return _handleHttpError(e);
+            _handleHttpError(e);
         },
       );
 
@@ -131,5 +140,37 @@ class Api {
         AppVersionSerializer.fromMap,
         ignoreToken: true,
         ignoreErrorHandle: ignoreErrorHandle,
+      );
+
+  static Future<bool> checkAuthStatus() => _get<int>(Apis.auth.status, getStatusCodeFunc, ignoreErrorHandle: true)
+      .then((value) => value == HttpStatus.noContent);
+
+  static Future<bool> uploadScheme({required AppScheme.Scheme scheme, required bool share}) => _post(
+        Apis.scheme.upload,
+        getStatusCodeFunc,
+        body: SchemeSerializer.toMap(
+          Scheme(
+            name: scheme.name,
+            uuid: scheme.id,
+            description: scheme.description,
+            gestures: scheme.gestures,
+            shared: share,
+          ),
+        ),
+      ).then((value) => value == HttpStatus.noContent);
+
+  static Future<List<SimpleSchemeTransMetaData>?> userSchemes({required SchemeListType type}) =>
+      _get(Apis.scheme.user(type: type.name.param), listRespBuilderWrap(SimpleSchemeTransMetaDataSerializer.fromMap));
+
+  static Future<bool> likeScheme({required String schemeId, required bool isLike}) => _get(
+              Apis.scheme.like(schemeId: schemeId.param, isLike: StringParam(isLike ? 'like' : 'unlike')),
+              getStatusCodeFunc)
+          .then((value) {
+        return value == HttpStatus.noContent;
+      });
+
+  static Future<SchemeForDownload?> downloadScheme({required String schemeId}) => _get(
+        Apis.scheme.download(schemeId: schemeId.param),
+        SchemeForDownloadSerializer.fromMap,
       );
 }

@@ -20,7 +20,13 @@
     "tip": "Display help documentation"
   },
   "market": {
-    "title": "Scheme market"
+    "title": "Scheme market",
+    "sort_types": {
+      "recommend": "Recommend",
+      "updated": "updated",
+      "likes": "likes",
+      "downloads": "downloads"
+    }
   },
   "local_manager": {
     "title": "Local scheme management",
@@ -66,19 +72,26 @@
     }
   },
   "operation": {
-    "add": "Add",
+    "add": "add",
     "delete": "delete",
     "duplicate": "duplicate",
     "apply": "apply",
     "paste": "paste",
-    "logout": "sign out"
+    "logout": "sign out",
+    "upload": "upload",
+    "download": "download",
+    "share": "share to market",
+    "like": "like"
   },
   "str": {
     "null": "Null",
     "new_scheme": "New gesture scheme",
     "copy": "copy",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "ok": "OK",
+    "share": "Share",
+    "cancel": "Cancel"
   },
   "built_in_commands": {
     "ShowWorkspace": "ShowWorkspace",
@@ -126,6 +139,27 @@
       "description_for_startup": "Click [{YES}] to view, click [{NO}] ignore this update",
       "title_already_latest": "Already the latest version ~",
       "description_for_manual": "Visit the official website to see more?"
+    },
+    "login_for_upload": {
+      "title": "please login",
+      "description": "You need to login first to perform upload operations"
+    },
+    "upload_and_share": {
+      "title": "Share the scheme at the same time?",
+      "description": "If you select [Share], other users can see this scheme and download it;\nIf you select [Cancel], you can still find this scheme in the [My Upload] list and share."
+    },
+    "user_blocked_hint": {
+      "title": "The account has been blocked!",
+      "description": "If you have any questions, please contact me using email."
+    },
+    "upload": {
+      "success": "Upload success ~",
+      "failed": "Upload failed.."
+    },
+    "share": {
+      "title": "Are you sure to sharing?",
+      "description": "Other users can see this scheme and download it after share",
+      "success": "Share success"
     }
   },
   "me": {
@@ -135,6 +169,11 @@
       "email_hint": "Please enter email",
       "password_hint": "Please enter 8-16-bit password",
       "email_error_hint": "Please enter your vaild email"
+    },
+    "scheme_types": {
+      "uploaded": "Uploaded",
+      "downloaded": "Downloaded",
+      "liked": "Liked"
     }
   }
 }

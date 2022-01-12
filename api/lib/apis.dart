@@ -7,6 +7,7 @@ class Apis {
 
   static final system = SystemApis();
   static final auth = AuthApis();
+  static final scheme = SchemeApis();
 }
 
 class AuthApis {
@@ -15,6 +16,8 @@ class AuthApis {
   String get loginOrSignup => [path, 'login_or_signup'].joinPath();
 
   String confirmSignup({required StringParam accessKey}) => [path, 'confirm_sign_up', accessKey].joinPath();
+
+  String get status => [path, 'status'].joinPath();
 }
 
 class SystemApis {
@@ -23,7 +26,26 @@ class SystemApis {
   String get appVersion => [path, 'app-version'].joinPath();
 }
 
+class SchemeApis {
+  static final String path = '/scheme';
+
+  String get upload => [path, 'upload'].joinPath();
+
+  String markAsShared({required StringParam schemeId}) => [path, 'mark_as_shared', schemeId].joinPath();
+
+  String user({required StringParam type}) => [path, 'user', type].joinPath();
+
+  String market({required StringParam type, required IntParam page, required IntParam pageSize}) => [path, 'market', type, page, pageSize].joinPath();
+
+  String download({required StringParam schemeId}) => [path, 'download', schemeId].joinPath();
+
+  String like({required StringParam schemeId, required StringParam isLike}) => [path, 'like', schemeId, isLike].joinPath();
+
+  String get userLikes => [path, 'user-likes'].joinPath();
+}
+
 final _paramsMap = {
+  'BoolParam': BoolParam.nameOnRoute,
   'IntParam': IntParam.nameOnRoute,
   'DoubleParam': DoubleParam.nameOnRoute,
   'StringParam': StringParam.nameOnRoute,
@@ -45,6 +67,18 @@ extension RouteUrl on Function {
     }
     return Function.apply(this, [], params);
   }
+}
+
+class BoolParam {
+  final bool val;
+  String? name;
+
+  BoolParam(this.val);
+
+  BoolParam.nameOnRoute(this.name) : val = true;
+
+  @override
+  String toString() => name == null ? val.toString() : 'bool:$name';
 }
 
 class IntParam {
@@ -81,6 +115,10 @@ class StringParam {
 
   @override
   String toString() => name == null ? val.toString() : ':$name';
+}
+
+extension BoolParamExt on bool {
+  BoolParam get param => BoolParam(this);
 }
 
 extension IntParamExt on int {

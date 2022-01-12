@@ -54,6 +54,12 @@ class _LoginWidgetState extends State<LoginWidget> {
                       title: LocaleKeys.info_sign_up_hint_title.tr(),
                       description: LocaleKeys.info_sign_up_hint_description.tr(),
                     );
+                  else if (code == HttpStatus.forbidden)
+                    Notificator.info(
+                      context,
+                      title: LocaleKeys.info_user_blocked_hint_title.tr(),
+                      description: LocaleKeys.info_user_blocked_hint_description.tr(),
+                    );
                   else
                     throw e;
                 }

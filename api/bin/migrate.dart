@@ -1,10 +1,12 @@
-import 'package:angel3_migration/angel3_migration.dart';
-import 'package:angel3_orm_postgres/angel3_orm_postgres.dart';
-import 'package:dde_gesture_manager_api/src/config/plugins/orm.dart';
-import 'package:dde_gesture_manager_api/models.dart';
 import 'package:angel3_configuration/angel3_configuration.dart';
+import 'package:angel3_migration/angel3_migration.dart';
 import 'package:angel3_migration_runner/angel3_migration_runner.dart';
 import 'package:angel3_migration_runner/postgres.dart';
+import 'package:angel3_orm_postgres/angel3_orm_postgres.dart';
+import 'package:dde_gesture_manager_api/models.dart';
+import 'package:dde_gesture_manager_api/src/config/plugins/orm.dart';
+import 'package:dde_gesture_manager_api/src/models/download_history.dart';
+import 'package:dde_gesture_manager_api/src/models/like_record.dart';
 import 'package:file/local.dart';
 import 'package:logging/logging.dart';
 
@@ -28,6 +30,9 @@ void main(List<String> args) async {
   var migrationRunner = PostgresMigrationRunner(connection, migrations: [
     UserMigration(),
     UserSeed(),
+    SchemeMigration(),
+    DownloadHistoryMigration(),
+    LikeRecordMigration(),
   ]);
   await runMigrations(migrationRunner, args);
 }
