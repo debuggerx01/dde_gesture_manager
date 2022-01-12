@@ -1,7 +1,7 @@
 class Apis {
   static const apiScheme = 'http';
-  static const apiHost = '127.0.0.1';
-  static const apiPort = 3000;
+  static const apiHost = 'home.debuggerx.com';
+  static const apiPort = 30000;
 
   static const appNewVersionUrl = 'https://www.debuggerx.com';
 
