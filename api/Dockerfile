@@ -4,7 +4,7 @@ ENV PUB_HOSTED_URL="https://pub.flutter-io.cn"
 ENV ANGEL_ENV=production
 COPY ./ ./
 RUN pub get
-RUN dart compile exe bin/prod.dart -o /server
+RUN bash source_gen.sh && dart compile exe bin/prod.dart -o /server
 ENTRYPOINT ["dart", "bin/migrate.dart", "up"]
 
 FROM scratch
