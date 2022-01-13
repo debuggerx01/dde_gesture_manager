@@ -114,7 +114,7 @@ class _MeWidgetState extends State<MeWidget> {
                               if (mounted && value != null)
                                 setState(() {
                                   _schemes = value;
-                                  _selected = value.first.uuid;
+                                  _selected = value.isEmpty ? null : value.first.uuid;
                                 });
                             });
                           },

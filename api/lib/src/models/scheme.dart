@@ -98,7 +98,7 @@ SimpleSchemeTransMetaData transSimpleSchemeMetaData(SimpleScheme scheme) => Simp
       uuid: scheme.uuid,
       name: scheme.name,
       shared: scheme.shared,
-      liked: scheme.liked,
+      liked: scheme.liked ?? false,
       likes: scheme.metadata?['likes'] ?? 0,
       downloads: scheme.metadata?['downloads'] ?? 0,
     );
