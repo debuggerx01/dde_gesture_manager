@@ -178,6 +178,7 @@ class RedisCacheProvider extends CacheProvider<List<int>> {
 
         // Force close the client
         scheduleMicrotask(() => client.close(force: true));
+        return null;
       });
 
   @override

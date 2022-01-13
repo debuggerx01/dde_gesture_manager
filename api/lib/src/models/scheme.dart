@@ -89,7 +89,7 @@ abstract class _SimpleSchemeTransMetaData {
 
   int? get likes;
 
-  bool? get liked;
+  bool get liked;
 }
 
 SimpleSchemeTransMetaData transSimpleSchemeMetaData(SimpleScheme scheme) => SimpleSchemeTransMetaData(
