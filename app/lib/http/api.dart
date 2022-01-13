@@ -6,6 +6,7 @@ import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/scheme.dart' as AppScheme;
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/notificator.dart';
+import 'package:dde_gesture_manager/widgets/market.dart';
 import 'package:dde_gesture_manager/widgets/me.dart';
 import 'package:dde_gesture_manager_api/apis.dart';
 import 'package:dde_gesture_manager_api/models.dart';
@@ -173,4 +174,27 @@ class Api {
         Apis.scheme.download(schemeId: schemeId.param),
         SchemeForDownloadSerializer.fromMap,
       );
+
+  static Future<MarketSchemeTransMetaDataResp?> marketSchemes(
+          {required MarketSortType type, required int page, int pageSize = 30}) =>
+      _get(
+        Apis.scheme.market(type: type.name.param, page: page.param, pageSize: pageSize.param),
+        MarketSchemeTransMetaDataResp.fromMap,
+      );
+
+  static Future<List<int>?> userLikes() => _get(
+        Apis.scheme.userLikes,
+        (e) => (e['list'] as List).cast<int>(),
+      );
+}
+
+class MarketSchemeTransMetaDataResp {
+  bool hasMore;
+  List<MarketSchemeTransMetaData> items;
+
+  MarketSchemeTransMetaDataResp.fromMap(Map map)
+      : hasMore = map['hasMore'],
+        items = (map['items'] as List)
+            .map<MarketSchemeTransMetaData>((e) => MarketSchemeTransMetaDataSerializer.fromMap(e))
+            .toList();
 }

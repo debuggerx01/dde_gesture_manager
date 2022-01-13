@@ -7,6 +7,7 @@ import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
+import 'package:dde_gesture_manager/models/scheme_list_refresh_key.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/pages/content.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
@@ -332,6 +333,9 @@ class GestureEditor extends StatelessWidget {
                                               .firstWhere((ele) => ele.scheme.id == schemeProvider.id);
                                           localSchemeEntry.scheme.uploaded = true;
                                           localSchemeEntry.save(localSchemesProvider);
+                                          context
+                                              .read<SchemeListRefreshKeyProvider>()
+                                              .setProps(refreshKey: DateTime.now().millisecondsSinceEpoch);
                                         } else {
                                           Notificator.error(context, title: LocaleKeys.info_upload_failed.tr());
                                         }
