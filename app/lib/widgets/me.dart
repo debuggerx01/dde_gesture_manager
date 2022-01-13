@@ -5,8 +5,10 @@ import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/http/api.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
+import 'package:dde_gesture_manager/models/scheme_list_refresh_key.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/notificator.dart';
+import 'package:dde_gesture_manager/utils/simple_throttle.dart';
 import 'package:dde_gesture_manager_api/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
@@ -33,6 +35,7 @@ class _MeWidgetState extends State<MeWidget> {
   SchemeListType _type = SchemeListType.uploaded;
   String? _selected;
   String? _hovering;
+  int _refreshKey = 0;
 
   @override
   void initState() {
@@ -66,6 +69,12 @@ class _MeWidgetState extends State<MeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var refreshKey = context.watch<SchemeListRefreshKeyProvider>().refreshKey;
+    if (_refreshKey != refreshKey) {
+      Future.microtask(SimpleThrottle.bind(_refreshList));
+    }
+    _refreshKey = refreshKey;
+
     var currentSelectedScheme = _schemes.firstWhereOrNull((e) => e.uuid == _selected);
     return Padding(
       padding: EdgeInsets.only(top: 10),
@@ -264,7 +273,9 @@ class _MeWidgetState extends State<MeWidget> {
                     Api.likeScheme(schemeId: currentSelectedScheme!.uuid!, isLike: !currentSelectedScheme.liked)
                         .then((value) {
                       if (value) {
-                        _refreshList();
+                        context
+                            .read<SchemeListRefreshKeyProvider>()
+                            .setProps(refreshKey: DateTime.now().millisecondsSinceEpoch);
                       }
                     });
                   },
@@ -273,8 +284,11 @@ class _MeWidgetState extends State<MeWidget> {
                   enabled: true,
                   onTap: () {
                     Api.downloadScheme(schemeId: currentSelectedScheme!.uuid!).then((value) {
+                      /// todo: 下载逻辑
                       value.sout();
-                      _refreshList();
+                      context
+                          .read<SchemeListRefreshKeyProvider>()
+                          .setProps(refreshKey: DateTime.now().millisecondsSinceEpoch);
                     });
                   },
                 ),

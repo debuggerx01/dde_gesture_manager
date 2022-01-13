@@ -1,6 +1,7 @@
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
+import 'package:dde_gesture_manager/models/scheme_list_refresh_key.provider.dart';
 import 'package:dde_gesture_manager/pages/gesture_editor.dart';
 import 'package:dde_gesture_manager/pages/local_manager.dart';
 import 'package:dde_gesture_manager/pages/market_or_me.dart';
@@ -35,6 +36,9 @@ class _ContentState extends State<Content> {
         ),
         ChangeNotifierProvider(
           create: (context) => CopiedGesturePropProvider.empty(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SchemeListRefreshKeyProvider(),
         ),
       ],
       builder: (context, child) {
