@@ -36,6 +36,7 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryWeb> {
             }
             return entry;
           }
+          return null;
         })
         .where((e) => e != null)
         .cast<LocalSchemeEntryWeb>()

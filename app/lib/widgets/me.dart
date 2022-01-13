@@ -114,7 +114,7 @@ class _MeWidgetState extends State<MeWidget> {
                               if (mounted && value != null)
                                 setState(() {
                                   _schemes = value;
-                                  _selected = value.first.uuid;
+                                  _selected = value.isEmpty ? null : value.first.uuid;
                                 });
                             });
                           },
@@ -261,7 +261,7 @@ class _MeWidgetState extends State<MeWidget> {
                 DButton.like(
                   enabled: true,
                   onTap: () {
-                    Api.likeScheme(schemeId: currentSelectedScheme!.uuid!, isLike: !currentSelectedScheme.liked!)
+                    Api.likeScheme(schemeId: currentSelectedScheme!.uuid!, isLike: !currentSelectedScheme.liked)
                         .then((value) {
                       if (value) {
                         _refreshList();

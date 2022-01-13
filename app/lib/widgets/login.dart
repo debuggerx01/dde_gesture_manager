@@ -63,6 +63,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   else
                     throw e;
                 }
+                return null;
               },
               onSubmitAnimationCompleted: () {
                 var token = H().sp.getString(SPKeys.accessToken);
@@ -75,7 +76,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                       .read<ConfigsProvider>()
                       .setProps(accessToken: token, email: H().sp.getString(SPKeys.loginEmail));
               },
-              onRecoverPassword: (_) {},
+              onRecoverPassword: (_) => null,
               hideForgotPasswordButton: true,
               disableCustomPageTransformer: true,
               messages: LoginMessages(
@@ -87,11 +88,13 @@ class _LoginWidgetState extends State<LoginWidget> {
                 if (FlutterLogin.defaultEmailValidator(value) != null) {
                   return LocaleKeys.me_login_email_error_hint.tr();
                 }
+                return null;
               },
               passwordValidator: (value) {
                 if (value!.isEmpty || value.length < 8 || value.length > 16) {
                   return LocaleKeys.me_login_password_hint.tr();
                 }
+                return null;
               },
               theme: LoginTheme(
                 pageColorDark: Colors.transparent,
