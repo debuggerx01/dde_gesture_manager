@@ -8,7 +8,7 @@ var lightTheme = ThemeData.light().copyWith(
   iconTheme: IconThemeData(
     color: Color(0xff414d68),
   ),
-  dividerColor: Color(0xfff3f3f3),
+  dividerColor: Colors.grey.shade600,
   textTheme: ThemeData.light().textTheme.copyWith(
         headline1: TextStyle(
           color: Color(0xff414d68),

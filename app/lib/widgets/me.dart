@@ -7,6 +7,7 @@ import 'package:dde_gesture_manager/http/api.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/scheme_list_refresh_key.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/notificator.dart';
 import 'package:dde_gesture_manager/utils/simple_throttle.dart';
 import 'package:dde_gesture_manager_api/models.dart';
@@ -141,17 +142,17 @@ class _MeWidgetState extends State<MeWidget> {
             ),
           ),
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: .3,
-                  color: context.t.dividerColor,
-                ),
-                borderRadius: BorderRadius.circular(defaultBorderRadius),
-              ),
-              child: Column(
-                children: [
-                  Flexible(
+            child: Column(
+              children: [
+                Flexible(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: .3,
+                        color: context.t.dividerColor,
+                      ),
+                      borderRadius: BorderRadius.circular(defaultBorderRadius),
+                    ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
                       child: ListView.builder(
@@ -225,12 +226,24 @@ class _MeWidgetState extends State<MeWidget> {
                       ),
                     ),
                   ),
-                  Divider(thickness: .5),
-                  Flexible(
+                ),
+                Container(height: 10),
+                Flexible(
+                  child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: .3,
+                        color: context.t.dividerColor,
+                      ),
+                      borderRadius: BorderRadius.circular(defaultBorderRadius),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: MdPreview(
                         text: _schemes.firstWhereOrNull((e) => e.uuid == _selected)?.description ?? '',
+                        onTapLink: H.launchURL,
                         widgetImage: (imageUrl) => CachedNetworkImage(
                           imageUrl: imageUrl,
                           placeholder: (context, url) => const SizedBox(
@@ -243,9 +256,9 @@ class _MeWidgetState extends State<MeWidget> {
                         onCodeCopied: () {},
                       ),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
           Padding(
