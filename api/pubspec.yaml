@@ -9,7 +9,7 @@ dependencies:
   angel3_configuration: ^4.1.0
   angel3_framework: ^4.2.0
   angel3_migration: ^4.0.3
-  angel3_orm: ^4.0.5
+  angel3_orm: ^4.0.6
   angel3_orm_postgres: ^3.3.0
   angel3_serialize: ^4.1.0
   angel3_production: ^3.1.2
