@@ -4,6 +4,7 @@ import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/http/api.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager_api/models.dart';
 import 'package:flutter/material.dart';
@@ -131,17 +132,17 @@ class _MarketWidgetState extends State<MarketWidget> {
           ),
         ),
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: .3,
-                color: context.t.dividerColor,
-              ),
-              borderRadius: BorderRadius.circular(defaultBorderRadius),
-            ),
-            child: Column(
-              children: [
-                Flexible(
+          child: Column(
+            children: [
+              Flexible(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: .3,
+                      color: context.t.dividerColor,
+                    ),
+                    borderRadius: BorderRadius.circular(defaultBorderRadius),
+                  ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
                     child: ListView.builder(
@@ -221,8 +222,19 @@ class _MarketWidgetState extends State<MarketWidget> {
                     ),
                   ),
                 ),
-                Divider(thickness: .5),
-                Flexible(
+              ),
+              Container(height: 10),
+              Flexible(
+                child: Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: .3,
+                      color: context.t.dividerColor,
+                    ),
+                    borderRadius: BorderRadius.circular(defaultBorderRadius),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8),
                     child: MdPreview(
@@ -236,12 +248,13 @@ class _MarketWidgetState extends State<MarketWidget> {
                         ),
                         errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
+                      onTapLink: H.launchURL,
                       onCodeCopied: () {},
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         Padding(

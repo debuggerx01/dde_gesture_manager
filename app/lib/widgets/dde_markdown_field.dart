@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/notificator.dart';
 import 'package:flutter/material.dart';
 import 'package:markdown_editor_ot/markdown_editor.dart';
@@ -34,14 +35,6 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
   void initState() {
     _previewText = widget.initText;
     super.initState();
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   @override
@@ -82,7 +75,7 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
                     child: MdPreview(
                       text: _previewText ?? '',
                       padding: EdgeInsets.only(left: 15),
-                      onTapLink: _launchURL,
+                      onTapLink: H.launchURL,
                       onCodeCopied: () {
                         Notificator.success(
                           context,

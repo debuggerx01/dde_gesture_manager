@@ -4,6 +4,7 @@ import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 extension EnumByName<T extends Enum> on Iterable<T> {
@@ -29,9 +30,9 @@ class H {
   initSharedPreference() async {
     _sp = await SharedPreferences.getInstance();
   }
-  
+
   late BuildContext _topContext;
-  
+
   BuildContext get topContext => _topContext;
 
   DateTime? lastCheckAuthStatusTime;
@@ -113,6 +114,14 @@ class H {
     gestureProp.gesture = tree.availableNode.availableNode.type;
     gestureProp.direction = tree.availableNode.availableNode.availableNode.direction;
     return gestureProp;
+  }
+
+  static void launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
 
