@@ -201,19 +201,16 @@ Future configureServer(Angel app) async {
 
     switch (type) {
       case 'recommend':
-        // orders = [recommend, likes, downloads, SchemeFields.id];
-        orders = [recommend];
+        orders = [recommend, likes, downloads, SchemeFields.id];
         break;
       case 'updated':
         orders = [updated];
         break;
       case 'likes':
-        // orders = [likes, recommend, downloads, SchemeFields.id];
-        orders = [likes];
+        orders = [likes, recommend, downloads, SchemeFields.id];
         break;
       case 'downloads':
-        // orders = [downloads, recommend, likes, SchemeFields.id];
-        orders = [downloads];
+        orders = [downloads, recommend, likes, SchemeFields.id];
         break;
       default:
         return res.unProcessableEntity();
