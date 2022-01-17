@@ -154,7 +154,10 @@
     },
     "upload": {
       "success": "Upload success ~",
-      "failed": "Upload failed.."
+      "failed": "Upload failed..",
+      "name_occupied": "Name occupied……",
+      "pls_rename": "Please rename",
+      "pls_add_description": "Please enter the scheme description"
     },
     "share": {
       "title": "Are you sure to sharing?",

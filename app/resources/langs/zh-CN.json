@@ -154,7 +154,10 @@
     },
     "upload": {
       "success": "上传成功～",
-      "failed": "上传失败。。"
+      "failed": "上传失败。。",
+      "name_occupied": "名称被占用……",
+      "pls_rename": "请重新命名",
+      "pls_add_description": "请填写方案描述～"
     },
     "share": {
       "title": "确定分享？",

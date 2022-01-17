@@ -40,3 +40,9 @@ enum PanelType {
   local_manager,
   market_or_me,
 }
+
+enum UploadRespStatus {
+  done,
+  name_occupied,
+  error,
+}

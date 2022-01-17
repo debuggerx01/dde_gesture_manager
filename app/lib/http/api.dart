@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/scheme.dart' as AppScheme;
@@ -146,7 +147,7 @@ class Api {
   static Future<bool> checkAuthStatus() => _get<int>(Apis.auth.status, getStatusCodeFunc, ignoreErrorHandle: true)
       .then((value) => value == HttpStatus.noContent);
 
-  static Future<bool> uploadScheme({required AppScheme.Scheme scheme, required bool share}) => _post(
+  static Future<UploadRespStatus> uploadScheme({required AppScheme.Scheme scheme, required bool share}) => _post(
         Apis.scheme.upload,
         getStatusCodeFunc,
         body: SchemeSerializer.toMap(
@@ -158,7 +159,17 @@ class Api {
             shared: share,
           ),
         ),
-      ).then((value) => value == HttpStatus.noContent);
+      ).then((value) {
+        switch (value) {
+          case HttpStatus.noContent:
+            return UploadRespStatus.done;
+          case HttpStatus.locked:
+            return UploadRespStatus.name_occupied;
+          case HttpStatus.unprocessableEntity:
+          default:
+            return UploadRespStatus.error;
+        }
+      });
 
   static Future<List<SimpleSchemeTransMetaData>?> userSchemes({required SchemeListType type}) =>
       _get(Apis.scheme.user(type: type.name.param), listRespBuilderWrap(SimpleSchemeTransMetaDataSerializer.fromMap));

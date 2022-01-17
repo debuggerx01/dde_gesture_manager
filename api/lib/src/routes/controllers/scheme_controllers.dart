@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:dde_gesture_manager_api/apis.dart';
@@ -21,13 +22,21 @@ Future configureServer(Angel app) async {
           try {
             var scheme = SchemeSerializer.fromMap(req.bodyAsMap);
             var schemeQuery = SchemeQuery();
-            schemeQuery.where!.uuid.equals(scheme.uuid!);
+            schemeQuery.where!.uuid.notEquals(scheme.uuid!);
+            schemeQuery.where!.name.equals(scheme.name!);
+            if ((await schemeQuery.getOne(req.queryExecutor)).isNotEmpty) {
+              res.statusCode = HttpStatus.locked;
+              return res.close();
+            }
             req.queryExecutor.transaction((tx) async {
+              schemeQuery = SchemeQuery();
+              schemeQuery.where!.uuid.equals(scheme.uuid!);
               var one = await schemeQuery.getOne(tx);
               schemeQuery = SchemeQuery();
               schemeQuery.values.copyFrom(scheme);
               schemeQuery.values.uid = req.user!.idAsInt;
               if (one.isEmpty) {
+                schemeQuery.values.metadata?['author'] = req.user!.email;
                 return await schemeQuery.insert(tx);
               } else {
                 schemeQuery.whereId = one.value.idAsInt;
