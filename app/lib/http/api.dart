@@ -132,7 +132,7 @@ class Api {
         LoginSuccessSerializer.fromMap,
         body: {
           UserFields.email: email,
-          UserFields.password: password,
+          UserFields.password: User(email: email, password: password).secret('dgm_password'),
         },
         ignoreToken: true,
       );
