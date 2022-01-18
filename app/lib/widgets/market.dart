@@ -34,7 +34,6 @@ class _MarketWidgetState extends State<MarketWidget> {
   MarketSortType _type = MarketSortType.recommend;
   String? _selected;
   String? _hovering;
-  int _refreshKey = 0;
   List<int> _likedSchemes = [];
 
   @override

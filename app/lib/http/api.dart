@@ -52,6 +52,8 @@ class Api {
         if (builder is GetStatusCodeFunc) return builder({"statusCode": resp.statusCode});
         T? res;
         try {
+          if (resp.statusCode != HttpStatus.ok && resp.bodyBytes.length == 0)
+            throw HttpErrorCode(resp.statusCode, message: 'No resp body');
           var decodeBody = json.decode(utf8.decode(resp.bodyBytes));
           res = decodeBody is Map ? builder(decodeBody) : builder({'list': decodeBody});
         } catch (e) {

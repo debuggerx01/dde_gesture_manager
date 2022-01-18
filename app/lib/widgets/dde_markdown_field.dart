@@ -6,7 +6,6 @@ import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/notificator.dart';
 import 'package:flutter/material.dart';
 import 'package:markdown_editor_ot/markdown_editor.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DMarkdownField extends StatefulWidget {
   const DMarkdownField({
