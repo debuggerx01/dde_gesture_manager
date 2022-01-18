@@ -36,7 +36,7 @@ Future configureServer(Angel app) async {
               schemeQuery.values.copyFrom(scheme);
               schemeQuery.values.uid = req.user!.idAsInt;
               if (one.isEmpty) {
-                schemeQuery.values.metadata?['author'] = req.user!.email;
+                schemeQuery.values.metadata = {'author': req.user!.email};
                 return await schemeQuery.insert(tx);
               } else {
                 schemeQuery.whereId = one.value.idAsInt;
