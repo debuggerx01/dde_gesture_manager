@@ -12,6 +12,7 @@ dependencies:
   angel3_orm: ^4.0.6
   angel3_orm_postgres: ^3.3.0
   angel3_serialize: ^4.1.0
+  angel3_static: ^4.1.0
   angel3_production: ^3.1.2
   belatuk_pretty_logging: ^4.0.0
   optional: ^6.0.0

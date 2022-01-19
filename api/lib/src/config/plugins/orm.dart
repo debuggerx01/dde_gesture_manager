@@ -3,11 +3,32 @@ import 'dart:io';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_orm/angel3_orm.dart';
 import 'package:angel3_orm_postgres/angel3_orm_postgres.dart';
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 
+const times = ['', 'st', 'nd', 'rd'];
+
+const retryTimeOut = Duration(seconds: 30);
+
 Future<void> configureServer(Angel app) async {
-  var connection = await connectToPostgres(app.configuration);
-  await connection.open();
+  final _log = Logger('OrmPlugin');
+  late PostgreSQLConnection connection;
+  var _startTime = DateTime.now();
+  var _retry = 1;
+  while (_startTime.difference(DateTime.now()).abs() <= retryTimeOut) {
+    try {
+      connection = await connectToPostgres(app.configuration);
+      await connection.open();
+      break;
+    } catch (e, st) {
+      await connection.close();
+      _log.severe(
+          'Failed to connect, the $_retry${_retry <= 3 ? times[_retry] : 'th'} retry will do in a second.', e, st);
+      sleep(Duration(seconds: 1));
+      _retry++;
+      if (_startTime.difference(DateTime.now()).abs() > retryTimeOut) rethrow;
+    }
+  }
 
   var logger = app.environment.isProduction ? null : app.logger;
   var executor = PostgreSqlExecutor(connection, logger: logger);
