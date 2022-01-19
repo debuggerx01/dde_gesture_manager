@@ -111,6 +111,9 @@ abstract class _SchemeForDownload {
   @SerializableField(isNullable: false)
   String? get name;
 
+  @SerializableField(defaultValue: false, isNullable: false)
+  bool? get shared;
+
   @Column(type: ColumnType.text)
   String? description;
 
@@ -124,6 +127,7 @@ SchemeForDownload transSchemeForDownload(Scheme scheme) => SchemeForDownload(
       name: scheme.name,
       description: scheme.description,
       gestures: scheme.gestures,
+      shared: scheme.shared,
     );
 
 @serializable
@@ -172,10 +176,10 @@ abstract class _MarketSchemeTransMetaData {
 }
 
 MarketSchemeTransMetaData transMarketSchemeMetaData(MarketScheme scheme) => MarketSchemeTransMetaData(
-  id: scheme.id,
-  description: scheme.description,
-  uuid: scheme.uuid,
-  name: scheme.name,
-  likes: scheme.metadata?['likes'] ?? 0,
-  downloads: scheme.metadata?['downloads'] ?? 0,
-);
+      id: scheme.id,
+      description: scheme.description,
+      uuid: scheme.uuid,
+      name: scheme.name,
+      likes: scheme.metadata?['likes'] ?? 0,
+      downloads: scheme.metadata?['downloads'] ?? 0,
+    );

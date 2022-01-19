@@ -80,7 +80,7 @@ class LocalManagerState extends State<LocalManager> {
         ..name = downloadedScheme.name
         ..description = downloadedScheme.description
         ..uploaded = true
-        ..fromMarket = true
+        ..fromMarket = downloadedScheme.shared == true
         ..gestures = (downloadedScheme.gestures ?? []).map(GestureProp.parse).toList();
     }
     newSchemes.add(newEntry);
