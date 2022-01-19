@@ -24,7 +24,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.add({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight * .7,
     width = defaultButtonHeight * .7,
@@ -41,7 +41,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.delete({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight * .7,
     width = defaultButtonHeight * .7,
@@ -58,7 +58,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.apply({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight * .7,
     width = defaultButtonHeight * .7,
@@ -75,7 +75,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.duplicate({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight * .7,
     width = defaultButtonHeight * .7,
@@ -92,7 +92,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.paste({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight * .7,
     width = defaultButtonHeight * .7,
@@ -109,7 +109,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.logout({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight,
     width = defaultButtonHeight,
@@ -126,7 +126,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.upload({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight,
     width = defaultButtonHeight,
@@ -143,7 +143,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.download({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight * .7,
     width = defaultButtonHeight * .7,
@@ -160,7 +160,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.share({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight * .7,
     width = defaultButtonHeight * .7,
@@ -177,7 +177,7 @@ class DButton extends StatefulWidget {
 
   factory DButton.like({
     Key? key,
-    required enabled,
+    required bool enabled,
     GestureTapCallback? onTap,
     height = defaultButtonHeight * .7,
     width = defaultButtonHeight * .7,

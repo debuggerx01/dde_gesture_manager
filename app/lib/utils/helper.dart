@@ -2,6 +2,8 @@ import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
+import 'package:dde_gesture_manager/pages/local_manager.dart';
+import 'package:dde_gesture_manager_api/src/models/scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -36,6 +38,8 @@ class H {
   BuildContext get topContext => _topContext;
 
   DateTime? lastCheckAuthStatusTime;
+
+  static final localManagerKey = GlobalKey<LocalManagerState>();
 
   initTopContext(BuildContext context) {
     _topContext = context;
@@ -123,6 +127,9 @@ class H {
       throw 'Could not launch $url';
     }
   }
+
+  static void handleDownloadScheme(BuildContext context, SchemeForDownload value) =>
+      localManagerKey.currentState?.addLocalScheme(context, value);
 }
 
 class PreferredPanelsStatus {

@@ -5,6 +5,7 @@ import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/http/api.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
+import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme_list_refresh_key.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
@@ -294,14 +295,15 @@ class _MeWidgetState extends State<MeWidget> {
                   },
                 ),
                 DButton.download(
-                  enabled: true,
+                  enabled: (context.watch<LocalSchemesProvider>().schemes ?? []).every((e) => e.scheme.id != _selected),
                   onTap: () {
                     Api.downloadScheme(schemeId: currentSelectedScheme!.uuid!).then((value) {
-                      /// todo: 下载逻辑
-                      value.sout();
-                      context
-                          .read<SchemeListRefreshKeyProvider>()
-                          .setProps(refreshKey: DateTime.now().millisecondsSinceEpoch);
+                      if (value != null) {
+                        H.handleDownloadScheme(context, value);
+                        context
+                            .read<SchemeListRefreshKeyProvider>()
+                            .setProps(refreshKey: DateTime.now().millisecondsSinceEpoch);
+                      }
                     });
                   },
                 ),
