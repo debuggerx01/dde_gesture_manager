@@ -49,7 +49,7 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryWeb> {
   @override
   Future<LocalSchemeEntry> create() => Future.value(
         LocalSchemeEntryWeb(
-          path: Uuid().v1(),
+          path: 'schemes.${Uuid().v1()}',
           scheme: Scheme.create(),
           lastModifyTime: DateTime.now(),
         ),
