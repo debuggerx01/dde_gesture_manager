@@ -8,6 +8,7 @@ import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/utils/apply_scheme_interface.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager_api/models.dart' show SchemeForDownload;
 import 'package:flutter/cupertino.dart';
@@ -257,10 +258,10 @@ class LocalManagerState extends State<LocalManager> {
                               DButton.apply(
                                 enabled: true,
                                 onTap: () {
-                                  var appliedId =
-                                      localSchemes.firstWhere((ele) => ele.path == _selectedItemPath).scheme.id!;
-                                  appliedId.sout();
-                                  context.read<ConfigsProvider>().setProps(appliedSchemeId: appliedId);
+                                  var appliedScheme =
+                                      localSchemes.firstWhere((ele) => ele.path == _selectedItemPath).scheme;
+                                  context.read<ConfigsProvider>().setProps(appliedSchemeId: appliedScheme.id);
+                                  SchemeApplyUtil().apply(context, appliedScheme);
                                 },
                               ),
                             ]

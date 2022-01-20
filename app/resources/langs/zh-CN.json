@@ -163,6 +163,13 @@
       "title": "确定分享？",
       "description": "分享后其他用户可以看到本方案并下载使用",
       "success": "分享成功"
+    },
+    "apply_scheme": {
+      "success": "设置成功",
+      "description": "手势方案需注销后才能生效，注销前注意保存工作进度",
+      "logout_immediately": "立即注销",
+      "commands_copied_title": "命令复制成功！",
+      "commands_copied_description": "请打开终端后粘贴命令并执行"
     }
   },
   "me": {

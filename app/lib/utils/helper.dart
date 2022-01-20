@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
@@ -130,6 +132,23 @@ class H {
 
   static void handleDownloadScheme(BuildContext context, SchemeForDownload value) =>
       localManagerKey.currentState?.addLocalScheme(context, value);
+
+  static String transGesturePropsToConfig(List<GestureProp> gestures) =>
+      JsonEncoder.withIndent(' ' * 4).convert(gestures
+          .map(
+            (gesture) => {
+              "Event": {
+                "Name": gesture.gesture!.name,
+                "Direction": H.getGestureDirectionName(gesture.direction),
+                "Fingers": gesture.fingers,
+              },
+              "Action": {
+                "Type": gesture.type!.name,
+                "Action": gesture.command,
+              },
+            },
+          )
+          .toList());
 }
 
 class PreferredPanelsStatus {
