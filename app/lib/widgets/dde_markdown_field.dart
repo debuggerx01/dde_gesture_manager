@@ -96,6 +96,7 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
                 )
               : MdEditor(
                   initText: widget.initText,
+                  hintText: LocaleKeys.md_editor_init_text.tr(),
                   textFocusNode: _focusNode,
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   onComplete: (content) {
@@ -105,6 +106,23 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
                       });
                     else
                       widget.onComplete(content);
+                  },
+                  actionMessages: {
+                    ActionType.done: LocaleKeys.md_editor_done.tr(),
+                    ActionType.undo: LocaleKeys.md_editor_undo.tr(),
+                    ActionType.redo: LocaleKeys.md_editor_redo.tr(),
+                    ActionType.image: LocaleKeys.md_editor_image.tr(),
+                    ActionType.link: LocaleKeys.md_editor_link.tr(),
+                    ActionType.fontBold: LocaleKeys.md_editor_font_bold.tr(),
+                    ActionType.fontItalic: LocaleKeys.md_editor_font_italic.tr(),
+                    ActionType.fontStrikethrough: LocaleKeys.md_editor_font_strikethrough.tr(),
+                    ActionType.textQuote: LocaleKeys.md_editor_text_quote.tr(),
+                    ActionType.list: LocaleKeys.md_editor_list.tr(),
+                    ActionType.h1: LocaleKeys.md_editor_h1.tr(),
+                    ActionType.h2: LocaleKeys.md_editor_h2.tr(),
+                    ActionType.h3: LocaleKeys.md_editor_h3.tr(),
+                    ActionType.h4: LocaleKeys.md_editor_h4.tr(),
+                    ActionType.h5: LocaleKeys.md_editor_h5.tr(),
                   },
                 ),
         );

@@ -185,5 +185,23 @@
       "downloaded": "我的下载",
       "liked": "我的点赞"
     }
+  },
+  "md_editor": {
+    "init_text": "请输入描述",
+    "done": "完成",
+    "undo": "撤销",
+    "redo": "重做",
+    "image": "图片",
+    "link": "链接",
+    "font_bold": "加粗",
+    "font_italic": "斜体",
+    "font_strikethrough": "删除线",
+    "text_quote": "文字引用",
+    "list": "无序列表",
+    "h1": "一级标题",
+    "h2": "二级标题",
+    "h3": "三级标题",
+    "h4": "四级标题",
+    "h5": "五级标题"
   }
 }

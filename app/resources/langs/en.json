@@ -185,5 +185,23 @@
       "downloaded": "Downloaded",
       "liked": "Liked"
     }
+  },
+  "md_editor": {
+    "init_text": "Please enter a description",
+    "done": "Done",
+    "undo": "Undo",
+    "redo": "redo",
+    "image": "Image",
+    "link": "Link",
+    "font_bold": "FontBold",
+    "font_italic": "FontItalic",
+    "font_strikethrough": "FontStrikethrough",
+    "text_quote": "TextQuote",
+    "list": "List",
+    "h1": "H1",
+    "h2": "H2",
+    "h3": "H3",
+    "h4": "H4",
+    "h5": "H5"
   }
 }
