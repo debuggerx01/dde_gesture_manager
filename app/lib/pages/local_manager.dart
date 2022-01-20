@@ -85,6 +85,7 @@ class LocalManagerState extends State<LocalManager> {
     }
     newSchemes.add(newEntry);
     localSchemesProvider.setProps(schemes: newSchemes..sort());
+    newEntry.save(localSchemesProvider);
     setState(() {
       _selectedItemPath = newEntry.path;
     });
