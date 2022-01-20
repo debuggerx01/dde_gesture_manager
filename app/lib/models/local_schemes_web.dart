@@ -84,7 +84,9 @@ class LocalSchemeEntryWeb implements LocalSchemeEntry {
 
   @override
   save(LocalSchemesProvider provider) {
-    window.localStorage[path] = JsonEncoder.withIndent(' ' * 4).convert(scheme);
+    var schemeMap = scheme.toJson();
+    schemeMap['modified_at'] = DateTime.now();
+    window.localStorage[path] = JsonEncoder.withIndent(' ' * 4).convert();
     provider.schemes!.firstWhere((ele) => ele.scheme.id == scheme.id).lastModifyTime = DateTime.now();
     provider.setProps(schemes: [...provider.schemes!]..sort());
   }
