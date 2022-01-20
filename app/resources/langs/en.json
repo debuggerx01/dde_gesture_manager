@@ -166,7 +166,7 @@
     },
     "apply_scheme": {
       "success": "Apply success",
-      "description": "The gesture scheme will take effect after logout, pay attention to the save work data",
+      "description": "The gesture scheme will take effect after logout, pay attention to the save work data~",
       "logout_immediately": "Logout",
       "commands_copied_title": "Commands copied!",
       "commands_copied_description": "Please open the terminal and paste the command to execute"

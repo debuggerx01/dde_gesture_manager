@@ -20,10 +20,10 @@ class SchemeApplyUtil implements SchemeApplyUtilStub {
             'EOF',
           ];
     cmd.add('zenity'
-        ' --title=${LocaleKeys.info_apply_scheme_success.tr()}'
+        ' --title="${LocaleKeys.info_apply_scheme_success.tr()}"'
         ' --question'
         ' --no-wrap'
-        ' --text=${LocaleKeys.info_apply_scheme_description.tr()}'
+        ' --text="${LocaleKeys.info_apply_scheme_description.tr()}"'
         ' --ok-label=${LocaleKeys.info_apply_scheme_logout_immediately.tr()}'
         ' --cancel-label=${LocaleKeys.str_cancel.tr()}'
         ' && ${deepinLogoutCommands.join(' ')}');
