@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:html';
 
 import 'package:dde_gesture_manager/builder/provider_annotation.dart';
+import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:uuid/uuid.dart';
@@ -22,12 +23,19 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryWeb> {
     for (var key in window.localStorage.keys) {
       if (key.startsWith('schemes.')) {
         var content = window.localStorage[key] ?? '';
-        var schemeJson = json.decode(content);
-        _localeSchemes.add(LocalSchemeEntryWeb(
-          path: key,
-          scheme: Scheme.parse(schemeJson),
-          lastModifyTime: DateTime.parse(schemeJson['modified_at']),
-        ));
+        var schemeJson;
+        try {
+          schemeJson = json.decode(content);
+        } catch (e) {
+          e.sout();
+        }
+        if (schemes != null) {
+          _localeSchemes.add(LocalSchemeEntryWeb(
+            path: key,
+            scheme: Scheme.parse(schemeJson),
+            lastModifyTime: DateTime.parse(schemeJson['modified_at']),
+          ));
+        }
       }
     }
     return Future.value(_localeSchemes);
