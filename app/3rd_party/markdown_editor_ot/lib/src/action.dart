@@ -11,6 +11,7 @@ class ActionImage extends StatefulWidget {
     this.imageSelect,
     required this.color,
     this.getCursorPosition,
+    required this.message,
   })  : super(key: key);
 
   final ActionType type;
@@ -19,6 +20,8 @@ class ActionImage extends StatefulWidget {
   final GetCursorPosition? getCursorPosition;
 
   final Color? color;
+
+  final String? message;
 
   @override
   ActionImageState createState() => ActionImageState();
@@ -60,7 +63,7 @@ class ActionImageState extends State<ActionImage> {
   Widget build(BuildContext context) {
     return Tooltip(
       preferBelow: false,
-      message: _defaultImageAttributes
+      message: widget.message ?? _defaultImageAttributes
           .firstWhere((img) => img.type == widget.type)
           .tip,
       child: IconButton(
@@ -243,7 +246,6 @@ enum ActionType {
   fontBold,
   fontItalic,
   fontStrikethrough,
-  fontDeleteLine,
   textQuote,
   list,
   h1,

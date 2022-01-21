@@ -154,12 +154,22 @@
     },
     "upload": {
       "success": "上传成功～",
-      "failed": "上传失败。。"
+      "failed": "上传失败。。",
+      "name_occupied": "名称被占用……",
+      "pls_rename": "请重新命名",
+      "pls_add_description": "请填写方案描述～"
     },
     "share": {
       "title": "确定分享？",
       "description": "分享后其他用户可以看到本方案并下载使用",
       "success": "分享成功"
+    },
+    "apply_scheme": {
+      "success": "设置成功",
+      "description": "手势方案需注销后才能生效，注销前注意保存工作进度~",
+      "logout_immediately": "立即注销",
+      "commands_copied_title": "命令复制成功！",
+      "commands_copied_description": "请打开终端后粘贴命令并执行"
     }
   },
   "me": {
@@ -175,5 +185,23 @@
       "downloaded": "我的下载",
       "liked": "我的点赞"
     }
+  },
+  "md_editor": {
+    "init_text": "请输入描述",
+    "done": "完成",
+    "undo": "撤销",
+    "redo": "重做",
+    "image": "图片",
+    "link": "链接",
+    "font_bold": "加粗",
+    "font_italic": "斜体",
+    "font_strikethrough": "删除线",
+    "text_quote": "文字引用",
+    "list": "无序列表",
+    "h1": "一级标题",
+    "h2": "二级标题",
+    "h3": "三级标题",
+    "h4": "四级标题",
+    "h5": "五级标题"
   }
 }

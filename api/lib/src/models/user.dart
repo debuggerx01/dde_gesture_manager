@@ -16,7 +16,7 @@ abstract class _User extends BaseModel {
   @SerializableField(isNullable: false)
   String? get email;
 
-  @Column(isNullable: false, length: 32)
+  @Column(isNullable: false, length: 64)
   @SerializableField(isNullable: true, exclude: true)
   String? get password;
 

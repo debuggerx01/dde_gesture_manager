@@ -301,6 +301,10 @@ class GestureEditor extends StatelessWidget {
                               child: DButton.upload(
                                 enabled: schemeProvider.readOnly == false,
                                 onTap: () async {
+                                  if (schemeProvider.description.isNull) {
+                                    Notificator.error(context, title: LocaleKeys.info_upload_pls_add_description.tr());
+                                    return;
+                                  }
                                   if (context.read<ConfigsProvider>().accessToken.isNull) {
                                     return Notificator.showAlert(
                                       title: LocaleKeys.info_login_for_upload_title.tr(),
@@ -326,7 +330,7 @@ class GestureEditor extends StatelessWidget {
 
                                     if (_share != null) {
                                       Api.uploadScheme(scheme: schemeProvider, share: _share).then((value) {
-                                        if (value) {
+                                        if (value == UploadRespStatus.done) {
                                           Notificator.success(context, title: LocaleKeys.info_upload_success.tr());
                                           var localSchemesProvider = context.read<LocalSchemesProvider>();
                                           var localSchemeEntry = localSchemesProvider.schemes!
@@ -336,6 +340,12 @@ class GestureEditor extends StatelessWidget {
                                           context
                                               .read<SchemeListRefreshKeyProvider>()
                                               .setProps(refreshKey: DateTime.now().millisecondsSinceEpoch);
+                                        } else if (value == UploadRespStatus.name_occupied) {
+                                          Notificator.error(
+                                            context,
+                                            title: LocaleKeys.info_upload_name_occupied.tr(),
+                                            description: LocaleKeys.info_upload_pls_rename.tr(),
+                                          );
                                         } else {
                                           Notificator.error(context, title: LocaleKeys.info_upload_failed.tr());
                                         }

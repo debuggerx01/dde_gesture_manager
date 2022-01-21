@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/http/api.dart';
 import 'package:dde_gesture_manager/models/configs.provider.dart';
+import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
@@ -34,7 +35,6 @@ class _MarketWidgetState extends State<MarketWidget> {
   MarketSortType _type = MarketSortType.recommend;
   String? _selected;
   String? _hovering;
-  int _refreshKey = 0;
   List<int> _likedSchemes = [];
 
   @override
@@ -282,14 +282,15 @@ class _MarketWidgetState extends State<MarketWidget> {
                 },
               ),
               DButton.download(
-                enabled: true,
+                enabled: (context.watch<LocalSchemesProvider>().schemes ?? []).every((e) => e.scheme.id != _selected),
                 onTap: () {
                   Api.downloadScheme(schemeId: currentSelectedScheme!.uuid!).then((value) {
-                    /// todo: 下载逻辑
-                    value.sout();
-                    setState(() {
-                      currentSelectedScheme.downloads = currentSelectedScheme.downloads! + 1;
-                    });
+                    if (value != null) {
+                      H.handleDownloadScheme(context, value);
+                      setState(() {
+                        currentSelectedScheme.downloads = currentSelectedScheme.downloads! + 1;
+                      });
+                    }
                   });
                 },
               ),

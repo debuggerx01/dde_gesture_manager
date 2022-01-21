@@ -154,12 +154,22 @@
     },
     "upload": {
       "success": "Upload success ~",
-      "failed": "Upload failed.."
+      "failed": "Upload failed..",
+      "name_occupied": "Name occupied……",
+      "pls_rename": "Please rename",
+      "pls_add_description": "Please enter the scheme description"
     },
     "share": {
       "title": "Are you sure to sharing?",
       "description": "Other users can see this scheme and download it after share",
       "success": "Share success"
+    },
+    "apply_scheme": {
+      "success": "Apply success",
+      "description": "The gesture scheme will take effect after logout, pay attention to the save work data~",
+      "logout_immediately": "Logout",
+      "commands_copied_title": "Commands copied!",
+      "commands_copied_description": "Please open the terminal and paste the command to execute"
     }
   },
   "me": {
@@ -175,5 +185,23 @@
       "downloaded": "Downloaded",
       "liked": "Liked"
     }
+  },
+  "md_editor": {
+    "init_text": "Please enter a description",
+    "done": "Done",
+    "undo": "Undo",
+    "redo": "redo",
+    "image": "Image",
+    "link": "Link",
+    "font_bold": "FontBold",
+    "font_italic": "FontItalic",
+    "font_strikethrough": "FontStrikethrough",
+    "text_quote": "TextQuote",
+    "list": "List",
+    "h1": "H1",
+    "h2": "H2",
+    "h3": "H3",
+    "h4": "H4",
+    "h5": "H5"
   }
 }

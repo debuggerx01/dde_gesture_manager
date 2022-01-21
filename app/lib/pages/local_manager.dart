@@ -8,7 +8,9 @@ import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
 import 'package:dde_gesture_manager/models/scheme.provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
+import 'package:dde_gesture_manager/utils/apply_scheme_interface.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
+import 'package:dde_gesture_manager_api/models.dart' show SchemeForDownload;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -19,10 +21,10 @@ class LocalManager extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<LocalManager> createState() => _LocalManagerState();
+  State<LocalManager> createState() => LocalManagerState();
 }
 
-class _LocalManagerState extends State<LocalManager> {
+class LocalManagerState extends State<LocalManager> {
   late ScrollController _scrollController;
   String? _hoveringItemPath;
   late String _selectedItemPath;
@@ -67,6 +69,28 @@ class _LocalManagerState extends State<LocalManager> {
       _selectedItemPath = localScheme.path;
     });
     context.read<GesturePropProvider>().copyFrom(GestureProp.empty());
+  }
+
+  Future addLocalScheme(BuildContext context, [SchemeForDownload? downloadedScheme = null]) async {
+    var localSchemesProvider = context.read<LocalSchemesProvider>();
+    var newSchemes = [...?localSchemesProvider.schemes];
+    var newEntry = await localSchemesProvider.create();
+    if (downloadedScheme != null) {
+      newEntry.scheme
+        ..id = downloadedScheme.uuid
+        ..name = downloadedScheme.name
+        ..description = downloadedScheme.description
+        ..uploaded = true
+        ..fromMarket = downloadedScheme.shared == true
+        ..gestures = (downloadedScheme.gestures ?? []).map(GestureProp.parse).toList();
+    }
+    newSchemes.add(newEntry);
+    localSchemesProvider.setProps(schemes: newSchemes..sort());
+    newEntry.save(localSchemesProvider);
+    setState(() {
+      _selectedItemPath = newEntry.path;
+    });
+    _handleItemClick(context, newEntry);
   }
 
   @override
@@ -192,15 +216,7 @@ class _LocalManagerState extends State<LocalManager> {
                               DButton.add(
                                 enabled: true,
                                 onTap: () async {
-                                  var localSchemesProvider = context.read<LocalSchemesProvider>();
-                                  var newSchemes = [...?localSchemesProvider.schemes];
-                                  var newEntry = await localSchemesProvider.create();
-                                  newSchemes.add(newEntry);
-                                  localSchemesProvider.setProps(schemes: newSchemes..sort());
-                                  setState(() {
-                                    _selectedItemPath = newEntry.path;
-                                  });
-                                  _handleItemClick(context, newEntry);
+                                  await addLocalScheme(context);
                                 },
                               ),
                               DButton.delete(
@@ -242,10 +258,10 @@ class _LocalManagerState extends State<LocalManager> {
                               DButton.apply(
                                 enabled: true,
                                 onTap: () {
-                                  var appliedId =
-                                      localSchemes.firstWhere((ele) => ele.path == _selectedItemPath).scheme.id!;
-                                  appliedId.sout();
-                                  context.read<ConfigsProvider>().setProps(appliedSchemeId: appliedId);
+                                  var appliedScheme =
+                                      localSchemes.firstWhere((ele) => ele.path == _selectedItemPath).scheme;
+                                  context.read<ConfigsProvider>().setProps(appliedSchemeId: appliedScheme.id);
+                                  SchemeApplyUtil().apply(context, appliedScheme);
                                 },
                               ),
                             ]

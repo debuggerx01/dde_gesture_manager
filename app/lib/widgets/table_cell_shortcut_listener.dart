@@ -23,8 +23,7 @@ class TableCellShortcutListener extends StatefulWidget {
 
 class _TableCellShortcutListenerState extends State<TableCellShortcutListener> {
   List<KeyNames> _shortcut = [];
-  bool inputMode = false;
-  FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
 
   _handleFocusChange() {
     if (!_focusNode.hasFocus) {
@@ -43,6 +42,7 @@ class _TableCellShortcutListenerState extends State<TableCellShortcutListener> {
 
   @override
   void initState() {
+    super.initState();
     var __shortcut = widget.initShortcut.split('+');
     __shortcut.forEach((name) {
       var keyNames = getPhysicalKeyNamesByRealName(name);
@@ -50,7 +50,6 @@ class _TableCellShortcutListenerState extends State<TableCellShortcutListener> {
     });
     _shortcut.sort();
     _focusNode.addListener(_handleFocusChange);
-    super.initState();
   }
 
   @override
@@ -70,8 +69,8 @@ class _TableCellShortcutListenerState extends State<TableCellShortcutListener> {
         onTap: () {
           setState(() {
             _shortcut = [];
-            inputMode = true;
           });
+          _focusNode.requestFocus();
         },
         child: Focus(
           autofocus: true,

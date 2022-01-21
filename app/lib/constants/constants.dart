@@ -19,6 +19,16 @@ const double defaultBorderRadius = 8;
 
 const double defaultButtonHeight = 36;
 
+const userGestureConfigFilePath = 'deepin/dde-daemon/gesture.json';
+
+const deepinLogoutCommands = [
+  'dbus-send',
+  '--type=method_call',
+  '--dest=com.deepin.SessionManager',
+  '/com/deepin/SessionManager',
+  'com.deepin.SessionManager.RequestLogout'
+];
+
 const List<String> builtInCommands = [
   'ShowWorkspace',
   'Handle4Or5FingersSwipeUp',
@@ -39,4 +49,10 @@ const List<String> builtInCommands = [
 enum PanelType {
   local_manager,
   market_or_me,
+}
+
+enum UploadRespStatus {
+  done,
+  name_occupied,
+  error,
 }

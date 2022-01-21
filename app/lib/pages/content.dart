@@ -54,7 +54,7 @@ class _ContentState extends State<Content> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            LocalManager(),
+            LocalManager(key: H.localManagerKey),
             GestureEditor(),
             MarketOrMe(),
           ],

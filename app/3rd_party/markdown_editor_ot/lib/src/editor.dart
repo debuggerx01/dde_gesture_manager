@@ -24,6 +24,7 @@ class MdEditor extends StatefulWidget {
     this.appendBottomWidget,
     this.splitWidget,
     this.textFocusNode,
+    required this.actionMessages,
     required this.onComplete,
   }) : super(key: key);
 
@@ -50,6 +51,8 @@ class MdEditor extends StatefulWidget {
   final FocusNode? textFocusNode;
 
   final OnComplete onComplete;
+
+  final Map<ActionType, String> actionMessages;
 
   @override
   State<StatefulWidget> createState() => MdEditorState();
@@ -186,6 +189,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
 
                   widgets.add(ActionImage(
                     type: ActionType.done,
+                    message: widget.actionMessages[ActionType.done],
                     color: widget.actionIconColor,
                     tap: (t, s, i, [p]) {
                       widget.onComplete(getText());
@@ -194,6 +198,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
 
                   widgets.add(ActionImage(
                     type: ActionType.undo,
+                    message: widget.actionMessages[ActionType.undo],
                     color: widget.actionIconColor,
                     tap: (t, s, i, [p]) {
                       _editPerform.undo();
@@ -201,6 +206,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
                   ));
                   widgets.add(ActionImage(
                     type: ActionType.redo,
+                    message: widget.actionMessages[ActionType.redo],
                     color: widget.actionIconColor,
                     tap: (t, s, i, [p]) {
                       _editPerform.redo();
@@ -237,6 +243,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.image),
       widget: ActionImage(
         type: ActionType.image,
+        message: widget.actionMessages[ActionType.image],
         color: widget.actionIconColor,
         tap: _disposeText,
         imageSelect: widget.imageSelect,
@@ -247,6 +254,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.link),
       widget: ActionImage(
         type: ActionType.link,
+        message: widget.actionMessages[ActionType.link],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -255,6 +263,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.fontBold),
       widget: ActionImage(
         type: ActionType.fontBold,
+        message: widget.actionMessages[ActionType.fontBold],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -263,6 +272,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.fontItalic),
       widget: ActionImage(
         type: ActionType.fontItalic,
+        message: widget.actionMessages[ActionType.fontItalic],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -271,6 +281,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.fontStrikethrough),
       widget: ActionImage(
         type: ActionType.fontStrikethrough,
+        message: widget.actionMessages[ActionType.fontStrikethrough],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -279,6 +290,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.textQuote),
       widget: ActionImage(
         type: ActionType.textQuote,
+        message: widget.actionMessages[ActionType.textQuote],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -287,6 +299,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.list),
       widget: ActionImage(
         type: ActionType.list,
+        message: widget.actionMessages[ActionType.list],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -295,6 +308,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.h4),
       widget: ActionImage(
         type: ActionType.h4,
+        message: widget.actionMessages[ActionType.h4],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -303,6 +317,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.h5),
       widget: ActionImage(
         type: ActionType.h5,
+        message: widget.actionMessages[ActionType.h5],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -311,6 +326,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.h1),
       widget: ActionImage(
         type: ActionType.h1,
+        message: widget.actionMessages[ActionType.h1],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -319,6 +335,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.h2),
       widget: ActionImage(
         type: ActionType.h2,
+        message: widget.actionMessages[ActionType.h2],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),
@@ -327,6 +344,7 @@ class MdEditorState extends State<MdEditor> with AutomaticKeepAliveClientMixin {
       sortValue: getSortValue(ActionType.h3),
       widget: ActionImage(
         type: ActionType.h3,
+        message: widget.actionMessages[ActionType.h3],
         color: widget.actionIconColor,
         tap: _disposeText,
       ),

@@ -287,6 +287,8 @@ class _CherryToastState extends State<CherryToast> with TickerProviderStateMixin
   late Animation<Offset> offsetAnimation;
   late AnimationController slideController;
   late BoxDecoration toastDecoration;
+  
+  bool _dismissed = false;
 
   @override
   void initState() {
@@ -311,7 +313,10 @@ class _CherryToastState extends State<CherryToast> with TickerProviderStateMixin
       Timer(this.widget.toastDuration, () {
         slideController.reverse();
         Timer(this.widget.animationDuration, () {
-          if (mounted) Navigator.pop(context);
+          if (mounted && !_dismissed) {
+            _dismissed = true;
+            Navigator.pop(context);
+          }
         });
       });
     }
@@ -463,7 +468,10 @@ class _CherryToastState extends State<CherryToast> with TickerProviderStateMixin
       onTap: () {
         slideController.reverse();
         Timer(this.widget.animationDuration, () {
-          if (mounted) Navigator.pop(context);
+          if (mounted && !_dismissed) {
+            _dismissed = true;
+            Navigator.pop(context);
+          }
         });
       },
       child: Icon(Icons.close, color: Colors.grey[500], size: CLOSE_BUTTON_SIZE),
