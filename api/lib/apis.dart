@@ -3,7 +3,10 @@ class Apis {
   static const apiHost = 'home.debuggerx.com';
   static const apiPort = 30000;
 
-  static const appNewVersionUrl = 'https://www.debuggerx.com';
+  static const appNewVersionUrl = 'https://www.debuggerx.com/2022/01/21/dgm-changelog?from=app';
+
+  static appManualUrl(bool isWeb) =>
+      'https://www.debuggerx.com/2022/01/21/dgm-manual?from=app_${isWeb ? 'web' : 'linux'}';
 
   static final system = SystemApis();
   static final auth = AuthApis();
@@ -35,11 +38,13 @@ class SchemeApis {
 
   String user({required StringParam type}) => [path, 'user', type].joinPath();
 
-  String market({required StringParam type, required IntParam page, required IntParam pageSize}) => [path, 'market', type, page, pageSize].joinPath();
+  String market({required StringParam type, required IntParam page, required IntParam pageSize}) =>
+      [path, 'market', type, page, pageSize].joinPath();
 
   String download({required StringParam schemeId}) => [path, 'download', schemeId].joinPath();
 
-  String like({required StringParam schemeId, required StringParam isLike}) => [path, 'like', schemeId, isLike].joinPath();
+  String like({required StringParam schemeId, required StringParam isLike}) =>
+      [path, 'like', schemeId, isLike].joinPath();
 
   String get userLikes => [path, 'user-likes'].joinPath();
 }
