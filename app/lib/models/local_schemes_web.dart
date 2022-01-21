@@ -30,7 +30,6 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryWeb> {
         ));
       }
     }
-    print(_localeSchemes.join('\n'));
     return Future.value(_localeSchemes);
   }
 
