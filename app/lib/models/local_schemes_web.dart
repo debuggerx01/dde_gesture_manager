@@ -29,7 +29,7 @@ class LocalSchemes implements LocalSchemesInterface<LocalSchemeEntryWeb> {
         } catch (e) {
           e.sout();
         }
-        if (schemes != null) {
+        if (schemeJson != null) {
           _localeSchemes.add(LocalSchemeEntryWeb(
             path: key,
             scheme: Scheme.parse(schemeJson),
