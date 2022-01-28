@@ -1,0 +1,13 @@
+Source: dde-gesture-manager
+Section: utils
+Priority: optional
+Maintainer: DebuggerX <dx8913712@163.com>
+Build-Depends:
+ clang,
+ cmake,
+ libgtk-3-dev,
+ ninja-build,
+Homepage: https://github.com/debuggerx01/dde_gesture_manager
+Package: dde-gesture-manager
+Architecture: amd64
+Description: 专为 DDE 桌面环境打造的触摸板手势管理工具（缩写：dgm），使用 Flutter 构建。

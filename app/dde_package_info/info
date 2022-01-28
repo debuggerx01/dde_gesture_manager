@@ -1,0 +1,17 @@
+{
+    "appid": "com.debuggerx.dde-gesture-manager",
+    "name": "dde-gesture-manager",
+    "version": "VERSION",
+    "arch": ["amd64"],
+    "permissions": {
+        "autostart": true,
+        "notification": true,
+        "trayicon": false,
+        "clipboard": true,
+        "account": false,
+        "bluetooth": false,
+        "camera": false,
+        "audio_record": false,
+        "installed_apps": false
+    }
+}
