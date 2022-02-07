@@ -605,13 +605,11 @@ Widget _buildCommandCellsEditing(BuildContext context) {
                     ('${LocaleKeys.built_in_commands}.$e').tr(),
                     textScaleFactor: .8,
                   ),
-                  value: ('${LocaleKeys.built_in_commands}.$e').tr(),
+                  value: e,
                 ),
               )
               .toList(),
-          value:
-              ('${LocaleKeys.built_in_commands}.${(builtInCommands.contains(gesture.command) ? gesture.command : builtInCommands.first)!}')
-                  .tr(),
+          value: (builtInCommands.contains(gesture.command) ? gesture.command : builtInCommands.first)!,
           onChanged: (value) => context.read<GesturePropProvider>().setProps(
                 command: value,
                 editMode: true,
