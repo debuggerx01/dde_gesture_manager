@@ -21,6 +21,8 @@ const double defaultButtonHeight = 36;
 
 const userGestureConfigFilePath = 'deepin/dde-daemon/gesture.json';
 
+const defaultFontFamily = 'NotoSansSC';
+
 const deepinLogoutCommands = [
   'dbus-send',
   '--type=method_call',

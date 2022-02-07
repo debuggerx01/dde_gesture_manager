@@ -10,4 +10,5 @@ Build-Depends:
 Homepage: https://github.com/debuggerx01/dde_gesture_manager
 Package: dde-gesture-manager
 Architecture: amd64
+Depends: fonts-noto-cjk
 Description: 专为 DDE 桌面环境打造的触摸板手势管理工具（缩写：dgm），使用 Flutter 构建。
