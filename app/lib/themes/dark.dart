@@ -18,11 +18,11 @@ var darkTheme = _darkTheme.copyWith(
   textTheme: _darkTheme.textTheme.copyWith(
         headline1: TextStyle(
           color: Color(0xffc0c6d4),
-          fontFamilyFallback: kIsWeb ? null : [defaultFontFamily],
+          fontFamily: kIsWeb ? null : defaultFontFamily,
         ),
         bodyText2: TextStyle(
           color: Color(0xffc0c6d4),
-          fontFamilyFallback: kIsWeb ? null : [defaultFontFamily],
+          fontFamily: kIsWeb ? null : defaultFontFamily,
         ),
       ),
   popupMenuTheme: _darkTheme.popupMenuTheme.copyWith(
@@ -34,6 +34,7 @@ var darkTheme = _darkTheme.copyWith(
   tooltipTheme: _darkTheme.tooltipTheme.copyWith(
         textStyle: TextStyle(
           color: Colors.grey,
+          fontFamily: kIsWeb ? null : defaultFontFamily,
         ),
         padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
         decoration: BoxDecoration(

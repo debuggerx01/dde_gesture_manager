@@ -60,74 +60,72 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
                     ? context.watch<SettingsProvider>().activeColor ?? Color(0xff565656)
                     : Color(0xff565656)),
           ),
-          child: DefaultTextStyle(
-            style: context.t.textTheme.bodyText2!,
-            child: isPreview
-                ? GestureDetector(
-                    onTap: widget.readOnly
-                        ? null
-                        : () {
-                            setState(() {
-                              _previewText = null;
-                            });
-                          },
-                    child: MouseRegion(
-                      cursor: widget.readOnly ? SystemMouseCursors.basic : SystemMouseCursors.text,
-                      child: MdPreview(
-                        text: _previewText ?? '',
-                        padding: EdgeInsets.only(left: 15),
-                        onTapLink: H.launchURL,
-                        onCodeCopied: () {
-                          Notificator.success(
-                            context,
-                            title: LocaleKeys.info_code_copied_titte.tr(),
-                            description: LocaleKeys.info_code_copied_description.tr(),
-                          );
+          child: isPreview
+              ? GestureDetector(
+                  onTap: widget.readOnly
+                      ? null
+                      : () {
+                          setState(() {
+                            _previewText = null;
+                          });
                         },
-                        widgetImage: (imageUrl) => CachedNetworkImage(
-                          imageUrl: imageUrl,
-                          placeholder: (context, url) => const SizedBox(
-                            width: double.infinity,
-                            height: 300,
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                  child: MouseRegion(
+                    cursor: widget.readOnly ? SystemMouseCursors.basic : SystemMouseCursors.text,
+                    child: MdPreview(
+                      text: _previewText ?? '',
+                      padding: EdgeInsets.only(left: 15),
+                      onTapLink: H.launchURL,
+                      textStyle: context.t.textTheme.bodyText2,
+                      onCodeCopied: () {
+                        Notificator.success(
+                          context,
+                          title: LocaleKeys.info_code_copied_titte.tr(),
+                          description: LocaleKeys.info_code_copied_description.tr(),
+                        );
+                      },
+                      widgetImage: (imageUrl) => CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        placeholder: (context, url) => const SizedBox(
+                          width: double.infinity,
+                          height: 300,
+                          child: Center(child: CircularProgressIndicator()),
                         ),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
                     ),
-                  )
-                : MdEditor(
-                    initText: widget.initText,
-                    hintText: LocaleKeys.md_editor_init_text.tr(),
-                    textFocusNode: _focusNode,
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    onComplete: (content) {
-                      if (content == widget.initText)
-                        setState(() {
-                          _previewText = content;
-                        });
-                      else
-                        widget.onComplete(content);
-                    },
-                    actionMessages: {
-                      ActionType.done: LocaleKeys.md_editor_done.tr(),
-                      ActionType.undo: LocaleKeys.md_editor_undo.tr(),
-                      ActionType.redo: LocaleKeys.md_editor_redo.tr(),
-                      ActionType.image: LocaleKeys.md_editor_image.tr(),
-                      ActionType.link: LocaleKeys.md_editor_link.tr(),
-                      ActionType.fontBold: LocaleKeys.md_editor_font_bold.tr(),
-                      ActionType.fontItalic: LocaleKeys.md_editor_font_italic.tr(),
-                      ActionType.fontStrikethrough: LocaleKeys.md_editor_font_strikethrough.tr(),
-                      ActionType.textQuote: LocaleKeys.md_editor_text_quote.tr(),
-                      ActionType.list: LocaleKeys.md_editor_list.tr(),
-                      ActionType.h1: LocaleKeys.md_editor_h1.tr(),
-                      ActionType.h2: LocaleKeys.md_editor_h2.tr(),
-                      ActionType.h3: LocaleKeys.md_editor_h3.tr(),
-                      ActionType.h4: LocaleKeys.md_editor_h4.tr(),
-                      ActionType.h5: LocaleKeys.md_editor_h5.tr(),
-                    },
                   ),
-          ),
+                )
+              : MdEditor(
+                  initText: widget.initText,
+                  hintText: LocaleKeys.md_editor_init_text.tr(),
+                  textFocusNode: _focusNode,
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  onComplete: (content) {
+                    if (content == widget.initText)
+                      setState(() {
+                        _previewText = content;
+                      });
+                    else
+                      widget.onComplete(content);
+                  },
+                  actionMessages: {
+                    ActionType.done: LocaleKeys.md_editor_done.tr(),
+                    ActionType.undo: LocaleKeys.md_editor_undo.tr(),
+                    ActionType.redo: LocaleKeys.md_editor_redo.tr(),
+                    ActionType.image: LocaleKeys.md_editor_image.tr(),
+                    ActionType.link: LocaleKeys.md_editor_link.tr(),
+                    ActionType.fontBold: LocaleKeys.md_editor_font_bold.tr(),
+                    ActionType.fontItalic: LocaleKeys.md_editor_font_italic.tr(),
+                    ActionType.fontStrikethrough: LocaleKeys.md_editor_font_strikethrough.tr(),
+                    ActionType.textQuote: LocaleKeys.md_editor_text_quote.tr(),
+                    ActionType.list: LocaleKeys.md_editor_list.tr(),
+                    ActionType.h1: LocaleKeys.md_editor_h1.tr(),
+                    ActionType.h2: LocaleKeys.md_editor_h2.tr(),
+                    ActionType.h3: LocaleKeys.md_editor_h3.tr(),
+                    ActionType.h4: LocaleKeys.md_editor_h4.tr(),
+                    ActionType.h5: LocaleKeys.md_editor_h5.tr(),
+                  },
+                ),
         );
       }),
     );

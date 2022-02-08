@@ -18,11 +18,11 @@ var lightTheme = _lightTheme.copyWith(
   textTheme: _lightTheme.textTheme.copyWith(
         headline1: TextStyle(
           color: Color(0xff414d68),
-          fontFamilyFallback: kIsWeb ? null : [defaultFontFamily],
+          fontFamily: kIsWeb ? null : defaultFontFamily,
         ),
         bodyText2: TextStyle(
           color: Color(0xff414d68),
-          fontFamilyFallback: kIsWeb ? null : [defaultFontFamily],
+          fontFamily: kIsWeb ? null : defaultFontFamily,
         ),
       ),
   popupMenuTheme: _lightTheme.popupMenuTheme.copyWith(
@@ -34,6 +34,7 @@ var lightTheme = _lightTheme.copyWith(
   tooltipTheme: _lightTheme.tooltipTheme.copyWith(
         textStyle: TextStyle(
           color: Colors.grey.shade600,
+          fontFamily: kIsWeb ? null : defaultFontFamily,
         ),
         padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
         decoration: BoxDecoration(

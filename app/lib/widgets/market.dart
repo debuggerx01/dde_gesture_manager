@@ -237,22 +237,20 @@ class _MarketWidgetState extends State<MarketWidget> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8),
-                    child: DefaultTextStyle(
-                      style: context.t.textTheme.bodyText2!,
-                      child: MdPreview(
-                        text: _schemes.firstWhereOrNull((e) => e.uuid == _selected)?.description ?? '',
-                        widgetImage: (imageUrl) => CachedNetworkImage(
-                          imageUrl: imageUrl,
-                          placeholder: (context, url) => const SizedBox(
-                            width: double.infinity,
-                            height: 300,
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                    child: MdPreview(
+                      text: _schemes.firstWhereOrNull((e) => e.uuid == _selected)?.description ?? '',
+                      widgetImage: (imageUrl) => CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        placeholder: (context, url) => const SizedBox(
+                          width: double.infinity,
+                          height: 300,
+                          child: Center(child: CircularProgressIndicator()),
                         ),
-                        onTapLink: H.launchURL,
-                        onCodeCopied: () {},
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
+                      onTapLink: H.launchURL,
+                      textStyle: context.t.textTheme.bodyText2,
+                      onCodeCopied: () {},
                     ),
                   ),
                 ),
