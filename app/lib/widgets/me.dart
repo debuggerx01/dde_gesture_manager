@@ -245,6 +245,7 @@ class _MeWidgetState extends State<MeWidget> {
                       child: MdPreview(
                         text: _schemes.firstWhereOrNull((e) => e.uuid == _selected)?.description ?? '',
                         onTapLink: H.launchURL,
+                        textStyle: context.t.textTheme.bodyText2,
                         widgetImage: (imageUrl) => CachedNetworkImage(
                           imageUrl: imageUrl,
                           placeholder: (context, url) => const SizedBox(

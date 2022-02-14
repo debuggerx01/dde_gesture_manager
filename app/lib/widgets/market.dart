@@ -249,6 +249,7 @@ class _MarketWidgetState extends State<MarketWidget> {
                         errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
                       onTapLink: H.launchURL,
+                      textStyle: context.t.textTheme.bodyText2,
                       onCodeCopied: () {},
                     ),
                   ),

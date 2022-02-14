@@ -1,0 +1,10 @@
+[Desktop Entry]
+Categories=Utility;
+Comment=专为 DDE 桌面环境打造的触摸板手势管理工具（缩写：dgm），使用 Flutter 构建。
+Exec=/opt/apps/com.debuggerx.dde-gesture-manager/files/dde-gesture-manager
+Icon=dgm
+Name=DDE Gesture Manager
+Name[zh_CN]=DDE手势管理器
+Type=Application
+Version=VERSION
+X-Deepin-Vendor=user-custom

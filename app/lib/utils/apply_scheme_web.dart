@@ -19,13 +19,12 @@ class SchemeApplyUtil implements SchemeApplyUtilStub {
             '${H.transGesturePropsToConfig(scheme.gestures ?? [])}',
             'EOF',
           ];
-    cmd.add('zenity'
-        ' --title="${LocaleKeys.info_apply_scheme_success.tr()}"'
-        ' --question'
-        ' --no-wrap'
-        ' --text="${LocaleKeys.info_apply_scheme_description.tr()}"'
-        ' --ok-label=${LocaleKeys.info_apply_scheme_logout_immediately.tr()}'
-        ' --cancel-label=${LocaleKeys.str_cancel.tr()}'
+    cmd.add('dialog'
+        ' --title "${LocaleKeys.info_apply_scheme_success.tr()}"'
+        ' --yes-label "${LocaleKeys.info_apply_scheme_logout_immediately.tr()}"'
+        ' --no-label "${LocaleKeys.str_cancel.tr()}"'
+        ' --yesno "${LocaleKeys.info_apply_scheme_description.tr()}"'
+        ' 8 30'
         ' && ${deepinLogoutCommands.join(' ')}');
     Clipboard.setData(ClipboardData(
       text: cmd.join('\n'),

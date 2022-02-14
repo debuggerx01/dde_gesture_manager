@@ -4,7 +4,7 @@
 
 专为 [DDE](https://www.deepin.org/zh/dde/) 桌面环境打造的触摸板手势管理工具（缩写：dgm），客户端使用 [Flutter](https://flutter.dev/) 构建，后端技术栈为 [dart](https://dart.dev/) 的 [Angel3 框架](https://github.com/dukefirehawk/angel) + [PostgreSQL](https://www.postgresql.org/) + [Redis](https://redis.io/) + docker。
 
-# DEMO
+# web版
 
 [DDE手势管理器-web版](http://www.debuggerx.com/dgm_web/#/)
 
@@ -15,6 +15,9 @@
 - 可以下载、点赞他人分享的配置方案
 - 贴合 DDE 的 UI 设计风格，支持系统主题切换和活动色
 - 支持多语言
+
+# 手册
+[DDE手势管理器-说明手册](https://www.debuggerx.com/2022/01/21/dgm-manual/)
 
 # 运行
 
@@ -127,7 +130,7 @@
 - [x] 方案应用功能实现
 - [ ] BugFix
 - [x] MD 编辑器中的UI文本国际化
-- [ ] 编写帮助说明文档
+- [x] 编写帮助说明文档
 - [ ] 浅色模式界面优化
 - [ ] 打包上架 Deepin/UOS 应用商店
 

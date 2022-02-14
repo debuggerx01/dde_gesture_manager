@@ -75,6 +75,7 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
                       text: _previewText ?? '',
                       padding: EdgeInsets.only(left: 15),
                       onTapLink: H.launchURL,
+                      textStyle: context.t.textTheme.bodyText2,
                       onCodeCopied: () {
                         Notificator.success(
                           context,
