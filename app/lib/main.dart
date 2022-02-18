@@ -13,6 +13,7 @@ import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/init.dart';
 import 'package:dde_gesture_manager/utils/simple_throttle.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'pages/home.dart';
 
@@ -21,13 +22,21 @@ Future<void> main() async {
   EasyLocalization.logger.enableLevels = [];
   await EasyLocalization.ensureInitialized();
   await initConfigs();
-  runApp(EasyLocalization(
-    supportedLocales: supportedLocales,
-    fallbackLocale: zh_CN,
-    path: 'resources/langs',
-    assetLoader: CodegenLoader(),
-    child: MyApp(),
-  ));
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = 'https://febbfdeac6874a01b5fee56b2ba9515c@o644838.ingest.sentry.io/6216990';
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(EasyLocalization(
+      supportedLocales: supportedLocales,
+      fallbackLocale: zh_CN,
+      path: 'resources/langs',
+      assetLoader: CodegenLoader(),
+      child: MyApp(),
+    )),
+  );
 }
 
 class MyApp extends StatelessWidget {

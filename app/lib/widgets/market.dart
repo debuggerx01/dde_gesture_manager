@@ -40,12 +40,13 @@ class _MarketWidgetState extends State<MarketWidget> {
   @override
   void initState() {
     super.initState();
-    Api.userLikes().then((value) {
-      if (mounted && value != null)
-        setState(() {
-          _likedSchemes = value;
-        });
-    });
+    if (context.read<ConfigsProvider>().accessToken.notNull)
+      Api.userLikes().then((value) {
+        if (mounted && value != null)
+          setState(() {
+            _likedSchemes = value;
+          });
+      });
     Api.marketSchemes(type: _type, page: _currentPage).then((value) {
       if (mounted && value != null)
         setState(() {
