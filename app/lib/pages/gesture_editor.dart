@@ -2,7 +2,6 @@ import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/http/api.dart';
-import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/scheme.dart';
@@ -305,7 +304,7 @@ class GestureEditor extends StatelessWidget {
                                     Notificator.error(context, title: LocaleKeys.info_upload_pls_add_description.tr());
                                     return;
                                   }
-                                  if (context.read<ConfigsProvider>().accessToken.isNull) {
+                                  if (!context.hasToken) {
                                     return Notificator.showAlert(
                                       title: LocaleKeys.info_login_for_upload_title.tr(),
                                       description: LocaleKeys.info_login_for_upload_description.tr(),

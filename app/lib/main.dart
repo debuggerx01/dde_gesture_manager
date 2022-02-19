@@ -12,6 +12,7 @@ import 'package:dde_gesture_manager/themes/light.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/init.dart';
 import 'package:dde_gesture_manager/utils/simple_throttle.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -27,7 +28,9 @@ Future<void> main() async {
       options.dsn = 'https://febbfdeac6874a01b5fee56b2ba9515c@o644838.ingest.sentry.io/6216990';
       // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
       // We recommend adjusting this value in production.
-      options.tracesSampleRate = 1.0;
+      options.tracesSampleRate = kReleaseMode ? 0.1 : 1.0;
+      options.reportPackages = false;
+      options.maxDeduplicationItems = 3;
     },
     appRunner: () => runApp(EasyLocalization(
       supportedLocales: supportedLocales,
@@ -82,6 +85,10 @@ class MyApp extends StatelessWidget {
               Future.microtask(() {
                 initEvents(context);
                 SimpleThrottle.throttledFunc(_checkAuthStatus, timeout: const Duration(minutes: 5))?.call(context);
+                SimpleThrottle.throttledFunc(
+                  Sentry.captureMessage,
+                  timeout: const Duration(days: 1),
+                )?.call('App launched');
               });
               return Container();
             }),
@@ -97,7 +104,7 @@ class MyApp extends StatelessWidget {
 void _checkAuthStatus(BuildContext context) {
   if (H().lastCheckAuthStatusTime != null &&
       H().lastCheckAuthStatusTime!.difference(DateTime.now()) < Duration(minutes: 10)) return;
-  if (context.read<ConfigsProvider>().accessToken.notNull) {
+  if (context.hasToken) {
     Api.checkAuthStatus().then((value) {
       if (!value) context.read<ConfigsProvider>().setProps(email: '', accessToken: '');
     });

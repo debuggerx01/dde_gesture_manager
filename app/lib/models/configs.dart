@@ -2,6 +2,7 @@ import 'package:dde_gesture_manager/builder/provider_annotation.dart';
 import 'package:dde_gesture_manager/constants/sp_keys.dart';
 import 'package:dde_gesture_manager/extensions.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 enum BrightnessMode {
   system,
@@ -45,9 +46,12 @@ class Configs {
 
   set email(String? emailAddress) {
     _email = emailAddress;
-    if (emailAddress.notNull)
+    if (emailAddress.notNull) {
       H().sp.updateString(SPKeys.loginEmail, emailAddress!);
-    else
+      Sentry.configureScope(
+        (scope) => scope.user = SentryUser(email: emailAddress),
+      );
+    } else
       H().sp.remove(SPKeys.loginEmail);
   }
 

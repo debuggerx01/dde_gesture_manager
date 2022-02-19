@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/http/api.dart';
-import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/local_schemes_provider.dart';
 import 'package:dde_gesture_manager/models/settings.provider.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
@@ -40,7 +39,7 @@ class _MarketWidgetState extends State<MarketWidget> {
   @override
   void initState() {
     super.initState();
-    if (context.read<ConfigsProvider>().accessToken.notNull)
+    if (context.hasToken)
       Api.userLikes().then((value) {
         if (mounted && value != null)
           setState(() {
@@ -265,7 +264,7 @@ class _MarketWidgetState extends State<MarketWidget> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               DButton.like(
-                enabled: context.watch<ConfigsProvider>().accessToken.notNull,
+                enabled: context.watchHasToken,
                 onTap: () {
                   bool liked = _likedSchemes.contains(currentSelectedScheme!.id!);
                   Api.likeScheme(schemeId: currentSelectedScheme.uuid!, isLike: !liked).then((value) {

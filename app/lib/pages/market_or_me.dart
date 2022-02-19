@@ -1,6 +1,5 @@
 import 'package:dde_gesture_manager/constants/constants.dart';
 import 'package:dde_gesture_manager/extensions.dart';
-import 'package:dde_gesture_manager/models/configs.provider.dart';
 import 'package:dde_gesture_manager/models/content_layout.provider.dart';
 import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager/widgets/login.dart';
@@ -79,11 +78,11 @@ class MarketOrMe extends StatelessWidget {
     );
   }
 
-  Widget buildMeContent(BuildContext context) {
-    var accessToken = context.watch<ConfigsProvider>().accessToken;
-    if (accessToken.isNull) return LoginWidget();
-    return Expanded(child: MeWidget());
-  }
+  Widget buildMeContent(BuildContext context) => context.watchHasToken
+      ? Expanded(
+          child: MeWidget(),
+        )
+      : LoginWidget();
 
   Widget buildMarketContent(BuildContext context) => Expanded(child: MarketWidget());
 }
