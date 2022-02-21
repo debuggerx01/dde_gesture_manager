@@ -6,6 +6,7 @@ import 'package:angel3_framework/angel3_framework.dart';
 import 'package:dde_gesture_manager_api/apis.dart';
 import 'package:dde_gesture_manager_api/models.dart';
 import 'package:dde_gesture_manager_api/src/routes/controllers/middlewares.dart';
+import 'package:logging/logging.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:uuid/uuid.dart';
@@ -45,7 +46,9 @@ Future configureServer(Angel app) async {
           },
         );
 
-      send(message, smtpServer);
+      SendReport report = await send(message, smtpServer);
+      Logger('auth_controller').info(report);
+
       return res.notFound();
     } else if (user.value.password != userParams.password) {
       return res.unauthorized();

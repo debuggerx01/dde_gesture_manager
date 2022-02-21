@@ -46,6 +46,14 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
     super.didUpdateWidget(oldWidget);
   }
 
+  VoidCallback? get _onMdPreviewTap => widget.readOnly
+      ? null
+      : () {
+          setState(() {
+            _previewText = null;
+          });
+        };
+
   @override
   Widget build(BuildContext context) {
     return Focus(
@@ -62,19 +70,14 @@ class _DMarkdownFieldState extends State<DMarkdownField> {
           ),
           child: isPreview
               ? GestureDetector(
-                  onTap: widget.readOnly
-                      ? null
-                      : () {
-                          setState(() {
-                            _previewText = null;
-                          });
-                        },
+                  onTap: _onMdPreviewTap,
                   child: MouseRegion(
                     cursor: widget.readOnly ? SystemMouseCursors.basic : SystemMouseCursors.text,
                     child: MdPreview(
                       text: _previewText ?? '',
                       padding: EdgeInsets.only(left: 15),
                       onTapLink: H.launchURL,
+                      richTap: _onMdPreviewTap,
                       textStyle: context.t.textTheme.bodyText2,
                       onCodeCopied: () {
                         Notificator.success(

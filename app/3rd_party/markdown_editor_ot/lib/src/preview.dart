@@ -11,6 +11,7 @@ class MdPreview extends StatefulWidget {
     required this.widgetImage,
     required this.onCodeCopied,
     this.textStyle,
+    this.richTap,
   }) : super(key: key);
 
   final String text;
@@ -23,6 +24,8 @@ class MdPreview extends StatefulWidget {
   /// Call this method when it tap link of markdown.
   /// If [onTapLink] is null,it will open the link with your default browser.
   final TapLinkCallback? onTapLink;
+
+  final VoidCallback? richTap;
 
   @override
   State<StatefulWidget> createState() => MdPreviewState();
@@ -50,6 +53,7 @@ class MdPreviewState extends State<MdPreview>
               image: widget.widgetImage,
               textStyle: widget.textStyle,
               onCodeCopied: widget.onCodeCopied,
+              richTap: widget.richTap,
             );
           },
         ),

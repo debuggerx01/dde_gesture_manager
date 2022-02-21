@@ -5,4 +5,5 @@ class SPKeys {
   static final String accessToken = 'USER_ACCESS_TOKEN';
   static final String loginEmail = 'USER_LOGIN_EMAIL';
   static final String ignoredUpdateVersion = 'IGNORED_UPDATE_VERSION';
+  static final String readBulletinId = 'READ_BULLETIN_ID';
 }

@@ -14,6 +14,7 @@ class Markdown extends StatefulWidget {
     required this.onCodeCopied,
     this.maxWidth,
     this.textStyle,
+    this.richTap,
   }) : super(key: key);
 
   final String data;
@@ -27,6 +28,8 @@ class Markdown extends StatefulWidget {
   final TextStyle? textStyle;
 
   final Function onCodeCopied;
+
+  final VoidCallback? richTap;
 
   @override
   MarkdownState createState() => MarkdownState();
@@ -62,6 +65,7 @@ class MarkdownState extends State<Markdown> {
       widget.maxWidth ?? MediaQuery.of(context).size.width,
       widget.textStyle ?? defaultTextStyle(context),
       onCodeCopied: widget.onCodeCopied,
+      richTap: widget.richTap,
     ).build(nodes);
   }
 }

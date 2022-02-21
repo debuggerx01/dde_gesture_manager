@@ -53,7 +53,7 @@ class Api {
         T? res;
         try {
           if (resp.statusCode != HttpStatus.ok && resp.bodyBytes.length == 0)
-            throw HttpErrorCode(resp.statusCode, message: 'No resp body');
+            throw HttpErrorCode(resp.statusCode, message: 'No resp body from ${resp.request!.url.path}');
           var decodeBody = json.decode(utf8.decode(resp.bodyBytes));
           res = decodeBody is Map ? builder(decodeBody) : builder({'list': decodeBody});
         } catch (e) {
@@ -62,6 +62,8 @@ class Api {
         }
         return res;
       };
+
+  static final _fullPathRegExp = RegExp('http(s?)://');
 
   static Future<T?> _get<T>(
     String path,
@@ -72,13 +74,15 @@ class Api {
   }) =>
       http
           .get(
-        Uri(
-          scheme: Apis.apiScheme,
-          host: Apis.apiHost,
-          port: Apis.apiPort,
-          queryParameters: queryParams,
-          path: path,
-        ),
+        path.startsWith(_fullPathRegExp)
+            ? Uri.parse(path)
+            : Uri(
+                scheme: Apis.apiScheme,
+                host: Apis.apiHost,
+                port: Apis.apiPort,
+                queryParameters: queryParams,
+                path: path,
+              ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: ContentType.json.toString(),
         }..addAll(
@@ -103,12 +107,14 @@ class Api {
   }) =>
       http
           .post(
-        Uri(
-          scheme: Apis.apiScheme,
-          host: Apis.apiHost,
-          port: Apis.apiPort,
-          path: path,
-        ),
+        path.startsWith(_fullPathRegExp)
+            ? Uri.parse(path)
+            : Uri(
+                scheme: Apis.apiScheme,
+                host: Apis.apiHost,
+                port: Apis.apiPort,
+                path: path,
+              ),
         body: jsonEncode(body),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: ContentType.json.toString(),
@@ -199,6 +205,26 @@ class Api {
         Apis.scheme.userLikes,
         (e) => (e['list'] as List).cast<int>(),
       );
+
+  static Future<AppBulletinResp?> checkBulletin(bool isWeb) => _get(
+        Apis.appBulletinUrl(isWeb),
+        AppBulletinResp.fromMap,
+        ignoreErrorHandle: true,
+        ignoreToken: true,
+      ).catchError((_) {});
+}
+
+class AppBulletinResp {
+  int? id;
+  bool? once;
+  String? title;
+  String? content;
+
+  AppBulletinResp.fromMap(Map map)
+      : id = map['id'],
+        once = map['once'],
+        title = map['title'],
+        content = map['content'];
 }
 
 class MarketSchemeTransMetaDataResp {

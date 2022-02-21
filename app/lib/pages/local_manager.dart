@@ -13,6 +13,7 @@ import 'package:dde_gesture_manager/widgets/dde_button.dart';
 import 'package:dde_gesture_manager_api/models.dart' show SchemeForDownload;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class LocalManager extends StatefulWidget {
@@ -262,6 +263,7 @@ class LocalManagerState extends State<LocalManager> {
                                       localSchemes.firstWhere((ele) => ele.path == _selectedItemPath).scheme;
                                   context.read<ConfigsProvider>().setProps(appliedSchemeId: appliedScheme.id);
                                   SchemeApplyUtil().apply(context, appliedScheme);
+                                  Sentry.captureMessage('Scheme applied: [${appliedScheme.name}](${appliedScheme.id})');
                                 },
                               ),
                             ]

@@ -5,6 +5,9 @@ class Apis {
 
   static const appNewVersionUrl = 'https://www.debuggerx.com/2022/01/21/dgm-changelog?from=app';
 
+  static appBulletinUrl(bool isWeb) =>
+      'https://www.debuggerx.com/dgm_web/bulletin.json?from=app_${isWeb ? 'web' : 'linux'}';
+
   static appManualUrl(bool isWeb) =>
       'https://www.debuggerx.com/2022/01/21/dgm-manual?from=app_${isWeb ? 'web' : 'linux'}';
 
@@ -16,9 +19,9 @@ class Apis {
 class AuthApis {
   static final String path = '/auth';
 
-  String get loginOrSignup => [path, 'login_or_signup'].joinPath();
+  String get loginOrSignup => [path, 'login-or-signup'].joinPath();
 
-  String confirmSignup({required StringParam accessKey}) => [path, 'confirm_sign_up', accessKey].joinPath();
+  String confirmSignup({required StringParam accessKey}) => [path, 'confirm-sign-up', accessKey].joinPath();
 
   String get status => [path, 'status'].joinPath();
 }
@@ -34,7 +37,7 @@ class SchemeApis {
 
   String get upload => [path, 'upload'].joinPath();
 
-  String markAsShared({required StringParam schemeId}) => [path, 'mark_as_shared', schemeId].joinPath();
+  String markAsShared({required StringParam schemeId}) => [path, 'mark-as-shared', schemeId].joinPath();
 
   String user({required StringParam type}) => [path, 'user', type].joinPath();
 

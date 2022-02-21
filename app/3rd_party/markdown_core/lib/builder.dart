@@ -19,6 +19,7 @@ class MarkdownBuilder implements md.NodeVisitor {
     this.defaultTextStyle, {
     this.tagTextStyle = defaultTagTextStyle,
     required this.onCodeCopied,
+    this.richTap,
   });
 
   final _widgets = <Widget>[];
@@ -30,6 +31,7 @@ class MarkdownBuilder implements md.NodeVisitor {
 
   final BuildContext context;
   final LinkTap linkTap;
+  final VoidCallback? richTap;
   final WidgetImage widgetImage;
   final double maxWidth;
   final Function onCodeCopied;
@@ -125,6 +127,7 @@ class MarkdownBuilder implements md.NodeVisitor {
               children: last.textSpans,
               style: last.textStyle,
             ),
+            onTap: richTap,
           );
         }
       }
