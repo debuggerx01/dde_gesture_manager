@@ -11,6 +11,7 @@ import 'package:dde_gesture_manager/themes/dark.dart';
 import 'package:dde_gesture_manager/themes/light.dart';
 import 'package:dde_gesture_manager/utils/helper.dart';
 import 'package:dde_gesture_manager/utils/init.dart';
+import 'package:dde_gesture_manager/utils/notificator.dart';
 import 'package:dde_gesture_manager/utils/simple_throttle.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +90,7 @@ class MyApp extends StatelessWidget {
                   Sentry.captureMessage,
                   timeout: const Duration(days: 1),
                 )?.call('App launched');
+                SimpleThrottle.throttledFunc(_checkBulletin, timeout: const Duration(days: 1))?.call(context);
               });
               return Container();
             }),
@@ -111,4 +113,15 @@ void _checkAuthStatus(BuildContext context) {
   } else {
     H().lastCheckAuthStatusTime = DateTime.now();
   }
+}
+
+void _checkBulletin(BuildContext context) {
+  Api.checkBulletin(kIsWeb).then((value) {
+    if (value != null && value.id != null) {
+      if (value.once == false || (H().sp.getInt(SPKeys.readBulletinId) ?? 0) < value.id!) {
+        Notificator.showAlert(title: value.title ?? '', description: value.content ?? '');
+      }
+      H().sp.setInt(SPKeys.readBulletinId, value.id!);
+    }
+  });
 }

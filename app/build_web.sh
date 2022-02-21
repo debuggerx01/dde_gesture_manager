@@ -12,3 +12,6 @@ sed -i -e "s!$wasmLocation!.!" \
   -e "s!https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols!./assets/assets/css/Noto-Sans-Symbols.css!" \
   -e "s!https://fonts.googleapis.com/css2?family=Noto+Color+Emoji+Compat!./assets/assets/css/Noto-Color-Emoji-Compat.css!" \
   build/web/main.dart.js
+
+
+# git init && git add . && git commit -m 'update' && git remote add origin git@github.com:debuggerx01/dgm_web.git && git push --set-upstream origin master -f

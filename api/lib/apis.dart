@@ -5,6 +5,9 @@ class Apis {
 
   static const appNewVersionUrl = 'https://www.debuggerx.com/2022/01/21/dgm-changelog?from=app';
 
+  static appBulletinUrl(bool isWeb) =>
+      'https://www.debuggerx.com/dgm_web/bulletin.json?from=app_${isWeb ? 'web' : 'linux'}';
+
   static appManualUrl(bool isWeb) =>
       'https://www.debuggerx.com/2022/01/21/dgm-manual?from=app_${isWeb ? 'web' : 'linux'}';
 
