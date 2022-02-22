@@ -45,11 +45,15 @@ if [[ $(uname -m) == aarch64 ]]; then
   ARCH="arm64"
 fi
 
+echo "开始打包 $ARCH deb"
+
 mkdir "deb_builder"
 
 cp -r debian deb_builder/DEBIAN
-chmod -R 755 deb_builder/DEBIAN
+
 cp ../LICENSE deb_builder/DEBIAN/copyright
+
+echo "设置版本号为: $VERSION"
 
 echo Version: "$VERSION" >> deb_builder/DEBIAN/control
 
@@ -71,10 +75,12 @@ sed -i "s/VERSION/$VERSION/g" deb_builder/opt/apps/com.debuggerx.dde-gesture-man
 
 sed -i "s/VERSION/$VERSION/g" deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/entries/applications/com.debuggerx.dde-gesture-manager.desktop
 
-dpkg-deb -b deb_builder
+fakeroot dpkg-deb -b deb_builder
 
 if [[ $ARCH == "x64" ]]; then
     ARCH="amd64"
 fi
 
 mv deb_builder.deb com.debuggerx.dde-gesture-manager_"$VERSION"_"$ARCH".deb
+
+echo "打包完成！"
