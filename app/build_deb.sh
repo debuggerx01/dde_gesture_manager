@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+cd ../api || exit
+bash source_gen.sh
+
+cd ../app || exit
+bash source_gen.sh
+
+
 VERSION=$(dart version.dart)
 
 if [ -e pubspec.yaml.bak ]; then
@@ -66,4 +73,8 @@ sed -i "s/VERSION/$VERSION/g" deb_builder/opt/apps/com.debuggerx.dde-gesture-man
 
 dpkg-deb -b deb_builder
 
-mv deb_builder.deb dgm-"$VERSION"_"$ARCH".deb
+if [[ $ARCH == "x64" ]]; then
+    ARCH="amd64"
+fi
+
+mv deb_builder.deb com.debuggerx.dde-gesture-manager_"$VERSION"_"$ARCH".deb
