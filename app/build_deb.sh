@@ -39,13 +39,6 @@ if [ -e deb_builder ]; then
     rm -rf deb_builder
 fi
 
-ARCH="x64"
-
-if [[ $(uname -m) == aarch64 ]]; then
-  ARCH="arm64"
-fi
-
-echo "开始打包 $ARCH deb"
 
 mkdir "deb_builder"
 
@@ -59,13 +52,21 @@ echo Version: "$VERSION" >> deb_builder/DEBIAN/control
 
 mkdir -p deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/
 
+cp -r dde_package_info/* deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/
+
+ARCH="x64"
+
+if [[ $(uname -m) == aarch64 ]]; then
+  ARCH="arm64"
+  sed -i "s/amd64/$ARCH/g" deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/info
+  sed -i "s/amd64/$ARCH/g" deb_builder/DEBIAN/control
+fi
+
 cp -r build/linux/"$ARCH"/release/bundle deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/files
 
 rm -rf deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/files/data/flutter_assets/noto_fonts/
 
 ln -s /usr/share/fonts/opentype/noto/ deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/files/data/flutter_assets/noto_fonts
-
-cp -r dde_package_info/* deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/
 
 mkdir -p deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/entries/icons/hicolor/scalable/apps/
 
@@ -74,6 +75,8 @@ cp web/icons/Icon-512.png deb_builder/opt/apps/com.debuggerx.dde-gesture-manager
 sed -i "s/VERSION/$VERSION/g" deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/info
 
 sed -i "s/VERSION/$VERSION/g" deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/entries/applications/com.debuggerx.dde-gesture-manager.desktop
+
+echo "开始打包 $ARCH deb"
 
 fakeroot dpkg-deb -b deb_builder
 
