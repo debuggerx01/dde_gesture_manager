@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+cd ../api || exit
+bash source_gen.sh
+
+cd ../app || exit
+bash source_gen.sh
+
+
 VERSION=$(dart version.dart)
 
 if [ -e pubspec.yaml.bak ]; then
@@ -32,29 +39,34 @@ if [ -e deb_builder ]; then
     rm -rf deb_builder
 fi
 
-ARCH="x64"
-
-if [[ $(uname -m) == aarch64 ]]; then
-  ARCH="arm64"
-fi
 
 mkdir "deb_builder"
 
 cp -r debian deb_builder/DEBIAN
-chmod -R 755 deb_builder/DEBIAN
+
 cp ../LICENSE deb_builder/DEBIAN/copyright
+
+echo "设置版本号为: $VERSION"
 
 echo Version: "$VERSION" >> deb_builder/DEBIAN/control
 
 mkdir -p deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/
+
+cp -r dde_package_info/* deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/
+
+ARCH="x64"
+
+if [[ $(uname -m) == aarch64 ]]; then
+  ARCH="arm64"
+  sed -i "s/amd64/$ARCH/g" deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/info
+  sed -i "s/amd64/$ARCH/g" deb_builder/DEBIAN/control
+fi
 
 cp -r build/linux/"$ARCH"/release/bundle deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/files
 
 rm -rf deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/files/data/flutter_assets/noto_fonts/
 
 ln -s /usr/share/fonts/opentype/noto/ deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/files/data/flutter_assets/noto_fonts
-
-cp -r dde_package_info/* deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/
 
 mkdir -p deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/entries/icons/hicolor/scalable/apps/
 
@@ -64,6 +76,14 @@ sed -i "s/VERSION/$VERSION/g" deb_builder/opt/apps/com.debuggerx.dde-gesture-man
 
 sed -i "s/VERSION/$VERSION/g" deb_builder/opt/apps/com.debuggerx.dde-gesture-manager/entries/applications/com.debuggerx.dde-gesture-manager.desktop
 
-dpkg-deb -b deb_builder
+echo "开始打包 $ARCH deb"
 
-mv deb_builder.deb dgm-"$VERSION"_"$ARCH".deb
+fakeroot dpkg-deb -b deb_builder
+
+if [[ $ARCH == "x64" ]]; then
+    ARCH="amd64"
+fi
+
+mv deb_builder.deb com.debuggerx.dde-gesture-manager_"$VERSION"_"$ARCH".deb
+
+echo "打包完成！"
