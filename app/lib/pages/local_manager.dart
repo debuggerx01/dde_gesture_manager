@@ -229,7 +229,7 @@ class LocalManagerState extends State<LocalManager> {
                                   newSchemes.removeAt(index);
                                   localSchemesProvider.setProps(schemes: newSchemes);
                                   localSchemesProvider.remove(_selectedItemPath);
-                                  var newSelectedItem = newSchemes[(index - 1).clamp(1, newSchemes.length)];
+                                  var newSelectedItem = newSchemes[(index - 1).clamp(0, newSchemes.length)];
                                   setState(() {
                                     _selectedItemPath = newSelectedItem.path;
                                   });

@@ -446,20 +446,13 @@ void saveGesturesToLocal(BuildContext context, SchemeProvider schemeProvider, Li
 
 List<DDataCell> _buildRowCellsEditing(BuildContext context) {
   var gesture = context.read<GesturePropProvider>();
-  var schemeTree = context.read<SchemeProvider>().buildSchemeTree();
+  var schemeTree = context.read<SchemeProvider>().buildSchemeTree(availableGestureId: gesture.id);
   var availableFingers = schemeTree.nodes.where((node) => !node.fullFiled).map((e) => e.fingers);
-  if (!availableFingers.contains(gesture.fingers)) {
-    availableFingers = [...availableFingers, gesture.fingers!]..sort();
-  }
-
   var availableGestures = schemeTree.nodes
       .firstWhere((node) => node.fingers == gesture.fingers)
       .nodes
       .where((node) => !node.fullFiled)
       .map((e) => e.type);
-  if (!availableGestures.any((type) => type == gesture.gesture)) {
-    availableGestures = [...availableGestures, gesture.gesture!]..sort((a, b) => a.index - b.index);
-  }
 
   var availableDirection = schemeTree.nodes
       .firstWhere((node) => node.fingers == gesture.fingers)
@@ -468,10 +461,6 @@ List<DDataCell> _buildRowCellsEditing(BuildContext context) {
       .nodes
       .where((node) => !node.fullFiled)
       .map((e) => e.direction);
-
-  if (!availableDirection.any((direction) => direction == gesture.direction)) {
-    availableDirection = [...availableDirection, gesture.direction!]..sort((a, b) => a.index - b.index);
-  }
 
   return [
     DButton.dropdown(
@@ -487,10 +476,28 @@ List<DDataCell> _buildRowCellsEditing(BuildContext context) {
             )
             .toList(),
         value: gesture.fingers,
-        onChanged: (value) => context.read<GesturePropProvider>().setProps(
-              fingers: value,
-              editMode: true,
-            ),
+        onChanged: (value) {
+          var gesturePropProvider = context.read<GesturePropProvider>();
+          Gesture? newGestureType;
+          GestureDirection? newDirection;
+          if (!schemeTree.nodes
+              .firstWhere((e) => e.fingers == value)
+              .nodes
+              .firstWhere((e) => e.type == gesturePropProvider.gesture)
+              .nodes
+              .firstWhere((e) => e.direction == gesturePropProvider.direction)
+              .available) {
+            var availableNode = schemeTree.nodes.firstWhere((e) => e.fingers == value).availableNode;
+            newGestureType = availableNode.type;
+            newDirection = availableNode.availableNode.direction;
+          }
+          gesturePropProvider.setProps(
+            fingers: value,
+            gesture: newGestureType ?? gesturePropProvider.gesture,
+            direction: newDirection ?? gesturePropProvider.direction,
+            editMode: true,
+          );
+        },
         isExpanded: true,
       ),
     ),
@@ -511,10 +518,19 @@ List<DDataCell> _buildRowCellsEditing(BuildContext context) {
             )
             .toList(),
         value: gesture.gesture,
-        onChanged: (value) => context.read<GesturePropProvider>().setProps(
-              gesture: value,
-              editMode: true,
-            ),
+        onChanged: (value) {
+          var gesturePropProvider = context.read<GesturePropProvider>();
+          gesturePropProvider.setProps(
+            gesture: value,
+            direction: schemeTree.nodes
+                .firstWhere((node) => node.fingers == gesture.fingers)
+                .nodes
+                .firstWhere((node) => node.type == value)
+                .availableNode
+                .direction,
+            editMode: true,
+          );
+        },
         isExpanded: true,
       ),
     ),
