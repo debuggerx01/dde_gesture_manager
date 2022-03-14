@@ -159,9 +159,9 @@ class Scheme {
     this.name = LocaleKeys.str_new_scheme.tr();
   }
 
-  SchemeTree buildSchemeTree() {
+  SchemeTree buildSchemeTree({String? availableGestureId}) {
     var schemeTree = SchemeTree();
-    this.gestures!.forEach((gesture) {
+    this.gestures!.where((e) => e.id != availableGestureId).forEach((gesture) {
       var schemeTreeNode = schemeTree.nodes.firstWhere((ele) => ele.fingers == gesture.fingers);
       var schemeGestureNode = schemeTreeNode.nodes.firstWhere((element) => element.type == gesture.gesture);
       schemeGestureNode.nodes.firstWhere((element) => element.direction == gesture.direction).available = false;
