@@ -65,8 +65,9 @@ Future<void> initEvents(BuildContext context) async {
           }),
         ).then((confirmed) async {
           if (confirmed == CustomButton.positiveButton) {
-            if (await canLaunch(Apis.appNewVersionUrl)) {
-              await launch(Apis.appNewVersionUrl);
+            var uri = Uri.tryParse(Apis.appNewVersionUrl);
+            if (uri != null && await canLaunchUrl(uri)) {
+              await launchUrl(uri);
             }
           } else if (confirmed == CustomButton.negativeButton) {
             H().sp.updateInt(SPKeys.ignoredUpdateVersion, value?.versionCode ?? 0);

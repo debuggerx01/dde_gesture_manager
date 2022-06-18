@@ -123,8 +123,9 @@ class H {
   }
 
   static void launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    var uri = Uri.tryParse(url);
+    if (uri != null && await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
       throw 'Could not launch $url';
     }
@@ -143,7 +144,7 @@ class H {
                 "Fingers": gesture.fingers,
               },
               "Action": {
-                "Type": gesture.type!.name,
+                "Type": gesture.type!.typeName,
                 "Action": gesture.command,
               },
             },

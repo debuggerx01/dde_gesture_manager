@@ -201,6 +201,10 @@ enum GestureType {
   shortcut,
 }
 
+extension GestureTypeName on GestureType {
+  String get typeName => this == GestureType.built_in ? 'built-in' : this.name;
+}
+
 @ProviderModel(copyable: true)
 class GestureProp implements Comparable {
   @ProviderModelProp()
