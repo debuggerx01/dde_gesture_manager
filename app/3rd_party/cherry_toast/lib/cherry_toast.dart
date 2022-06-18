@@ -349,7 +349,7 @@ class _CherryToastState extends State<CherryToast> with TickerProviderStateMixin
         break;
       default:
     }
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       slideController.forward();
     });
   }

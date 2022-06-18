@@ -11,8 +11,9 @@ class HelpButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        if (await canLaunch(Apis.appManualUrl(kIsWeb))) {
-          await launch(Apis.appManualUrl(kIsWeb));
+        var uri = Uri.tryParse(Apis.appManualUrl(kIsWeb));
+        if (uri != null && await canLaunchUrl(uri)) {
+          await launchUrl(uri);
         }
       },
       child: MouseRegion(

@@ -36,8 +36,9 @@ class VersionChecker extends StatelessWidget {
                         description: LocaleKeys.info_new_version_description_for_manual.tr(),
                       ).then((value) async {
                         if (value == CustomButton.positiveButton) {
-                          if (await canLaunch(Apis.appNewVersionUrl)) {
-                            await launch(Apis.appNewVersionUrl);
+                          var uri = Uri.tryParse(Apis.appNewVersionUrl);
+                          if (uri != null && await canLaunchUrl(uri)) {
+                            await launchUrl(uri);
                           }
                         }
                       });
